@@ -12,7 +12,6 @@ table.table.table-hover
     tbody
       - @tasks.each do |task|
         tr
-          - binding.pry
           td = link_to task.name, task_path(task)
           td = task.description
           td = task.created_at
