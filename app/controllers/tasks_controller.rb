@@ -8,6 +8,7 @@ class TasksController < ApplicationController
   end
 
   def new
+    # 保存に失敗した場合にrenderされるが、newアクションは経由しない
     @task = Task.new
   end
 
@@ -16,9 +17,14 @@ class TasksController < ApplicationController
   end
 
   def create
-    task = Task.new(task_params)
-    task.save!
-    redirect_to tasks_url, notice: "タスク「#{task.name}」を登録しました！"
+    # @taskの理由は、保存失敗時にrender :newした際、@taskの情報（ユーザ入力情報）を保持しておくため
+    # またredirect_toの際に@taskを渡すと「redirect_to url_for(@record)」と同じような結果が得られ、ID値を含んだURLが返ってくる
+    @task = Task.new(task_params)
+    if @task.save
+      redirect_to @task, notice: "タスク「#{@task.name}」を登録しました！"
+    else
+      render :new
+    end
   end
 
   def update

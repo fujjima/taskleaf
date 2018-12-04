@@ -2,6 +2,12 @@
 .nav.justify-content-end
   = link_to '一覧', tasks_path, class: 'nav-link'
 
+/ ここのエラーメッセージの表示をモダンにしたい
+- if task.errors.present?
+  u1#error_explanation
+    - task.errors.full_messages.each do |message|
+      li = message
+
 / local: trueとすることで、Ajax通信を行うようにする
 = form_with model: @task, local: true do |f|
   .form-group
