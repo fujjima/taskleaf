@@ -1,10 +1,11 @@
 class TasksController < ApplicationController
   def index
-    @tasks = Task.all.order(created_at: :desc)
+    # ログインユーザに紐づくタスクのみ取得できるようにする
+    @tasks = current_user.tasks
   end
 
   def show
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def new
@@ -13,13 +14,13 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def create
     # @taskの理由は、保存失敗時にrender :newした際、@taskの情報（ユーザ入力情報）を保持しておくため
     # またredirect_toの際に@taskを渡すと「redirect_to url_for(@record)」と同じような結果が得られ、ID値を含んだURLが返ってくる
-    @task = Task.new(task_params)
+    @task = current_user.tasks.new(task_params)
     if @task.save
       redirect_to @task, notice: "タスク「#{@task.name}」を登録しました！"
     else
@@ -28,13 +29,13 @@ class TasksController < ApplicationController
   end
 
   def update
-    task = Task.find(params[:id])
+    task = current_user.tasks.find(params[:id])
     task.update!(task_params)
     redirect_to tasks_path, notice: "タスク 「#{task.name}を更新しました」"
   end
 
   def destroy
-    task = Task.find(params[:id])
+    task = current_user.tasks.find(params[:id])
     task.destroy
     redirect_to tasks_path, notice: "タスク「#{task.name}」を削除しました！"
   end
