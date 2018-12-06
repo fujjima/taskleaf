@@ -10,6 +10,7 @@ html
   body
     .app-title.navbar.navbar-expand-md.navbar-light.bg-light
       .navbar-brand Taskleaf
+      = current_user.name unless current_user.nil?
 
       ul.navbar-nav.ml-auto
         - if current_user
