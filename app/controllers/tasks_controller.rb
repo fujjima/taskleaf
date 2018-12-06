@@ -1,7 +1,6 @@
 class TasksController < ApplicationController
   def index
     # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
-    # テスト
     @tasks = current_user.tasks.order(created_at: :desc)
   end
 
