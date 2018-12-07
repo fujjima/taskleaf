@@ -1,0 +1,26 @@
+h1 ユーザー詳細
+
+.nav.justify-content-end
+  = link_to '一覧', tasks_path, class: 'nav-link'
+table.table.table-hover
+  tbody
+    tr
+      / モデル名とモデルの属性の翻訳を使うことができる
+      / thで太字中央揃え、tdで細字左揃え
+      th = User.human_attribute_name(:name)
+      td = @user.name
+    tr
+      th = User.human_attribute_name(:email)
+      td = @user.email
+    tr
+      th = User.human_attribute_name(:admin)
+      td = @user.admin? ? '権限あり' : '権限なし'
+    tr
+      th = User.human_attribute_name(:created_at)
+      td = @user.created_at
+    tr
+      th = User.human_attribute_name(:updated_at)
+      td = @user.updated_at
+
+= link_to '編集', edit_admin_user_path, class: 'btn btn-primary mr-3'
+= link_to '削除', [:admin, @user], method: :delete, data: { confirm: "ユーザー「#{@user.name}」を削除しますか？" }, class: 'btn btn-danger'
