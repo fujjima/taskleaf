@@ -14,6 +14,7 @@ describe 'タスク管理機能', type: :system do
     click_button 'ログインする'
   end
 
+  # behave_likeに入る
   shared_examples_for 'ユーザーAが作成したタスクが表示される' do
     it { expect(page).to have_content '最初のタスク' }
   end
