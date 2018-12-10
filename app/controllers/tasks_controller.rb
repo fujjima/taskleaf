@@ -40,6 +40,12 @@ class TasksController < ApplicationController
     redirect_to tasks_path, notice: "タスク「#{@task.name}」を削除しました！"
   end
 
+  # 確認画面表示
+  def cinfirm_new
+    @task = current_user.tasks.new(task_params)
+    render :new unless @task.valid?
+  end
+
   private
 
   def task_params
