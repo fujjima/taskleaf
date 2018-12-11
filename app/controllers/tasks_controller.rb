@@ -23,6 +23,7 @@ class TasksController < ApplicationController
     # またredirect_toの際に@taskを渡すと「redirect_to url_for(@record)」と同じような結果が得られ、ID値を含んだURLが返ってくる
     @task = current_user.tasks.new(task_params)
     if @task.save
+      logger.debug "task: #{@task.attributes.inspect}"
       redirect_to @task, notice: "タスク「#{@task.name}」を登録しました！"
     else
       render :new
@@ -37,6 +38,12 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to tasks_path, notice: "タスク「#{@task.name}」を削除しました！"
+  end
+
+  # 確認画面表示
+  def cinfirm_new
+    @task = current_user.tasks.new(task_params)
+    render :new unless @task.valid?
   end
 
   private
