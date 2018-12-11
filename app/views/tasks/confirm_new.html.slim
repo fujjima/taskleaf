@@ -4,11 +4,11 @@ h1 登録内容の確認
   table.table.table-hover
     tbody
       tr
-        th = Task.human_atrribute_name(:name)
+        th = Task.human_attribute_name(:name)
         td = @task.name
         = f.hidden_field :name
       tr
-        th = Task.human_atrribute_name(:description)
+        th = Task.human_attribute_name(:description)
         td = simple_format(@task.description)
         = f.hidden_field :description
   = f.submit '戻る', name: 'back', class: 'btn btn-secondary mr-3'

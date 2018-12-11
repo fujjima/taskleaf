@@ -22,6 +22,14 @@ class TasksController < ApplicationController
     # @taskの理由は、保存失敗時にrender :newした際、@taskの情報（ユーザ入力情報）を保持しておくため
     # またredirect_toの際に@taskを渡すと「redirect_to url_for(@record)」と同じような結果が得られ、ID値を含んだURLが返ってくる
     @task = current_user.tasks.new(task_params)
+
+    # 戻るボタンが押されたら、新規作成画面に戻る
+    if params[:back].present?
+      render :new
+      return
+    end
+
+
     if @task.save
       logger.debug "task: #{@task.attributes.inspect}"
       redirect_to @task, notice: "タスク「#{@task.name}」を登録しました！"
@@ -41,7 +49,7 @@ class TasksController < ApplicationController
   end
 
   # 確認画面表示
-  def cinfirm_new
+  def confirm_new
     @task = current_user.tasks.new(task_params)
     render :new unless @task.valid?
   end
