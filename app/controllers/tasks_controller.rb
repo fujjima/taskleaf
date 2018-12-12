@@ -57,7 +57,8 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :description)
+    # 画像のアップロードのため、imageも許可
+    params.require(:task).permit(:name, :description, :image)
   end
 
   def set_task
