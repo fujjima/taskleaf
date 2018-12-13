@@ -6,7 +6,7 @@ class TasksController < ApplicationController
   def index
     # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
     @q = current_user.tasks.ransack(params[:q])
-    @tasks = @q.result(distinct: true)
+    @tasks = @q.result(distinct: true).page(params[:page])
 
     respond_to do |format|
       format.html

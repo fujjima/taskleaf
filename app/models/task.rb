@@ -6,6 +6,9 @@ class Task < ApplicationRecord
 
   belongs_to :user
 
+  paginates_per 20
+  
+
   # データについて、新しい順に取得する
   scope :recent, -> { order(created_at: :desc) }
 
