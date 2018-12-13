@@ -2,10 +2,16 @@ class TasksController < ApplicationController
 
   before_action :set_task, only: %w[show edit update destroy]
 
+  # 今あるタスクについて、csv形式でも出力するようにする
   def index
     # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
     @q = current_user.tasks.ransack(params[:q])
     @tasks = @q.result(distinct: true)
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
+    end
   end
 
   def show
@@ -54,10 +60,17 @@ class TasksController < ApplicationController
     render :new unless @task.valid?
   end
 
+  # csvからのインポート
+  def import
+    current_user.tasks.import(params[:file])
+    redirect_to tasks_url, notice: 'タスクを追加しました'
+  end
+
   private
 
   def task_params
-    params.require(:task).permit(:name, :description)
+    # 画像のアップロードのため、imageも許可
+    params.require(:task).permit(:name, :description, :image)
   end
 
   def set_task
