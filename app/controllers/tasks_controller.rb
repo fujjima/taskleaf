@@ -2,10 +2,16 @@ class TasksController < ApplicationController
 
   before_action :set_task, only: %w[show edit update destroy]
 
+  # 今あるタスクについて、csv形式でも出力するようにする
   def index
     # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
     @q = current_user.tasks.ransack(params[:q])
     @tasks = @q.result(distinct: true)
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
+    end
   end
 
   def show
