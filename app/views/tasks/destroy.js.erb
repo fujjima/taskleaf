@@ -1,0 +1,6 @@
+<%# 削除ボタン押下後に、タスクを非表示にする %>
+document.querySelector("#task-<%= @task.id %>").style.display = 'none'
+
+var message = document.createElement('p');
+message.innerText = 'タスク「<%= @task.name %>」を削除しました！！　残りタスクは<%= Task.count %>件です！';
+document.querySelector('table').insertAdjacentElement('beforebegin', message);

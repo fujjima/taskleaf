@@ -51,7 +51,6 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    head :no_content
   end
 
   # 確認画面表示
