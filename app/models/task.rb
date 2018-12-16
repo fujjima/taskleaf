@@ -34,12 +34,18 @@ class Task < ApplicationRecord
     end
   end
 
+  # 1行ごとにデータを抜き取り、1セルずつ、属性ごとにデータを格納する
   def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|
       task = new
       task.attributes = row.to_hash.slice(*csv_attributes)
       task.save!
     end
+  end
+
+  # これをインスタンスメソッドにして、上のクラスメソッド内で呼び出せるようにしたい
+  def self.check_file_path_nil
+
   end
 
   private
