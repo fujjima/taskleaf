@@ -39,5 +39,5 @@ table.table.table-hover
 = link_to 'エクスポート', tasks_path(format: :csv), class: 'btn btn-primary mb-3'
 
 = form_tag import_tasks_path, multipart: true, class: 'mb-3' do
-  = file_field_tag :file
+  = file_field_tag :file, multiple: true
   = submit_tag "インポート", class: 'btn btn-primary'
