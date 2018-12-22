@@ -38,3 +38,4 @@ dump.rdb
 /node_modules
 yarn-debug.log*
 .yarn-integrity
+.memo.*
