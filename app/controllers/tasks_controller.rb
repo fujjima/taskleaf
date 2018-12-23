@@ -1,27 +1,23 @@
 class TasksController < ApplicationController
-
   before_action :set_task, only: %w[show edit update destroy]
   before_action :set_tasks, only: %w[index]
 
   # 今あるタスクについて、csv形式でも出力するようにする
   def index
-    @tasks
     respond_to do |format|
       format.html
       format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
   end
 
-  def show
-  end
+  def show; end
 
   def new
     # 保存に失敗した場合にrenderされるが、newアクションは経由しない
     @task = Task.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     # @taskの理由は、保存失敗時にrender :newした際、@taskの情報（ユーザ入力情報）を保持しておくため
@@ -59,9 +55,9 @@ class TasksController < ApplicationController
 
   # csvからのインポート
   def import
-    if params[:files] == nil
+    if params[:files].nil?
       set_tasks
-      redirect_to tasks_path, flash: {danger: 'ファイルを選択してください'}
+      redirect_to tasks_path, flash: { danger: 'ファイルを選択してください' }
       return
     end
     current_user.tasks.import(params[:files])

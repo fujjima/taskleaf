@@ -12,23 +12,23 @@ class Task < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   # 検索可能なカラムの指定
-  def self.ransackable_attributes(auth_object = nil)
+  def self.ransackable_attributes(_auth_object = nil)
     %w[name created_at]
   end
 
-  def self.ransackable_associations(auth_object = nil)
+  def self.ransackable_associations(_auth_object = nil)
     []
   end
 
   def self.csv_attributes
-    ["name", "description", "created_at", "updated_at"]
+    %w[name description created_at updated_at]
   end
 
   def self.generate_csv
     CSV.generate(headers: true) do |csv|
       csv << csv_attributes
       all.each do |task|
-        csv << csv_attributes.map{ |attr| task.send(attr) }
+        csv << csv_attributes.map { |attr| task.send(attr) }
       end
     end
   end
@@ -46,9 +46,7 @@ class Task < ApplicationRecord
   end
 
   # ファイルのパスが正常かどうかの確認
-  def self.check_file_path_nil
-
-  end
+  def self.check_file_path_nil; end
 
   private
 

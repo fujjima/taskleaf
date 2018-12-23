@@ -9,8 +9,8 @@ describe 'タスク管理機能', type: :system do
   before do
     # 共通化したログイン関連の処理
     visit login_path
-    find_by_id("session-email").set(login_user.email)
-    find_by_id("session-password").set(login_user.password)
+    find_by_id('session-email').set(login_user.email)
+    find_by_id('session-password').set(login_user.password)
     click_button 'ログインする'
   end
 
