@@ -7,7 +7,6 @@ class Task < ApplicationRecord
   belongs_to :user
 
   paginates_per 20
-  
 
   # データについて、新しい順に取得する
   scope :recent, -> { order(created_at: :desc) }
@@ -35,15 +34,18 @@ class Task < ApplicationRecord
   end
 
   # 1行ごとにデータを抜き取り、1セルずつ、属性ごとにデータを格納する
-  def self.import(file)
-    CSV.foreach(file.path, headers: true) do |row|
-      task = new
-      task.attributes = row.to_hash.slice(*csv_attributes)
-      task.save!
+  def self.import(files)
+    files.each do |file|
+      CSV.foreach(file.path, headers: true) do |row|
+        # importがTaskから呼ばれている場合に、Task.newと同義となる（今回はcurrent_user.tasksから呼ばれているので、タスクにユーザを紐づけてからnewする）
+        task = new
+        task.attributes = row.to_hash.slice(*csv_attributes)
+        task.save!
+      end
     end
   end
 
-  # これをインスタンスメソッドにして、上のクラスメソッド内で呼び出せるようにしたい
+  # ファイルのパスが正常かどうかの確認
   def self.check_file_path_nil
 
   end

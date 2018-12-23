@@ -39,3 +39,4 @@ dump.rdb
 yarn-debug.log*
 .yarn-integrity
 .memo.*
+test.rb
