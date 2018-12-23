@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-
   before_action :set_task, only: %w[show edit update destroy]
   before_action :set_tasks, only: %w[index]
 
@@ -11,16 +10,14 @@ class TasksController < ApplicationController
     end
   end
 
-  def show
-  end
+  def show; end
 
   def new
     # 保存に失敗した場合にrenderされるが、newアクションは経由しない
     @task = Task.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     # @taskの理由は、保存失敗時にrender :newした際、@taskの情報（ユーザ入力情報）を保持しておくため
@@ -58,19 +55,18 @@ class TasksController < ApplicationController
 
   # csvからのインポート
   def import
-    if params[:file] == nil
+    if params[:files].nil?
       set_tasks
-      redirect_to tasks_path, flash: {danger: 'ファイルを選択してください'}
+      redirect_to tasks_path, flash: { danger: 'ファイルを選択してください' }
       return
     end
-    current_user.tasks.import(params[:file])
+    current_user.tasks.import(params[:files])
     redirect_to tasks_url, notice: 'タスクを追加しました'
   end
 
   private
 
   def task_params
-    # 画像のアップロードのため、imageも許可
     params.require(:task).permit(:name, :description, :image)
   end
 
@@ -81,6 +77,6 @@ class TasksController < ApplicationController
   # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
   def set_tasks
     @q = current_user.tasks.ransack(params[:q])
-    @tasks = @q.result(distinct: true).page(params[:page])
+    @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
   end
 end
