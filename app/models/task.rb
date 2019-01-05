@@ -46,11 +46,6 @@ class Task < ApplicationRecord
     end
   end
 
-  # ファイルにヘッダーがあるかの確認
-  def self.check_header
-    self.nil?
-  end
-
   private
 
   def validate_name_not_including_comma
