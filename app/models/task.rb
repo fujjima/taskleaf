@@ -38,15 +38,13 @@ class Task < ApplicationRecord
     files.each do |file|
       CSV.foreach(file.path, headers: true) do |row|
         # importがTaskから呼ばれている場合に、Task.newと同義となる（今回はcurrent_user.tasksから呼ばれているので、タスクにユーザを紐づけてからnewする）
+        # headerがないファイルだと、rowの各要素に対して、キーが割り当てられない（row時点で）
         task = new
         task.attributes = row.to_hash.slice(*csv_attributes)
         task.save!
       end
     end
   end
-
-  # ファイルのパスが正常かどうかの確認
-  def self.check_file_path_nil; end
 
   private
 
