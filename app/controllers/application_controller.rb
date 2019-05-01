@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end
 
+  # サインアップしていないユーザーがログインしようとすると弾いてしまうので削除？
   def login_required
     redirect_to login_path unless current_user
   end

@@ -47,6 +47,8 @@ class Admin::UsersController < ApplicationController
     params.require(:user).permit(:name, :email, :admin, :password, :password_confirmation)
   end
 
+  # ここでadmin権限の確認を行なっている。サインアップ時には影響させないようにする。
+  # というか消していいのでは？
   def require_admin
     redirect_to root_path unless current_user.admin?
   end
