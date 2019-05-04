@@ -3,8 +3,8 @@
   u1#error_explanation
     - user.errors.full_messages.each do |message|
       li = message
-
-= form_with model: [:admin, user], local: true do |f|
+/ デフォルトでadminをfalseにして飛ばしたい      
+= form_with model: user, url: signup_path, local: true do |f|
   .form-group
     = f.label :name, '名前'
     = f.text_field :name, class: 'form-control'
@@ -17,5 +17,6 @@
   .form-group
     = f.label :password_confirmation, 'パスワード（確認）'
     = f.password_field :password_confirmation, class: 'form-control'
+  = f.hidden_field :admin
   = f.submit '登録する', class: 'btn btn-primary'
   
