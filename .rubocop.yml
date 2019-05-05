@@ -6,3 +6,8 @@ AsciiComments:
  Enabled: false
 Style/Documentation:
   Enabled: false
+ClassAndModuleChildren:
+  EnforcedStyle: compact
+Rails/TopLevelInclude:
+  Include:
+    - app/**/*.rb

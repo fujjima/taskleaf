@@ -1,6 +1,6 @@
 class Admin::UsersController < ApplicationController
   before_action :login_required
-  
+
   def index
     @users = User.all.order(created_at: 'DESC')
   end
