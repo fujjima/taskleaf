@@ -2,20 +2,18 @@
 require 'rails_helper'
 
 describe TaskMailer, type: :mailer do
-
   let(:task) { FactoryBot.create(:task, name: 'メイラーSpecを書く', description: '送信したメールの内容を確認します') }
 
   let(:text_body) do
-    part = mail.body.parts.detect { |part| part.content_type == 'text/plain; charset=UTF-8' }
+    part = mail.body.parts.detect { |pr_part| pr_part.content_type == 'text/plain; charset=UTF-8' }
     part.body.raw_source
   end
   let(:html_body) do
-    part = mail.body.parts.detect { |part| part.content_type == 'text/html; charset=UTF-8' }
+    part = mail.body.parts.detect { |pr_part| pr_part.content_type == 'text/html; charset=UTF-8' }
     part.body.raw_source
   end
 
   describe '#creation_email' do
-
     let(:mail) { TaskMailer.creation_email(task) }
 
     it '想定通りのメールが生成されている' do

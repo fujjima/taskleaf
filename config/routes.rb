@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   get '/logout', to: 'sessions#destroy'
   get 'session/new'
+  get '/signup', to: 'signup#new'
+  post '/signup', to: 'signup#create'
   namespace :admin do
     resources :users
   end
