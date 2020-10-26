@@ -13,6 +13,7 @@ ja:
       task:
         id: ID
         name: 名称
+        tag: タグ
         description: 詳しい説明
         finished_at: 締切日
         image: 画像

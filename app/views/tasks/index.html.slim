@@ -23,6 +23,7 @@ table.table.table-hover
   thead.thead-default
     tr
       th = sort_link(@q, :name, default_order: :desc)
+      th = Task.human_attribute_name(:tag)
       th = Task.human_attribute_name(:description)
       th = Task.human_attribute_name(:created_at)
       th
@@ -30,6 +31,7 @@ table.table.table-hover
       - @tasks.each do |task|
         tr id = "task-#{task.id}"
           td = link_to task.name, task_path(task)
+          td = task.tag_list
           td = task.description
           td = l(task.created_at, format: :long)
           td
