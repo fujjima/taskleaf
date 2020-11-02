@@ -24,17 +24,27 @@ table.table.table-hover
     tr
       th = sort_link(@q, :name, default_order: :desc)
       th = Task.human_attribute_name(:description)
-      th = Task.human_attribute_name(:created_at)
-      th
+      th = Task.human_attribute_name(:finished_at)
+      th = Task.human_attribute_name(:elapsed_time)
+      th = 'テスト再生ボタン'
     tbody
       - @tasks.each do |task|
         tr id = "task-#{task.id}"
           td = link_to task.name, task_path(task)
           td = task.description
-          td = l(task.created_at, format: :long)
-          td
-            = link_to '編集', edit_task_path(task), class: 'btn btn-primary mr-3'
-            = link_to '削除', task, method: :delete, remote: true, data: { confirm: "タスク「#{task.name}」を削除しますか？" },class: 'btn btn-danger delete'
+          td = l(task.finished_at, format: :long)
+          / 経過時間
+          / rails 5.1以上で、かつtaskに紐づくパラメータなためform_withを使用している
+          td id='timer'
+            | 00:00:00
+          td 
+            button id="start" name="test"
+              | start
+          / TODO:編集は行を押した際に遷移
+          / TODO:タスクの削除は行の右端のオプションボタンで選択
+          / td
+          /   = link_to '編集', edit_task_path(task), class: 'btn btn-primary mr-3'
+          /   = link_to '削除', task, method: :delete, remote: true, data: { confirm: "タスク「#{task.name}」を削除しますか？" },class: 'btn btn-danger delete'
 
 = link_to 'エクスポート', tasks_path(format: :csv), class: 'btn btn-primary mb-3'
 
