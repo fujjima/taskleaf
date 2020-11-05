@@ -64,8 +64,10 @@ document.addEventListener('turbolinks:load', function () {
     });
   });
 
-  // data属性のbutton-type_recordがクリックされた時（カウント停止時）に、そのクラスがstart(書き換わった後)であれば
-  // 特定のdata属性を指定することは可能か
-  // classは変わり、かつstartとstopが混在することがある
-  // $('button#stop').click(() => {});
+  $('i.fas').on('click', (event) => {
+    // 記録が停止された際に処理される
+    // バックにPOSTリクエストを飛ばす
+    if ($(event.target).hasClass('fa-play')) {
+    }
+  });
 });

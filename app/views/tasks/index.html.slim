@@ -31,7 +31,7 @@ table.table.table-hover
         tr id = "task-#{task.id}"
           td = link_to task.name, task_path(task)
           td = task.description
-          td = l(task.finished_at, format: :long)
+          td = l(task.finished_at)
           / リクエストはtasks_controllerのupdateに届く
           td id="timer-#{task.id}"
             | 00:00:00
