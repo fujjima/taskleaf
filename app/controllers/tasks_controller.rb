@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: %w[show edit update destroy]
+  before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
   # 今あるタスクについて、csv形式でも出力するようにする
@@ -16,8 +16,6 @@ class TasksController < ApplicationController
     # 保存に失敗した場合にrenderされるが、newアクションは経由しない
     @task = Task.new
   end
-
-  def edit; end
 
   def create
     # 保存失敗時、@taskの情報（ユーザ入力情報）を保持しておく
@@ -38,6 +36,9 @@ class TasksController < ApplicationController
     end
   end
 
+  # タスクのupdateケース
+  #   タスク自体の更新
+  #   一覧画面における経過時間の更新
   def update
     @task.update!(task_params)
     redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"

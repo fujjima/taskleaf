@@ -26,20 +26,17 @@ table.table.table-hover
       th = Task.human_attribute_name(:description)
       th = Task.human_attribute_name(:finished_at)
       th = Task.human_attribute_name(:elapsed_time)
-      th = 'テスト再生ボタン'
     tbody
       - @tasks.each do |task|
         tr id = "task-#{task.id}"
           td = link_to task.name, task_path(task)
           td = task.description
           td = l(task.finished_at, format: :long)
-          / 経過時間
-          / rails 5.1以上で、かつtaskに紐づくパラメータなためform_withを使用している
-          td id='timer'
+          / リクエストはtasks_controllerのupdateに届く
+          td id="timer-#{task.id}"
             | 00:00:00
-          td 
-            button id="start" name="test"
-              | start
+          td
+            = icon("fas", "play", id: "#{task.id}")
           / TODO:編集は行を押した際に遷移
           / TODO:タスクの削除は行の右端のオプションボタンで選択
           / td
