@@ -8,6 +8,9 @@ class Task < ApplicationRecord
 
   paginates_per 20
 
+  # elapsed_timeの更新が含まれている時に整形
+  # before_save :format_elapsed_time, if: :will_save_change_to_elapsed_time?
+
   # データについて、新しい順に取得する
   scope :recent, -> { order(created_at: :desc) }
 
@@ -33,7 +36,10 @@ class Task < ApplicationRecord
     end
   end
 
-  # 1行ごとにデータを抜き取り、1セルずつ、属性ごとにデータを格納する
+  # def format_elapsed_time
+  # end
+
+  # 1行ごとにデータを抜き取り、1セルずつ属性ごとにデータを格納する
   def self.import(files)
     files.each do |file|
       CSV.foreach(file.path, headers: true) do |row|

@@ -36,9 +36,6 @@ class TasksController < ApplicationController
     end
   end
 
-  # タスクのupdateケース
-  #   タスク自体の更新
-  #   一覧画面における経過時間の更新
   def update
     @task.update!(task_params)
     redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
@@ -54,7 +51,6 @@ class TasksController < ApplicationController
     render :new unless @task.valid?
   end
 
-  # csvからのインポート
   def import
     if params[:files].nil?
       set_tasks
@@ -68,11 +64,11 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at)
+    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time)
   end
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id]) || current_user.tasks.find_by(id: params[:task][:id])
   end
 
   # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
