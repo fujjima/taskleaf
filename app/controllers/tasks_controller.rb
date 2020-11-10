@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: %w[show edit update destroy]
+  before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
   # 今あるタスクについて、csv形式でも出力するようにする
@@ -16,8 +16,6 @@ class TasksController < ApplicationController
     # 保存に失敗した場合にrenderされるが、newアクションは経由しない
     @task = Task.new
   end
-
-  def edit; end
 
   def create
     # 保存失敗時、@taskの情報（ユーザ入力情報）を保持しておく
@@ -53,7 +51,6 @@ class TasksController < ApplicationController
     render :new unless @task.valid?
   end
 
-  # csvからのインポート
   def import
     if params[:files].nil?
       set_tasks
@@ -67,11 +64,11 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at)
+    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time)
   end
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id]) || current_user.tasks.find_by(id: params[:task][:id])
   end
 
   # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
