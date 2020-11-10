@@ -28,8 +28,10 @@ table.table.table-hover
       th = Task.human_attribute_name(:elapsed_time)
     tbody
       - @tasks.each do |task|
-        tr id = "task-#{task.id}"
-          td = link_to task.name, task_path(task)
+        / 行クリックで編集ページに遷移
+        / tr内にonclickを仕込む方法
+        tr id="task-#{task.id}" onclick="window.location.href='#{task_url(task)}'"
+          td = task.name
           td = task.description
           td = l(task.finished_at)
           td id="timer-#{task.id}"

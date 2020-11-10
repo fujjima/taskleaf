@@ -1,14 +1,14 @@
 document.addEventListener('turbolinks:load', function () {
   // オンカーソルされたタスクの背景色を変更する
-  document.querySelectorAll('td').forEach(function (td) {
-    td.addEventListener('mouseover', function (e) {
-      e.currentTarget.style.backgroundColor = '#eff';
-    });
+  // document.querySelectorAll('td').forEach(function (td) {
+  //   td.addEventListener('mouseover', function (e) {
+  //     e.currentTarget.style.backgroundColor = '#eff';
+  //   });
 
-    td.addEventListener('mouseout', function (e) {
-      e.currentTarget.style.backgroundColor = '';
-    });
-  });
+  //   td.addEventListener('mouseout', function (e) {
+  //     e.currentTarget.style.backgroundColor = '';
+  //   });
+  // });
 
   let startNodes = document.querySelectorAll('.fas');
   let startTime;
@@ -22,9 +22,8 @@ document.addEventListener('turbolinks:load', function () {
     return moment(timeToAdd, 'HH:mm:ss');
   }
 
-  // 本日の開始時刻を返す
-  // memo化しておく（何度も呼ばれるため）
-  // 計算に使用
+  // TODO:memo化しておく（何度も呼ばれるため）
+  // 処理実行当日の開始時刻を返す
   function startOfToday() {
     return moment().startOf('day').unix();
   }
@@ -91,6 +90,8 @@ document.addEventListener('turbolinks:load', function () {
   }
 
   $('i.fas').on('click', (event) => {
+    // アイコンクリック時に、親要素のtrにイベントが伝播しないようにする
+    event.stopPropagation();
     // 停止された際に経過時間を送信する
     if ($(event.target).hasClass('fa-play')) {
       let taskId = event.target.id;
@@ -104,9 +105,6 @@ document.addEventListener('turbolinks:load', function () {
         type: 'PATCH',
         data: { task: data },
         dataType: 'html',
-        success: function (data) {
-          alert('success');
-        },
         error: function (data) {
           alert('errror');
         },
