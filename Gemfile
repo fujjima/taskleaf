@@ -38,6 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'factory_bot_rails', '~> 4.11'
 gem 'jquery-rails'
 gem 'kaminari'
+gem 'rack-cors'
 gem 'rails_autolink'
 gem 'rails_best_practices', require: false
 gem 'ransack'

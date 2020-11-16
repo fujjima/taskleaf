@@ -2,12 +2,13 @@ class TasksController < ApplicationController
   before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
-  # 今あるタスクについて、csv形式でも出力するようにする
   def index
-    respond_to do |format|
-      format.html
-      format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
-    end
+    # CSVでエクスポートしたい、とかになったらformat.csvを復活させる
+    # respond_to do |format|
+    #   format.json { render json: @tasks }
+    #   format.html
+    #   format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
+    # end
   end
 
   def show; end
