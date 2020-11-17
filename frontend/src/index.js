@@ -1,4 +1,22 @@
-// ---------------------------------------------------
+// ------------------------------------------------------------------------------------------------------
+
+// memo
+
+// entry
+// 最初に読み込まれるjsファイルを指定すれば、その中で呼ばれている依存関係を解決してくれる
+// エントリーに指定されたファイルが依存しているライブラリを読み込んでくれる
+
+// loader
+// JSしか理解できないwebpackに、cssやhtmlといったファイルをモジュールに変換できる機能を追加する
+
+// plugin
+// ファイルのバンドル以外のタスク（カスタムタスク）を実行する
+// ファイルの圧縮などはここで行う
+
+// output
+// 読み込んだJSをまとめて出力
+
+// -------------------------
 
 // TODO群
 
@@ -10,11 +28,15 @@
 
 // async, awaitについての理解を深める
 
-// ---------------------------------------------------
+// ------------------------------------------------------------------------------------------------------
+
+// TODO: 今後必要となるライブラリについては、最終的にここに読み込まれるように設定する
 
 import { fetch } from 'whatwg-fetch';
 import React from 'react';
 import { render } from 'react-dom';
+import Main from './Components/Main';
+import { Button } from '@material-ui/core';
 
 class App extends React.Component {
   fetchApi = (url, options) => {
@@ -42,12 +64,21 @@ class App extends React.Component {
     } catch (err) {}
   };
 
+  // TODO:そのうちヘッダー、フッター、ボディに分ける
   render() {
     return (
-      <div>
-        <p>Hello React!</p>
-        <button onClick={() => this.fetchRails()}>request to rails</button>
-      </div>
+      // header
+      <>
+        <header></header>
+        <Main />
+        <footer>
+          <Button color="primary" onClick={() => this.fetchRails()}>
+            request to rails
+          </Button>
+        </footer>
+      </>
+
+      // footer
     );
   }
 }

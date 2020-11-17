@@ -11,7 +11,6 @@ module.exports = {
   entry: ['whatwg-fetch', src + '/index.js'],
 
   output: {
-    // TODO: filenameの適切な指定
     path: dist,
     filename: 'bundle.js',
   },
@@ -19,8 +18,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-
+        // loaderが処理するファイルの拡張子
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',

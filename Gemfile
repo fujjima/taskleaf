@@ -42,7 +42,6 @@ gem 'rack-cors'
 gem 'rails_autolink'
 gem 'rails_best_practices', require: false
 gem 'ransack'
-gem 'webpacker'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
