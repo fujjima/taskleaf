@@ -2,26 +2,130 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import {
+  Avatar,
+  Container,
+  CssBaseline,
+  makeStyles,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Grid,
+  Link,
+} from '@material-ui/core';
+import { pink, purple } from '@material-ui/core/colors';
+
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 // TODO: Material UIの場合、各種ページに対してCSSを適用させることはできるか調査したい
 
 // CSS in JSの書き方を採用している
 // クラスコンポーネント内でhookは呼び出せないため、高階コンポーネントを使用する
 // https://material-ui.com/styles/basics/#higher-order-component-api
-const sytles = (theme) => ({
-  top: {
-    font: 'red',
-    fontSize: '30px',
+const sytles = {
+  container: {},
+  paper: {
+    marginTop: '100px',
+    // 子要素を縦に並べる ----------
+    display: 'flex',
+    flexDirection: 'column',
+    // --------------------------
+    alignItems: 'center',
   },
-});
+  avater: {
+    margin: '12px',
+    // TODO: hooksを使用してmaterial ui標準のpaletteを使いたい
+    backgroundColor: purple[400],
+  },
+  form: {
+    width: '100 %',
+    marginTop: '12px',
+  },
+  submit: {
+    margin: '36px 0 24px',
+  },
+};
+
+// react hooksを使用している場合
+// const useSytles = makeStyles((theme) => ({
+//   container: {},
+//   paper: {
+//     marginTop: theme.spacing(2),
+//     display: 'flex',
+//   },
+// }));
 
 class LoginPage extends React.Component {
   render() {
     const { classes } = this.props;
+    // return <div className={classes.container}></div>;
     return (
-      <div className={classes.top}>
-        <p>こんにちは</p>
-      </div>
+      <Container component="main" maxWidth="xs">
+        {/* ブラウザによる表示の差異を解消、ページのマージン消滅、背景色の変更 */}
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avater}>
+            <LockOutlinedIcon />
+          </Avatar>
+          {/* variant:文字サイズ component:<h1></h1>で出力 */}
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          {/* 代表的なメアドのバリデーション入れたい（他サービスの使用例を見る） */}
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            {/* 個々のフォームのラベルを管理する（radio,checkbox,swhitch） */}
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  パスワードを忘れた場合
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {'新規登録の場合'}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
     );
   }
 }
