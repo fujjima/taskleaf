@@ -4,7 +4,10 @@ class SessionsController < ApplicationController
   def new; end
 
   def create
-    # 検索条件を指定して、最初の一件を取得
+    # rails apiモード時のログイン処理にしないといけない
+    # 認証周りについては、トークンは送信されてこないためその他の方法で行う。
+    # HTTPヘッダーに付与されている
+    # binding.pry
     user = User.find_by(email: session_params[:email])
     if user&.authenticate(session_params[:password])
       session[:user_id] = user.id

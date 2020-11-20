@@ -8,6 +8,8 @@ module.exports = {
   // 指定可能対象：none,development,production
   // https://webpack.js.org/concepts/mode/#mode-development
   mode: 'development',
+  // chromeのconsole上でjsxのオリジナルを出させる
+  devtool: 'source-map',
   entry: ['whatwg-fetch', src + '/index.js'],
 
   output: {
@@ -44,9 +46,15 @@ module.exports = {
   devServer: {
     // contentBase: path.join(__dirname, 'dist'),
     port: 8080,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': 'true',
+    // headers: {
+    //   'Access-Control-Allow-Origin': '*',
+    //   'Access-Control-Allow-Credentials': 'true',
+    // },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        pathRewrite: { '^/api': '' },
+      },
     },
   },
 

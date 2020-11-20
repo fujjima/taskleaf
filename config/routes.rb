@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   root to: 'tasks#index'
   patch 'tasks', to: 'tasks#update'
-  defaults format: :json do
+  namespace 'api', format: :json do
     resources :tasks do
       post :confirm, action: :confirm_new, on: :new
       post :import, on: :collection

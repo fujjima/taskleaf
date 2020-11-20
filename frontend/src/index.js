@@ -39,46 +39,34 @@ import Main from './Components/Main';
 import { Button } from '@material-ui/core';
 
 class App extends React.Component {
-  fetchApi = (url, options) => {
-    return fetch(url, options);
-  };
+  // fetchApi = (url, options) => {
+  //   return fetch(url, options);
+  // };
 
-  fetchRails = async () => {
-    // TODO: 接続先情報の集約
-    // fetch(url, init)
-    // initにはHTTP通信を行う際の設定を行うことができる
-    // https://developer.mozilla.org/ja/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-    const url = 'http://127.0.0.1:3000/tasks';
-    const options = {
-      mode: 'cors',
-      credentials: 'include',
-      method: 'get',
-    };
+  // fetchRails = async () => {
+  //   const url = 'http://127.0.0.1:3000/tasks';
+  //   const options = {
+  //     mode: 'cors',
+  //     credentials: 'include',
+  //     method: 'get',
+  //   };
 
-    // TODO:エラーハンドリングについて
-    // awaitはpromiseが確定して結果が帰ってくるまでJSの処理を停止させる
-    // awaitはPromiseオブジェクトに対して使用する
-    try {
-      const res = await this.fetchApi(url, options);
-      const data = res.json();
-    } catch (err) {}
-  };
+  //   // TODO:エラーハンドリングについて
+  //   // awaitはpromiseが確定して結果が帰ってくるまでJSの処理を停止させる
+  //   // awaitはPromiseオブジェクトに対して使用する
+  //   try {
+  //     const res = await this.fetchApi(url, options);
+  //     const data = res.json();
+  //   } catch (err) {}
+  // };
 
-  // TODO:そのうちヘッダー、フッター、ボディに分ける
   render() {
     return (
-      // header
       <>
         <header></header>
         <Main />
-        <footer>
-          <Button color="primary" onClick={() => this.fetchRails()}>
-            request to rails
-          </Button>
-        </footer>
+        <footer></footer>
       </>
-
-      // footer
     );
   }
 }

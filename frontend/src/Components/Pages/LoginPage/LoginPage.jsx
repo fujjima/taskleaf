@@ -15,13 +15,13 @@ import {
   Grid,
   Link,
 } from '@material-ui/core';
-import { pink, purple } from '@material-ui/core/colors';
+import { purple } from '@material-ui/core/colors';
+import { connect } from '../../../Lib/Connect';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
-// TODO: Material UIの場合、各種ページに対してCSSを適用させることはできるか調査したい
+// TODO: Material UIの場合、各種ページに対してCSSを適用させることはできるか調査
 
-// CSS in JSの書き方を採用している
 // クラスコンポーネント内でhookは呼び出せないため、高階コンポーネントを使用する
 // https://material-ui.com/styles/basics/#higher-order-component-api
 const sytles = {
@@ -58,9 +58,23 @@ const sytles = {
 // }));
 
 class LoginPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      password: null,
+    };
+  }
+
+  // handler
+
+  handleClick = () => {
+    const { email, password } = this.state;
+    const test = connect.login({ email: email, password: password });
+  };
+
   render() {
     const { classes } = this.props;
-    // return <div className={classes.container}></div>;
     return (
       <Container component="main" maxWidth="xs">
         {/* ブラウザによる表示の差異を解消、ページのマージン消滅、背景色の変更 */}
@@ -73,7 +87,7 @@ class LoginPage extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          {/* 代表的なメアドのバリデーション入れたい（他サービスの使用例を見る） */}
+          {/* TODO: メアドのバリデーション入れたい（他サービスの使用例を見る） */}
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -84,6 +98,9 @@ class LoginPage extends React.Component {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={(e) => {
+                this.setState({ email: e.target.value });
+              }}
               autoFocus
             />
             <TextField
@@ -95,12 +112,15 @@ class LoginPage extends React.Component {
               label="Password"
               type="password"
               id="password"
+              onChange={(e) => {
+                this.setState({ password: e.target.value });
+              }}
               autoComplete="current-password"
             />
             {/* 個々のフォームのラベルを管理する（radio,checkbox,swhitch） */}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="ログイン時に記憶する"
             />
             <Button
               type="submit"
@@ -108,6 +128,7 @@ class LoginPage extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.handleClick}
             >
               Sign In
             </Button>
