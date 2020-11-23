@@ -2,12 +2,10 @@
 // description
 
 // ただし、urlは特に理由がなければリクエストを飛ばした際のURLをそのまま使用する形にする
-// POST通信の際のoptionsに関する問題について
 
 // --------------------------------------------------------------------------
 
 import { fetch } from 'whatwg-fetch';
-import { csrfToken } from '@rails/ujs';
 
 class Connect {
   // URL中のクエリを除去したい場合
@@ -15,28 +13,45 @@ class Connect {
     return url.replace(/\?.*$/, '');
   };
 
-  login = (data) => {
-    // URL取得について
-    // CORS対策
+  excuteFetch = async (url, options) => {
+    const result = await fetch(url, options);
+    // TODO: なぜここのawaitが必要なのか
+    const data = await result.json();
+    return data;
+  };
 
-    // 固有のHTTPヘッダをfront側で付与する方式
-    // https://qiita.com/mpyw/items/0595f07736cfa5b1f50c
+  login = (data) => {
     const url = 'http://localhost:3000/login';
     const options = {
       mode: 'cors',
       method: 'POST',
       withCredentials: true,
-      headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      headers: {
+        // TODO: headerの値について
+        // https://qiita.com/mpyw/items/0595f07736cfa5b1f50c
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
       body: JSON.stringify({
         email: data.email,
         password: data.password,
       }),
     };
 
-    try {
-      const res = fetch(url, options);
-      const resJson = res.json();
-    } catch (err) { }
+    // ログインの成功可否によって、タスク一覧へのリダイレクト、メッセージの表示をだし分けしたいので、レスポンスが欲しい
+    this.excuteFetch(url, options)
+      .then((response) => {
+        // ログイン失敗ならメッセージを表示してページ更新
+        if ('errors' in response) {
+          return alert('error');
+        }
+        // ログイン成功ならタスク一覧ページにリダイレクト
+        return response;
+      })
+      .catch((err) => {
+        return err;
+      });
   };
 }
 

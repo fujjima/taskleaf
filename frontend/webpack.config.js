@@ -5,7 +5,6 @@ const dist = path.resolve(__dirname, 'dist');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  // 指定可能対象：none,development,production
   // https://webpack.js.org/concepts/mode/#mode-development
   mode: 'development',
   // chromeのconsole上でjsxのオリジナルを出させる
@@ -25,13 +24,14 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          // babelのオプションを指定する
           options: {
-            // reactが使用するjsxを解釈できるようにする
-            presets: ['@babel/preset-env', '@babel/preset-react'],
+            presets: [
+              ['@babel/preset-env', { useBuiltIns: 'usage', corejs: 3 }],
+              '@babel/preset-react',
+            ],
             plugins: [
-              '@babel/plugin-proposal-class-properties',
               '@babel/plugin-transform-runtime',
+              '@babel/plugin-proposal-class-properties',
             ],
           },
         },
@@ -45,14 +45,19 @@ module.exports = {
 
   devServer: {
     // contentBase: path.join(__dirname, 'dist'),
+    host: 'localhost',
     port: 8080,
-    // headers: {
-    //   'Access-Control-Allow-Origin': '*',
-    //   'Access-Control-Allow-Credentials': 'true',
-    // },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, content-type, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
+    },
+    // /api以下へのリクエストの送信先を設定する
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3000/',
         pathRewrite: { '^/api': '' },
       },
     },

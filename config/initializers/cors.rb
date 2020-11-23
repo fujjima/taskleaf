@@ -1,6 +1,6 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # webpack-dev-server(port:8080)からのリクエストのみ許可する
+    # フロントとのオリジンが異なる場合、fetchなどを受け取るため、CORSの設定が必要
     origins 'localhost:8080'
 
     resource '*',

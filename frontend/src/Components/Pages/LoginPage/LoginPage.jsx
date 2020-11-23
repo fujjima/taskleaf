@@ -68,9 +68,11 @@ class LoginPage extends React.Component {
 
   // handler
 
-  handleClick = () => {
+  handleClick = (e) => {
     const { email, password } = this.state;
-    const test = connect.login({ email: email, password: password });
+    connect.login({ email: email, password: password });
+    // ページ更新の制御
+    e.preventDefault();
   };
 
   render() {
@@ -128,7 +130,7 @@ class LoginPage extends React.Component {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={this.handleClick}
+              onClick={(e) => this.handleClick(e)}
             >
               Sign In
             </Button>

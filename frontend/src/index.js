@@ -31,12 +31,10 @@
 // ------------------------------------------------------------------------------------------------------
 
 // TODO: 今後必要となるライブラリについては、最終的にここに読み込まれるように設定する
-
 import { fetch } from 'whatwg-fetch';
 import React from 'react';
 import { render } from 'react-dom';
 import Main from './Components/Main';
-import { Button } from '@material-ui/core';
 
 class App extends React.Component {
   // fetchApi = (url, options) => {
