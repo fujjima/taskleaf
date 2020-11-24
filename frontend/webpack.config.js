@@ -61,6 +61,9 @@ module.exports = {
         pathRewrite: { '^/api': '' },
       },
     },
+    historyApiFallback: {
+      rewrites: [{ from: /^\/*/, to: '/index.html' }],
+    },
   },
 
   // webpackで生成したJavaScriptやCSSを埋め込んだHTMLを生成

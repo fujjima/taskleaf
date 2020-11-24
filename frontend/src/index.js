@@ -31,33 +31,11 @@
 // ------------------------------------------------------------------------------------------------------
 
 // TODO: 今後必要となるライブラリについては、最終的にここに読み込まれるように設定する
-import { fetch } from 'whatwg-fetch';
 import React from 'react';
 import { render } from 'react-dom';
 import Main from './Components/Main';
 
 class App extends React.Component {
-  // fetchApi = (url, options) => {
-  //   return fetch(url, options);
-  // };
-
-  // fetchRails = async () => {
-  //   const url = 'http://127.0.0.1:3000/tasks';
-  //   const options = {
-  //     mode: 'cors',
-  //     credentials: 'include',
-  //     method: 'get',
-  //   };
-
-  //   // TODO:エラーハンドリングについて
-  //   // awaitはpromiseが確定して結果が帰ってくるまでJSの処理を停止させる
-  //   // awaitはPromiseオブジェクトに対して使用する
-  //   try {
-  //     const res = await this.fetchApi(url, options);
-  //     const data = res.json();
-  //   } catch (err) {}
-  // };
-
   render() {
     return (
       <>

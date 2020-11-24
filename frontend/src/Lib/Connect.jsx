@@ -6,9 +6,11 @@
 // --------------------------------------------------------------------------
 
 import { fetch } from 'whatwg-fetch';
+import Routes from './Routes';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 class Connect {
-  // URL中のクエリを除去したい場合
+  // URL中のクエリを除去
   removeQuery = (url) => {
     return url.replace(/\?.*$/, '');
   };
@@ -47,7 +49,7 @@ class Connect {
           return alert('error');
         }
         // ログイン成功ならタスク一覧ページにリダイレクト
-        return response;
+        return (location.href = '/tasks');
       })
       .catch((err) => {
         return err;
