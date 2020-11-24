@@ -8,11 +8,14 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :users
   end
+
   root to: 'tasks#index'
   patch 'tasks', to: 'tasks#update'
-  resources :tasks do
-    post :confirm, action: :confirm_new, on: :new
-    post :import, on: :collection
+  namespace 'api', format: :json do
+    resources :tasks do
+      post :confirm, action: :confirm_new, on: :new
+      post :import, on: :collection
+    end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

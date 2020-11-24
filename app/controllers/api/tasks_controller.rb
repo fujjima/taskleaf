@@ -1,13 +1,15 @@
-class TasksController < ApplicationController
+class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
-  # 今あるタスクについて、csv形式でも出力するようにする
   def index
+    # CSVでエクスポートしたい、とかになったらformat.csvを復活させる
     respond_to do |format|
-      format.html
-      format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
+      format.json { render json: @tasks }
+      # format.html
+      # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
+    # render json: { message: 'success!!!' }
   end
 
   def show; end
@@ -73,7 +75,8 @@ class TasksController < ApplicationController
 
   # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
   def set_tasks
-    @q = current_user.tasks.ransack(params[:q])
+    # @q = current_user.tasks.ransack(params[:q])
+    @q = User.last.tasks.ransack(params[:q])
     @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
   end
 end
