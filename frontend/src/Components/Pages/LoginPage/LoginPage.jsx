@@ -16,9 +16,8 @@ import {
   Link,
 } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
-import { connect } from '../../../Lib/Connect';
-
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { connect } from '../../../Lib/Connect';
 
 // TODO: Material UIの場合、各種ページに対してCSSを適用させることはできるか調査
 

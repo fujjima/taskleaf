@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   add_flash_types :success, :info, :warning, :danger
   # before_action :check_xhr_header
-  before_action :login_required
+  # before_action :login_required
 
   helper_method :current_user
 
