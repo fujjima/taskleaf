@@ -16,8 +16,8 @@ import { purple } from '@material-ui/core/colors';
 import { connect } from '../../../Lib/Connect';
 
 const sytles = {
-  root: {},
-  paper: {
+  root: {
+    width: '100 %',
     marginTop: '100px',
     // 子要素を縦に並べる ----------
     display: 'flex',
@@ -25,6 +25,14 @@ const sytles = {
     // --------------------------
     alignItems: 'center',
   },
+  // paper: {
+  //   marginTop: '100px',
+  //   // 子要素を縦に並べる ----------
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   // --------------------------
+  //   alignItems: 'center',
+  // },
   table: {
     margin: '12px',
     // TODO: hooksを使用してmaterial ui標準のpaletteを使いたい
@@ -108,18 +116,17 @@ class TasksPage extends React.Component {
 
   renderTableBody = () => {
     const { tasks } = this.state;
-    if (tasks.length > 0) {
-      debugger;
-    }
     return (
       <TableBody>
         {Object.values(tasks).map((task) => {
           return (
             <TableRow hover role="checkbox" tabIndex={-1} key>
-              <Checkbox
-                checked={false}
-              // inputProps={{ 'aria-labelledby': labelId }}
-              />
+              <TableCell padding="checkbox">
+                <Checkbox
+                  checked={false}
+                // inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </TableCell>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.tag}</TableCell>
               <TableCell>{task.description}</TableCell>
@@ -139,19 +146,17 @@ class TasksPage extends React.Component {
     const { tasks } = this.state;
     return (
       <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <TableContainer>
-            <Table
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              size={'medium'}
-              aria-label="enhanced table"
-            >
-              {this.renderTableHead()}
-              {this.renderTableBody()}
-            </Table>
-          </TableContainer>
-        </Paper>
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={'medium'}
+            aria-label="enhanced table"
+          >
+            {this.renderTableHead()}
+            {this.renderTableBody()}
+          </Table>
+        </TableContainer>
       </div>
     );
   }

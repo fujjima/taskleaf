@@ -7,9 +7,6 @@ import TasksPage from '../Components/Pages/TasksPage/TasksPage';
 export default class Routes extends React.Component {
   // const [count, setCount] = useState(0);
 
-  // onclickの過程で遷移させることはできるか
-  // Routeコンポーネントを分割 or swhitch分割
-
   // 例：ログインに成功したらタスク一覧に進む
   //    タスク削除に成功したらタスク一覧に戻る、など
   render() {

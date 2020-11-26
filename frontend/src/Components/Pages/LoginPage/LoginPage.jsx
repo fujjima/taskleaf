@@ -157,4 +157,5 @@ LoginPage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+// TODO: withStylesの使い方について
 export default withStyles(sytles)(LoginPage);
