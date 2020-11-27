@@ -5,11 +5,10 @@
 - http://~:port/... 以下が表示されている状態である
 
 */
-import React, { Children } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Drawer,
-  CssBaseline,
   List,
   Divider,
   ListItem,
@@ -19,6 +18,7 @@ import {
 import { withStyles } from '@material-ui/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
 
 const drawerWidth = '250px';
@@ -33,6 +33,7 @@ const sytles = {
   },
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: grey[200],
   },
   content: {
     flexGrow: 1,

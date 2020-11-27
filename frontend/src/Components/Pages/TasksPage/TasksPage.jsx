@@ -8,21 +8,21 @@ import {
   TableRow,
   Table,
   Checkbox,
-  Paper,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import { purple } from '@material-ui/core/colors';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+// import { } from '@material-ui/core/colors';
 // TODO: import時のパス参照を行いやすくする
 import { connect } from '../../../Lib/Connect';
+import Formatter from '../../../Util/Formatter';
 
 const sytles = {
   root: {
     width: '100 %',
     marginTop: '100px',
-    // 子要素を縦に並べる ----------
     display: 'flex',
     flexDirection: 'column',
-    // --------------------------
     alignItems: 'center',
   },
   // paper: {
@@ -36,7 +36,7 @@ const sytles = {
   table: {
     margin: '12px',
     // TODO: hooksを使用してmaterial ui標準のpaletteを使いたい
-    // backgroundColor: purple[400],
+    // backgroundColor: grey[300],
   },
   form: {
     width: '100 %',
@@ -53,6 +53,7 @@ class TasksPage extends React.Component {
     super(props);
     this.state = {
       tasks: [],
+      recording: null,
     };
   }
 
@@ -60,7 +61,7 @@ class TasksPage extends React.Component {
     this.fetchData();
   }
 
-  // TODO: pageを呼ぶ上位のコンポーネント内でfetchするようにしたい
+  // TODO: 上位のコンポーネント内でfetchするようにしたい
   fetchData = async () => {
     const tasks = await connect.getTasks();
     this.setState(() => ({
@@ -75,8 +76,13 @@ class TasksPage extends React.Component {
     return Object.values(tasks).size;
   };
 
+  isRecording = (id) => {
+    const { recording } = this.state;
+    return recording === id;
+  };
+
   headerCells = () => {
-    return ['タスク名', 'タグ', '詳細', '経過時間', '締め切り日', 'アクション'];
+    return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
   };
 
   // render
@@ -121,19 +127,39 @@ class TasksPage extends React.Component {
         {Object.values(tasks).map((task) => {
           return (
             <TableRow hover role="checkbox" tabIndex={-1} key>
-              <TableCell padding="checkbox">
+              <TableCell padding="checkbox" width="10%">
                 <Checkbox
                   checked={false}
                 // inputProps={{ 'aria-labelledby': labelId }}
                 />
               </TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.tag}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              {/* 経過時間のフォーマット */}
-              <TableCell>{task.elapsed_time}</TableCell>
-              {/* 締め切り日のフォーマット */}
-              <TableCell>{task.finished_at}</TableCell>
+              <TableCell width="20%">{task.name}</TableCell>
+              <TableCell width="15%">{task.tag}</TableCell>
+              <TableCell width="25%">{task.description}</TableCell>
+              {/* 表示形式は文字列 */}
+              <TableCell width="10%">
+                {Formatter.toDate(task.finished_at)}
+              </TableCell>
+              {/* 時間記録についてはsetIntervalを使用して時間の書き換え処理を1秒毎に行うようにすればいいかも */}
+              <TableCell width="10%">
+                {Formatter.toElapsedTime(task.elapsed_time)}
+              </TableCell>
+              <TableCell width="10%">
+                {this.isRecording(task.id) ? (
+                  <StopIcon
+                    key={`stop-icon-${task.id}`}
+                    onClick={() => this.setState({ recording: null })}
+                  />
+                ) : (
+                    // timer部分はtimerコンポーネントとして分離したい（他では使わないがコードの量を減らすため）
+                    // 文字列情報をrefで取得する？
+                    <PlayArrowIcon
+                      key={`play-icon-${task.id}`}
+                      onClick={() => this.setState({ recording: task.id })}
+                    />
+                  )}
+              </TableCell>
+              <TableCell width="10%">テスト</TableCell>
             </TableRow>
           );
         })}
@@ -143,7 +169,6 @@ class TasksPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { tasks } = this.state;
     return (
       <div className={classes.root}>
         <TableContainer>
