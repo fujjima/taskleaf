@@ -16,6 +16,7 @@ import StopIcon from '@material-ui/icons/Stop';
 // TODO: import時のパス参照を行いやすくする
 import { connect } from '../../../Lib/Connect';
 import Formatter from '../../../Util/Formatter';
+import Timer from '../../Mols/Timer';
 
 const sytles = {
   root: {
@@ -53,7 +54,7 @@ class TasksPage extends React.Component {
     super(props);
     this.state = {
       tasks: [],
-      recording: null,
+      recordingTaskId: null,
     };
   }
 
@@ -61,7 +62,7 @@ class TasksPage extends React.Component {
     this.fetchData();
   }
 
-  // TODO: 上位のコンポーネント内でfetchするようにしたい
+  // TODO: 上位コンポーネント内でfetch
   fetchData = async () => {
     const tasks = await connect.getTasks();
     this.setState(() => ({
@@ -77,8 +78,8 @@ class TasksPage extends React.Component {
   };
 
   isRecording = (id) => {
-    const { recording } = this.state;
-    return recording === id;
+    const { recordingTaskId } = this.state;
+    return recordingTaskId === id;
   };
 
   headerCells = () => {
@@ -108,7 +109,6 @@ class TasksPage extends React.Component {
           {this.headerCells().map((hcell) => (
             <TableCell
               key={hcell.id}
-              // 数値であれば見やすくするために右揃えにする
               align={hcell.numeric ? 'right' : 'left'}
             // sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -121,7 +121,7 @@ class TasksPage extends React.Component {
   };
 
   renderTableBody = () => {
-    const { tasks } = this.state;
+    const { tasks, recordingTaskId } = this.state;
     return (
       <TableBody>
         {Object.values(tasks).map((task) => {
@@ -136,26 +136,26 @@ class TasksPage extends React.Component {
               <TableCell width="20%">{task.name}</TableCell>
               <TableCell width="15%">{task.tag}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
-              {/* 表示形式は文字列 */}
               <TableCell width="10%">
                 {Formatter.toDate(task.finished_at)}
               </TableCell>
-              {/* 時間記録についてはsetIntervalを使用して時間の書き換え処理を1秒毎に行うようにすればいいかも */}
               <TableCell width="10%">
-                {Formatter.toElapsedTime(task.elapsed_time)}
+                <Timer
+                  time={task.elapsed_time}
+                  taskId={task.id}
+                  recordingTaskId={recordingTaskId}
+                />
               </TableCell>
               <TableCell width="10%">
                 {this.isRecording(task.id) ? (
                   <StopIcon
                     key={`stop-icon-${task.id}`}
-                    onClick={() => this.setState({ recording: null })}
+                    onClick={() => this.setState({ recordingTaskId: null })}
                   />
                 ) : (
-                    // timer部分はtimerコンポーネントとして分離したい（他では使わないがコードの量を減らすため）
-                    // 文字列情報をrefで取得する？
                     <PlayArrowIcon
                       key={`play-icon-${task.id}`}
-                      onClick={() => this.setState({ recording: task.id })}
+                      onClick={() => this.setState({ recordingTaskId: task.id })}
                     />
                   )}
               </TableCell>

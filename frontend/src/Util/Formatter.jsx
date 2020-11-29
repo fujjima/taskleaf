@@ -6,23 +6,23 @@ dayjs.extend(duration);
 
 export default class Formatter {
   // TODO: JSの場合、クラスメソッド、インスタンスメソッドの使い分けについては？
-
-  // 24:00:00以上でカウントできるようにしたい
-  // 返す際は文字列にする
-  //
+  // 秒数をHH:mm:ssの文字列に変換して返す
   static toElapsedTime = (time) => {
-    // XXX: dayjsに秒数のみ与えると、時間が+9時間されている。GMTから見た日本時間が加算されているようだが詳細は不明なので、9時間分引いている
-    const t = dayjs(time);
-    console.log(dayjs.duration({ seconds: 14300 }).asHours());
-    const h = dayjs.duration().asHours();
-    const m = t.minute;
-    const s = t.second;
-    console.log(h, m, s);
+    const dayjsTime = dayjs(time * 1000).add(-9, 'hours');
+    const dur = dayjs.duration({ seconds: time });
+    // TODO: duration.format()がリリースされたら書き換える
+    let h = Math.floor(dur.asHours());
+    let m = dayjsTime.minute();
+    let s = dayjsTime.second();
 
-    return dayjs(time).add(-9, 'hours').format('HH:mm:ss');
+    h = ('0' + h).slice(-2);
+    m = ('0' + m).slice(-2);
+    s = ('0' + s).slice(-2);
+
+    return h + ':' + m + ':' + s;
   };
 
-  // 記録が停止された際の時間（hh:mm:ss）をミリビョウに変換する
+  // 記録が停止された際の時間（hh:mm:ss）をミリ秒に変換する
   static toMiliSecond = () => {
     return;
   };
