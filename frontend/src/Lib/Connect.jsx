@@ -6,7 +6,6 @@
 // --------------------------------------------------------------------------
 
 import { fetch } from 'whatwg-fetch';
-import Routes from './Routes';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 class Connect {
@@ -17,7 +16,7 @@ class Connect {
 
   excuteFetch = async (url, options = {}) => {
     const result = await fetch(url, options);
-    // TODO: なぜここのawaitが必要なのか
+    // TODO: awaitの必要性について整理
     const data = await result.json();
     return data;
   };
@@ -71,7 +70,7 @@ class Connect {
       },
     };
 
-    // TODO: なぜここでreturnする必要があるのか
+    // TODO: returnの必要性について
     return this.excuteFetch(url, options)
       .then((response) => {
         if ('errors' in response) {
@@ -81,6 +80,36 @@ class Connect {
       })
       .catch((err) => {
         err;
+      });
+  };
+
+  // リソースの部位の更新パターンが複数あるため、PUTで送信する
+  updateTask = (data) => {
+    const url = 'http://localhost:3000/api/tasks';
+    const options = {
+      mode: 'cors',
+      method: 'PUT',
+      withCredentials: true,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    this.excuteFetch(url, options)
+      .then((response) => {
+        // update失敗:メッセージを表示
+        if ('errors' in response) {
+          return alert('error');
+        }
+        // update成功:メッセージがあれば表示、なければ何もしない
+        // 更新後のtaskを返す
+        return (location.href = '/tasks');
+      })
+      .catch((err) => {
+        return err;
       });
   };
 }

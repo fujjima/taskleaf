@@ -49,13 +49,18 @@ const sytles = {
 };
 
 class TasksPage extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
-    // TODO: propsの型チェック機構を追加したい
     super(props);
     this.state = {
       tasks: [],
       recordingTaskId: null,
     };
+    // timer内のstateのtimeを取得したいがために追加
+    this.timerRef = React.createRef();
   }
 
   componentDidMount() {
@@ -68,6 +73,16 @@ class TasksPage extends React.Component {
     this.setState(() => ({
       tasks: tasks,
     }));
+  };
+
+  // TODO: recordingTaskIdが切り替わった時の対応
+  // TODO: こいつが処理をした際に、画面のリロードが入る
+  // 成功時のレスポンスは不要なため、画面のリロード等を挟まずに停止させたい
+  updateTime = (id, time) => {
+    connect.updateTask({
+      id: id,
+      elapsed_time: time,
+    });
   };
 
   // util
@@ -84,6 +99,11 @@ class TasksPage extends React.Component {
 
   headerCells = () => {
     return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
+  };
+
+  handleRecording = (id) => {
+    this.updateTime(id, this.timerRef.current.state.time);
+    this.setState({ recordingTaskId: null });
   };
 
   // render
@@ -144,18 +164,25 @@ class TasksPage extends React.Component {
                   time={task.elapsed_time}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
+                  ref={this.timerRef}
                 />
               </TableCell>
               <TableCell width="10%">
                 {this.isRecording(task.id) ? (
                   <StopIcon
                     key={`stop-icon-${task.id}`}
-                    onClick={() => this.setState({ recordingTaskId: null })}
+                    onClick={() => {
+                      this.handleRecording(task.id);
+                    }}
                   />
                 ) : (
                     <PlayArrowIcon
                       key={`play-icon-${task.id}`}
-                      onClick={() => this.setState({ recordingTaskId: task.id })}
+                      onClick={() =>
+                        this.setState({
+                          recordingTaskId: task.id,
+                        })
+                      }
                     />
                   )}
               </TableCell>
@@ -186,9 +213,5 @@ class TasksPage extends React.Component {
     );
   }
 }
-
-TasksPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(sytles)(TasksPage);
