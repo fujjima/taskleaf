@@ -3,7 +3,6 @@ class Api::TasksController < ApplicationController
   before_action :set_tasks, only: %w[index]
 
   def index
-    # CSVでエクスポートしたい、とかになったらformat.csvを復活させる
     respond_to do |format|
       format.json { render json: @tasks }
       # format.html
@@ -40,7 +39,8 @@ class Api::TasksController < ApplicationController
 
   def update
     @task.update!(task_params)
-    redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
+    render json: { status: 200, task: @task }
+    # redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
   end
 
   def destroy

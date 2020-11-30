@@ -8,21 +8,22 @@ import {
   TableRow,
   Table,
   Checkbox,
-  Paper,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
-import { purple } from '@material-ui/core/colors';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
+// import { } from '@material-ui/core/colors';
 // TODO: import時のパス参照を行いやすくする
 import { connect } from '../../../Lib/Connect';
+import Formatter from '../../../Util/Formatter';
+import Timer from '../../Mols/Timer';
 
 const sytles = {
   root: {
     width: '100 %',
     marginTop: '100px',
-    // 子要素を縦に並べる ----------
     display: 'flex',
     flexDirection: 'column',
-    // --------------------------
     alignItems: 'center',
   },
   // paper: {
@@ -36,7 +37,7 @@ const sytles = {
   table: {
     margin: '12px',
     // TODO: hooksを使用してmaterial ui標準のpaletteを使いたい
-    // backgroundColor: purple[400],
+    // backgroundColor: grey[300],
   },
   form: {
     width: '100 %',
@@ -48,24 +49,40 @@ const sytles = {
 };
 
 class TasksPage extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
-    // TODO: propsの型チェック機構を追加したい
     super(props);
     this.state = {
       tasks: [],
+      recordingTaskId: null,
     };
+    // timer内のstateのtimeを取得したいがために追加
+    this.timerRef = React.createRef();
   }
 
   componentDidMount() {
     this.fetchData();
   }
 
-  // TODO: pageを呼ぶ上位のコンポーネント内でfetchするようにしたい
+  // TODO: 上位コンポーネント内でfetch
   fetchData = async () => {
     const tasks = await connect.getTasks();
     this.setState(() => ({
       tasks: tasks,
     }));
+  };
+
+  // TODO: recordingTaskIdが切り替わった時の対応
+  // TODO: こいつが処理をした際に、画面のリロードが入る
+  // 成功時のレスポンスは不要なため、画面のリロード等を挟まずに停止させたい
+  updateTime = (id, time) => {
+    connect.updateTask({
+      id: id,
+      elapsed_time: time,
+    });
   };
 
   // util
@@ -75,8 +92,18 @@ class TasksPage extends React.Component {
     return Object.values(tasks).size;
   };
 
+  isRecording = (id) => {
+    const { recordingTaskId } = this.state;
+    return recordingTaskId === id;
+  };
+
   headerCells = () => {
-    return ['タスク名', 'タグ', '詳細', '経過時間', '締め切り日', 'アクション'];
+    return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
+  };
+
+  handleRecording = (id) => {
+    this.updateTime(id, this.timerRef.current.state.time);
+    this.setState({ recordingTaskId: null });
   };
 
   // render
@@ -102,7 +129,6 @@ class TasksPage extends React.Component {
           {this.headerCells().map((hcell) => (
             <TableCell
               key={hcell.id}
-              // 数値であれば見やすくするために右揃えにする
               align={hcell.numeric ? 'right' : 'left'}
             // sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -115,25 +141,52 @@ class TasksPage extends React.Component {
   };
 
   renderTableBody = () => {
-    const { tasks } = this.state;
+    const { tasks, recordingTaskId } = this.state;
     return (
       <TableBody>
         {Object.values(tasks).map((task) => {
           return (
             <TableRow hover role="checkbox" tabIndex={-1} key>
-              <TableCell padding="checkbox">
+              <TableCell padding="checkbox" width="10%">
                 <Checkbox
                   checked={false}
                 // inputProps={{ 'aria-labelledby': labelId }}
                 />
               </TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.tag}</TableCell>
-              <TableCell>{task.description}</TableCell>
-              {/* 経過時間のフォーマット */}
-              <TableCell>{task.elapsed_time}</TableCell>
-              {/* 締め切り日のフォーマット */}
-              <TableCell>{task.finished_at}</TableCell>
+              <TableCell width="20%">{task.name}</TableCell>
+              <TableCell width="15%">{task.tag}</TableCell>
+              <TableCell width="25%">{task.description}</TableCell>
+              <TableCell width="10%">
+                {Formatter.toDate(task.finished_at)}
+              </TableCell>
+              <TableCell width="10%">
+                <Timer
+                  time={task.elapsed_time}
+                  taskId={task.id}
+                  recordingTaskId={recordingTaskId}
+                  ref={this.timerRef}
+                />
+              </TableCell>
+              <TableCell width="10%">
+                {this.isRecording(task.id) ? (
+                  <StopIcon
+                    key={`stop-icon-${task.id}`}
+                    onClick={() => {
+                      this.handleRecording(task.id);
+                    }}
+                  />
+                ) : (
+                    <PlayArrowIcon
+                      key={`play-icon-${task.id}`}
+                      onClick={() =>
+                        this.setState({
+                          recordingTaskId: task.id,
+                        })
+                      }
+                    />
+                  )}
+              </TableCell>
+              <TableCell width="10%">テスト</TableCell>
             </TableRow>
           );
         })}
@@ -143,7 +196,6 @@ class TasksPage extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { tasks } = this.state;
     return (
       <div className={classes.root}>
         <TableContainer>
@@ -161,9 +213,5 @@ class TasksPage extends React.Component {
     );
   }
 }
-
-TasksPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(sytles)(TasksPage);
