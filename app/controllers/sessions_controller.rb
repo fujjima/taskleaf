@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   skip_before_action :login_required
 
+  # 未ログイン：ここにリダイレクト
   def new; end
 
   def create
@@ -8,6 +9,7 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:session][:password])
       # TODO: params内のsessionについて
       # https://qiita.com/zettaittenani/items/a75f0da8f44cfe0f85c0#session%E3%81%AE%E5%AE%9F%E4%BD%93%E3%81%AF%E3%81%A9%E3%81%93%E3%81%AB%E3%81%82%E3%82%8B%E3%81%8B
+      # TODO: フロント側へのsession_idの送付のタイミングについて
       session[:user_id] = user.id
     else
       # https://qiita.com/kurawo___D/items/d5257e69bcb300908687
@@ -16,7 +18,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    # TODO: セッションの期限についてもそのうち設定したい
+    # TODO: セッションの期限の設定
     reset_session
     redirect_to root_path, notice: 'ログアウトしました！'
   end

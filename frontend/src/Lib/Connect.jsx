@@ -26,7 +26,7 @@ class Connect {
     const options = {
       mode: 'cors',
       method: 'POST',
-      withCredentials: true,
+      credentials: 'include',
       headers: {
         // TODO: headerの値について
         // https://qiita.com/mpyw/items/0595f07736cfa5b1f50c
@@ -46,7 +46,6 @@ class Connect {
         if ('errors' in response) {
           return alert('error');
         }
-        // ログイン成功：タスク一覧画面に遷移
         return (location.href = '/tasks');
       })
       .catch((err) => {
@@ -55,12 +54,12 @@ class Connect {
   };
 
   getTasks = () => {
-    // 現在のパスを取得するようにしたい
+    // TODO: 現在のパスを取得するようにしたい
     const url = 'http://localhost:3000/api/tasks';
     const options = {
       mode: 'cors',
       method: 'GET',
-      withCredentials: true,
+      credentials: 'include',
       headers: {
         // TODO: headerの値について
         // https://qiita.com/mpyw/items/0595f07736cfa5b1f50c
