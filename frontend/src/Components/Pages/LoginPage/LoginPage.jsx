@@ -17,9 +17,7 @@ import {
 } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { connect } from '../../../Lib/Connect';
-
-// TODO: Material UIの場合、各種ページに対してCSSを適用させることはできるか調査
+import { UserContext } from '../../../Context';
 
 // クラスコンポーネント内でhookは呼び出せないため、高階コンポーネントを使用する
 // https://material-ui.com/styles/basics/#higher-order-component-api
@@ -57,6 +55,12 @@ const sytles = {
 // }));
 
 class LoginPage extends React.Component {
+  static contextType = UserContext;
+
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -69,7 +73,8 @@ class LoginPage extends React.Component {
 
   handleClick = (e) => {
     const { email, password } = this.state;
-    connect.login({ email: email, password: password });
+    const { login } = this.context;
+    login({ email: email, password: password });
     // ページ更新の制御
     e.preventDefault();
   };
@@ -151,11 +156,6 @@ class LoginPage extends React.Component {
     );
   }
 }
-
-// propの型チェック
-LoginPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 // TODO: withStylesの使い方について
 export default withStyles(sytles)(LoginPage);

@@ -8,7 +8,6 @@ class Api::TasksController < ApplicationController
       # format.html
       # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
-    # render json: { message: 'success!!!' }
   end
 
   def show; end

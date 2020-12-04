@@ -1,10 +1,3 @@
-// --------------------------------------------------------------------------
-// description
-
-// ただし、urlは特に理由がなければリクエストを飛ばした際のURLをそのまま使用する形にする
-
-// --------------------------------------------------------------------------
-
 import { fetch } from 'whatwg-fetch';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
@@ -19,38 +12,6 @@ class Connect {
     // TODO: awaitの必要性について整理
     const data = await result.json();
     return data;
-  };
-
-  login = (data) => {
-    const url = 'http://localhost:3000/login';
-    const options = {
-      mode: 'cors',
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        // TODO: headerの値について
-        // https://qiita.com/mpyw/items/0595f07736cfa5b1f50c
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-    };
-
-    this.excuteFetch(url, options)
-      .then((response) => {
-        // ログイン失敗：メッセージを表示
-        if ('errors' in response) {
-          return alert('error');
-        }
-        return (location.href = '/tasks');
-      })
-      .catch((err) => {
-        return err;
-      });
   };
 
   getTasks = () => {
