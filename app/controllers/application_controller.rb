@@ -5,9 +5,9 @@ class ApplicationController < ActionController::Base
   # https://github.com/rails/rails/blob/master/actionpack/lib/action_controller/metal/request_forgery_protection.rb#L14
   protect_from_forgery unless: -> { request.format.json? }
 
+  before_action :login_required
   add_flash_types :success, :info, :warning, :danger
   # before_action :check_xhr_header
-  # before_action :login_required
 
   helper_method :current_user
 
@@ -21,9 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
-    # 検証用
-    # @current_user ||= session[:user_id] ? User.find_by(id: session[:user_id]) : User.find_by(id: 19)
+    @current_user ||= User.find_by(id: session[:user_id])
   end
 
   def login_required

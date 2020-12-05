@@ -8,7 +8,6 @@ class Api::TasksController < ApplicationController
       # format.html
       # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
-    # render json: { message: 'success!!!' }
   end
 
   def show; end
@@ -73,10 +72,8 @@ class Api::TasksController < ApplicationController
     @task = current_user.tasks.find_by(id: params[:id]) || current_user.tasks.find_by(id: params[:task][:id])
   end
 
-  # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
   def set_tasks
-    # @q = current_user.tasks.ransack(params[:q])
-    @q = User.last.tasks.ransack(params[:q])
+    @q = current_user.tasks.ransack(params[:q])
     @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
   end
 end
