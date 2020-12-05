@@ -10,12 +10,13 @@ Rails.application.routes.draw do
   end
 
   root to: 'tasks#index'
-  patch 'tasks', to: 'tasks#update'
   namespace 'api', format: :json do
     resources :tasks do
       post :confirm, action: :confirm_new, on: :new
       post :import, on: :collection
     end
+    # タスク一覧画面でのタスク情報の更新に使用する
+    put 'tasks', to: 'tasks#update'
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

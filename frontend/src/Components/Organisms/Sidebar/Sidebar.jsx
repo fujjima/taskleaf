@@ -1,15 +1,7 @@
-/*
-表示条件
-
-- ログイン済みである
-- http://~:port/... 以下が表示されている状態である
-
-*/
-import React, { Children } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Drawer,
-  CssBaseline,
   List,
   Divider,
   ListItem,
@@ -19,6 +11,7 @@ import {
 import { withStyles } from '@material-ui/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
 
 const drawerWidth = '250px';
@@ -33,6 +26,7 @@ const sytles = {
   },
   drawerPaper: {
     width: drawerWidth,
+    backgroundColor: grey[200],
   },
   content: {
     flexGrow: 1,
@@ -40,6 +34,11 @@ const sytles = {
 };
 
 class SideBar extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    children: PropTypes.object.isRequired,
+  };
+
   constructor(props) {
     super(props);
   }
@@ -66,7 +65,8 @@ class SideBar extends React.Component {
   // render
 
   render() {
-    const { classes, node } = this.props;
+    // XXX: childrenが機能しているか確認
+    const { classes, children } = this.props;
 
     return (
       <div className={classes.root}>
@@ -90,18 +90,10 @@ class SideBar extends React.Component {
             })}
           </List>
         </Drawer>
-        <main className={classes.content}>
-          {/* ここにメインコンテンツ（React.node） */}
-          {node}
-        </main>
+        <main className={classes.content}>{children}</main>
       </div>
     );
   }
 }
-
-SideBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  node: PropTypes.object.isRequired,
-};
 
 export default withStyles(sytles)(SideBar);

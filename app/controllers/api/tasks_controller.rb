@@ -3,13 +3,11 @@ class Api::TasksController < ApplicationController
   before_action :set_tasks, only: %w[index]
 
   def index
-    # CSVでエクスポートしたい、とかになったらformat.csvを復活させる
     respond_to do |format|
       format.json { render json: @tasks }
       # format.html
       # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
-    # render json: { message: 'success!!!' }
   end
 
   def show; end
@@ -40,7 +38,8 @@ class Api::TasksController < ApplicationController
 
   def update
     @task.update!(task_params)
-    redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
+    render json: { status: 200, task: @task }
+    # redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
   end
 
   def destroy
@@ -73,10 +72,8 @@ class Api::TasksController < ApplicationController
     @task = current_user.tasks.find_by(id: params[:id]) || current_user.tasks.find_by(id: params[:task][:id])
   end
 
-  # ログインユーザに紐づくタスクのみ取得できるようにする(=tasks.where(id: current_user.id))
   def set_tasks
-    # @q = current_user.tasks.ransack(params[:q])
-    @q = User.last.tasks.ransack(params[:q])
+    @q = current_user.tasks.ransack(params[:q])
     @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
   end
 end
