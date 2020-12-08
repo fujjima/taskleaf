@@ -1,26 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-// import { Redirect } from 'react-router-dom';
-import { UserContext } from '../../../src/Context';
-import { withRouter } from 'react-router-dom';
+import LoginPage from '../Components/Pages/LoginPage/LoginPage';
+import { signin, signout } from '../Slices/UserSlice';
 
-class UserProvider extends React.Component {
-  static propTypes = {
-    children: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-  };
+export const LoginContainer = (props) => {
+  const user = useSelector((user) => user);
+  const dispatch = useDispatch();
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-      isLoggedIn: false,
-      // isLoggedIn: locaStorage(isLoggedIn)(この文字列が入っているかどうか)
-    };
-    this.login = this.login.bind(this);
-  }
-
-  login(data) {
+  const login = (data) => {
     const url = 'http://localhost:3000/login';
     const options = {
       mode: 'cors',
@@ -51,9 +39,8 @@ class UserProvider extends React.Component {
           // TODO: ログイン失敗：メッセージを表示
           return alert('error');
         } else if (data.logged_in) {
-          this.setState({ isLoggedIn: data.logged_in }, () => {
-            this.props.history.push('/tasks');
-          });
+          dispatch(signin());
+          props.history.push('/tasks');
         } else {
           return alert('not authorized');
         }
@@ -61,16 +48,13 @@ class UserProvider extends React.Component {
       .catch((err) => {
         return err;
       });
-  }
+  };
 
-  render() {
-    const { children } = this.props;
-    return (
-      <UserContext.Provider value={{ ...this.state, login: this.login }}>
-        {children}
-      </UserContext.Provider>
-    );
-  }
-}
+  const logout = () => { };
 
-export default withRouter(UserProvider);
+  return <LoginPage login={login} logout={logout} {...user} />;
+};
+
+LoginContainer.propTypes = {
+  history: PropTypes.object.isRequired,
+};

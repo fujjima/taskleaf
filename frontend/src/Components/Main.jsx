@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LoginPage from '../Components/Pages/LoginPage/LoginPage';
-import UserProvider from '../Components/Provider/UserProvider';
-import PrivateRoutes from '../Lib/PrivateRoutes';
+import { LoginContainer } from '../Containers/LoginContainer';
+import { Provider } from 'react-redux';
+import store from '../../src/Stores/Store';
+import { PrivateRoutes } from '../Lib/PrivateRoutes';
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -11,14 +12,14 @@ export default class Main extends React.Component {
 
   render() {
     return (
-      <Router>
-        <UserProvider>
+      <Provider store={store}>
+        <Router>
           <Switch>
-            <Route exact path="/" component={LoginPage} />
+            <Route exact path="/" component={LoginContainer} />
             <PrivateRoutes />
           </Switch>
-        </UserProvider>
-      </Router>
+        </Router>
+      </Provider>
     );
   }
 }

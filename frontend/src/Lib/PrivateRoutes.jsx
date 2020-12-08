@@ -5,29 +5,27 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Sidebar from '../Components/Organisms/Sidebar/Sidebar';
 import NotFoundPage from '../Components/Pages/NotFoundPage';
 import TasksPage from '../Components/Pages/TasksPage/TasksPage';
-import { UserContext } from '../Context';
 
-export default class PrivateRoutes extends React.Component {
-  static contextType = UserContext;
+export const PrivateRoutes = (props) => {
+  const user = useSelector((state) => state.user);
+  const isLoggedIn = user.isLoggedIn;
 
-  render() {
-    const { isLoggedIn } = this.context;
-    if (isLoggedIn) {
-      return (
-        <Sidebar>
-          <Router>
-            <Switch>
-              <Route path="/tasks" component={TasksPage} />
-              <Route component={NotFoundPage} />
-            </Switch>
-          </Router>
-        </Sidebar>
-      );
-    } else {
-      return <Redirect to="/" />;
-    }
+  if (isLoggedIn) {
+    return (
+      <Sidebar>
+        <Router>
+          <Switch>
+            <Route path="/tasks" component={TasksPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </Router>
+      </Sidebar>
+    );
+  } else {
+    return <Redirect to="/" />;
   }
-}
+};
