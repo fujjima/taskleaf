@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 // TODO: ここのstateはuserというkey内に閉じ込めた方がいいのか
-const initialState = {
-  name: '',
-  email: '',
-  isLoggedIn: false,
-};
+const storage = localStorage.getItem('user');
+const initialState = storage
+  ? JSON.parse(localStorage.getItem('user'))
+  : {
+      name: '',
+      email: '',
+      isLoggedIn: false,
+    };
 
 const UserSlice = createSlice({
   name: 'login',
@@ -13,9 +16,12 @@ const UserSlice = createSlice({
   reducers: {
     signin: (state) => {
       state.isLoggedIn = true;
+      // TODO: そもそもlocalStorageを使わなくても良い方法を考える
+      localStorage.setItem('user', JSON.stringify(state));
     },
     signout: (state) => {
       state.isLoggedIn = false;
+      localStorage.removeItem('user');
     },
   },
 });
