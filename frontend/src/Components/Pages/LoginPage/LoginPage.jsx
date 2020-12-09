@@ -59,6 +59,7 @@ class LoginPage extends React.Component {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    login: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -73,7 +74,7 @@ class LoginPage extends React.Component {
 
   handleClick = (e) => {
     const { email, password } = this.state;
-    const { login } = this.context;
+    const { login } = this.props;
     login({ email: email, password: password });
     // ページ更新の制御
     e.preventDefault();
