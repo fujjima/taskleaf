@@ -17,6 +17,7 @@ import StopIcon from '@material-ui/icons/Stop';
 import { connect } from '../../../Lib/Connect';
 import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
+import { TaskShowPage } from './TaskShowPage';
 
 const sytles = {
   root: {
@@ -51,6 +52,7 @@ const sytles = {
 class TasksPage extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    history: PropTypes.object,
   };
 
   constructor(props) {
@@ -67,7 +69,7 @@ class TasksPage extends React.Component {
     this.fetchData();
   }
 
-  // TODO: 上位コンポーネント内でfetch
+  // TODO: 上位コンポーネント内でfetchしたい
   fetchData = async () => {
     const tasks = await connect.getTasks();
     this.setState(() => ({
@@ -142,11 +144,21 @@ class TasksPage extends React.Component {
 
   renderTableBody = () => {
     const { tasks, recordingTaskId } = this.state;
+    const { history } = this.props;
     return (
       <TableBody>
         {Object.values(tasks).map((task) => {
           return (
-            <TableRow hover role="checkbox" tabIndex={-1} key>
+            <TableRow
+              hover
+              role="checkbox"
+              tabIndex={-1}
+              key
+              onClick={() => {
+                // TODO: 開始地点が常にtopなのは仕様なのか
+                history.push(`tasks/${task.id}`);
+              }}
+            >
               <TableCell padding="checkbox" width="10%">
                 <Checkbox
                   checked={false}
