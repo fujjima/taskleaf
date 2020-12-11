@@ -17,7 +17,6 @@ import StopIcon from '@material-ui/icons/Stop';
 import { connect } from '../../../Lib/Connect';
 import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
-import { TaskShowPage } from './TaskShowPage';
 
 const sytles = {
   root: {
