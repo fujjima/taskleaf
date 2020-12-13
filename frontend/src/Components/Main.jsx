@@ -5,12 +5,14 @@ import { Provider } from 'react-redux';
 import store from '../../src/Stores/Store';
 import { PrivateRoutes } from '../Lib/PrivateRoutes';
 
+const path = require('path');
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
+    console.log(path.resolve(__dirname, '../../src'));
     return (
       <Provider store={store}>
         <Router>

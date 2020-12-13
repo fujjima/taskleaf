@@ -155,7 +155,7 @@ class TasksPage extends React.Component {
               key
               onClick={() => {
                 // TODO: 開始地点が常にtopなのは仕様なのか
-                history.push(`tasks/${task.id}`);
+                history.push(`tasks/${task.id}`, { task: task });
               }}
             >
               <TableCell padding="checkbox" width="10%">
