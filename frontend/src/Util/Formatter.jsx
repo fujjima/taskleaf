@@ -19,7 +19,7 @@ export default class Formatter {
     m = ('0' + m).slice(-2);
     s = ('0' + s).slice(-2);
 
-    return h + ':' + m + ':' + s;
+    return h + ' : ' + m + ' : ' + s;
   };
 
   // 記録が停止された際の時間（hh:mm:ss）をミリ秒に変換する

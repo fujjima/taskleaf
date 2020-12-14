@@ -12,7 +12,6 @@ export default class Main extends React.Component {
   }
 
   render() {
-    console.log(path.resolve(__dirname, '../../src'));
     return (
       <Provider store={store}>
         <Router>

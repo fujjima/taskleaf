@@ -18,6 +18,7 @@ import { connect } from '../../../Lib/Connect';
 import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
 
+// TODO: 全体に共通して適用させるスタイルの定義方法について
 const sytles = {
   root: {
     width: '100 %',
