@@ -96017,9 +96017,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_array_map__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_map__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var core_js_modules_es_function_name__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.function.name */ "./node_modules/core-js/modules/es.function.name.js");
 /* harmony import */ var core_js_modules_es_function_name__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
 /* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
 /* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../Util/Formatter */ "./src/Util/Formatter.jsx");
@@ -96057,7 +96058,7 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["ma
 var TaskPage = function TaskPage(props) {
   var classes = useStyles();
 
-  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_4__["useContext"])(_Containers_TaskContainer__WEBPACK_IMPORTED_MODULE_9__["TaskContext"]),
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_5__["useContext"])(_Containers_TaskContainer__WEBPACK_IMPORTED_MODULE_9__["TaskContext"]),
       task = _useContext.task,
       updateTask = _useContext.updateTask;
 
@@ -96083,10 +96084,7 @@ var TaskPage = function TaskPage(props) {
 
   var handleBlur = function handleBlur(label) {
     var value = event.target.value;
-    updateTask({
-      value: value,
-      label: label
-    });
+    updateTask(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()({}, label, value));
   }; // ただし、締め切り日、経過時間に関しては直接入力ではなく、カレンダー表示とする
   // クリックされた要素の属性を見て判定する
   // handler
@@ -96094,16 +96092,16 @@ var TaskPage = function TaskPage(props) {
 
   var TableBody = function TableBody() {
     return taskElements.map(function (item) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableRow"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableRow"], {
         key: item.attribute
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
         colSpan: 1,
         component: "th",
         scope: "row",
         className: classes.label
-      }, item.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
+      }, item.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
         className: classes.editable
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["InputBase"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["InputBase"], {
         className: classes.input,
         defaultValue: item.value,
         inputProps: {
@@ -96116,11 +96114,11 @@ var TaskPage = function TaskPage(props) {
     });
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableContainer"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableContainer"], {
     className: classes.container
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["Table"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["Table"], {
     className: classes.table,
     "aria-labelledby": "tableTitle",
     size: 'medium',
@@ -96357,10 +96355,7 @@ var TasksPage = /*#__PURE__*/function (_React$Component) {
           tabIndex: -1,
           key: true,
           onClick: function onClick() {
-            // TODO: 開始地点が常にtopなのは仕様なのか
-            history.push("tasks/".concat(task.id), {
-              task: task
-            });
+            history.push("tasks/".concat(task.id));
           }
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_19___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_21__["TableCell"], {
           padding: "checkbox",
@@ -96573,7 +96568,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_12__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _Components_Pages_TasksPage_TaskPage__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../Components/Pages/TasksPage/TaskPage */ "./src/Components/Pages/TasksPage/TaskPage.jsx");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _Components_Pages_TasksPage_TaskPage__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../Components/Pages/TasksPage/TaskPage */ "./src/Components/Pages/TasksPage/TaskPage.jsx");
 
 
 
@@ -96594,30 +96590,73 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 
-var TaskContext = /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_13__["createContext"])(); // props内にtaskがない場合→URL直叩きのケースかリロード→取得しに行く
 
-var initialState = function initialState(props) {
-  if (props.location.state) {
-    // TODO: リロード時のprop.locationがundefinedになっていないかを調べる
-    return props.location.state.task;
-  }
-
-  return null;
-}; // getTask
-// destroytask
-
+var TaskContext = /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_13__["createContext"])(); // TODO:
+// http://localhost:3000までを取得して
+// そこにapi配下のURLを追加する
+// 上記の文字列を送信URLとする
 
 var TaskContainer = function TaskContainer(props) {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_13__["useState"])(initialState(props)),
+  var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_14__["useParams"])(),
+      id = _useParams.id;
+
+  var url = "http://localhost:3000/api/tasks/".concat(id);
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_13__["useState"])(null),
       _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_12___default()(_useState, 2),
       task = _useState2[0],
-      setTask = _useState2[1]; // idはURLから取得でも良い気はする
-  // 対象タスクの属性と新しいvalueのkvsのセットを送ればいいだけ
+      setTask = _useState2[1]; // 初描画時に処理させたい
+
+
+  Object(react__WEBPACK_IMPORTED_MODULE_13__["useEffect"])(function () {
+    var result = getTask();
+    console.log('通過');
+    console.log(result);
+    setTask(result.task);
+  }); // TODO: 文と式における関数のルールの確認
+  // async function initialState() {
+  //   if (!task) {
+  //     const result = await getTask();
+  //     debugger;
+  //     setTask(result.task);
+  //   }
+  //   return null;
+  // }
+
+  function getTask() {
+    var options = {
+      mode: 'cors',
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    };
+    return fetch(url, options).then(function (response) {
+      // この時点ではサーバがヘッダをレスポンスしている状態
+      // 組み込みのresponseオブジェクトにアクセスする形となっている
+      if (!response.ok) {
+        throw new Error();
+      } // ここでpromiseを返しているよ
+      // ここでは、レスポンスの本文が帰ってくることを期待しているよ
+
+
+      return response.json();
+    }).then(function (data) {
+      if ('errors' in data) {
+        return alert('error');
+      }
+
+      return data;
+    })["catch"](function (err) {
+      return err;
+    });
+  } // TODO: URLの共通化についてまじで考える
 
 
   var updateTask = function updateTask(params) {
-    // const url = location.href;
-    var url = 'http://localhost:8080/api/tasks/239';
     var options = {
       mode: 'cors',
       method: 'PATCH',
@@ -96629,7 +96668,7 @@ var TaskContainer = function TaskContainer(props) {
       },
       body: JSON.stringify({
         id: task.id,
-        params: _objectSpread({}, params)
+        task: _objectSpread({}, params)
       })
     };
     fetch(url, options).then(function (response) {
@@ -96641,14 +96680,13 @@ var TaskContainer = function TaskContainer(props) {
     }).then(function (data) {
       if ('errors' in data) {
         return alert('error');
-      } // taskにセット
+      }
 
-
-      console.log(data);
+      setTask(data.task);
     })["catch"](function (err) {
       return err;
     });
-  }; // タスクの取得が完了するまではloading画面を出す
+  }; // destroytask
 
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(TaskContext.Provider, {
@@ -96656,7 +96694,7 @@ var TaskContainer = function TaskContainer(props) {
       task: task,
       updateTask: updateTask
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_Components_Pages_TasksPage_TaskPage__WEBPACK_IMPORTED_MODULE_14__["TaskPage"], null));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_13___default.a.createElement(_Components_Pages_TasksPage_TaskPage__WEBPACK_IMPORTED_MODULE_15__["TaskPage"], null));
 };
 
 /***/ }),

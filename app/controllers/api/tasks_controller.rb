@@ -10,7 +10,9 @@ class Api::TasksController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    render json: { status: 200, task: @task }
+  end
 
   def new
     # 保存に失敗した場合にrenderされるが、newアクションは経由しない

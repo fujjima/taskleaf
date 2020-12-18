@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import { BrowseRouter as Router, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   TableContainer,
@@ -11,7 +10,7 @@ import {
   InputBase,
 } from '@material-ui/core';
 import Formatter from '../../../Util/Formatter';
-import { TaskContext } from '../../../Containers/TaskContainer';
+import { TaskContext } from '../../../Containers/TasksContainer';
 
 const useStyles = makeStyles({
   root: {
@@ -36,6 +35,7 @@ export const TaskPage = (props) => {
   const classes = useStyles();
   const { task, updateTask } = useContext(TaskContext);
 
+  // mapにすることで、[].map(i => i.item)など、オブジェクトの内部の要素に対してアクセスしようとした際に単純に[]を返すことでエラーを防止する
   const taskElements = [
     { label: 'タスク名', attribute: 'name', value: task.name },
     { label: '詳細', attribute: 'description', value: task.description },
@@ -104,4 +104,7 @@ export const TaskPage = (props) => {
   );
 };
 
-// proptypes
+// TODO: contextで受け取れる値についてproptypesを指定できるか
+// TaskPage.propTypes = {
+//   task: PropTypes.object.isRequired,
+// };
