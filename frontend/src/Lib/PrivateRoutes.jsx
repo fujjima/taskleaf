@@ -19,7 +19,8 @@ export const PrivateRoutes = (props) => {
       <Sidebar>
         <Router>
           <Switch>
-            <Route path="/tasks" component={TasksContainer} />
+            <Route exact path="/tasks" component={TasksContainer} />
+            <Route path="/tasks/:id" component={TasksContainer} />
             <Route component={NotFoundPage} />
           </Switch>
         </Router>

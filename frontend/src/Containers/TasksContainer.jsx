@@ -88,7 +88,6 @@ export const TasksContainer = (props) => {
 
   // destroytask
 
-  // TODO: context api
   return (
     <TaskContext.Provider value={{ tasks, updateTask }}>
       {id ? <TaskPage /> : <TasksPage />}

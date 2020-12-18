@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   TableContainer,
@@ -13,8 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 // import { } from '@material-ui/core/colors';
-// TODO: import時のパス参照を行いやすくする
-import { connect } from '../../../Lib/Connect';
 import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
 import { TaskContext } from '../../../Containers/TasksContainer';
@@ -45,6 +44,7 @@ export const TasksPage = (props) => {
   const [recordingTaskId, setRecordingTaskId] = useState(null);
   const timerRef = useRef();
   const classes = useStyles();
+  const history = useHistory();
 
   const rowCount = () => {
     return Object.values(tasks).size;
@@ -93,7 +93,6 @@ export const TasksPage = (props) => {
   };
 
   const renderTableBody = () => {
-    const { history } = props;
     return (
       <TableBody>
         {Object.values(tasks).map((task) => {
