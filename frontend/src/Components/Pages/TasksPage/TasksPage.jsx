@@ -167,7 +167,9 @@ export const TasksPage = (props) => {
 };
 
 TasksPage.propTypes = {
-  // contextに対するproptypesとかはあるのか？
-  tasks: PropTypes.array.isRequired,
   history: PropTypes.object,
+};
+
+TasksPage.contextTypes = {
+  tasks: PropTypes.object,
 };

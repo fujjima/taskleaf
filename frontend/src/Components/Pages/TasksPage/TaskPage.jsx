@@ -33,40 +33,36 @@ const useStyles = makeStyles({
 
 export const TaskPage = (props) => {
   const classes = useStyles();
-  const { task, updateTask } = useContext(TaskContext);
+  const { updateTask } = useContext(TaskContext);
 
-  // mapにすることで、[].map(i => i.item)など、オブジェクトの内部の要素に対してアクセスしようとした際に単純に[]を返すことでエラーを防止する
-  const taskElements = [
-    { label: 'タスク名', attribute: 'name', value: task.name },
-    { label: '詳細', attribute: 'description', value: task.description },
-    {
-      label: '締め切り日',
-      attribute: 'finishedAt',
-      value: Formatter.toDate(task.finished_at),
-    },
-    {
-      label: '経過時間',
-      attribute: 'elapsedTime',
-      value: Formatter.toElapsedTime(task.elapsed_time),
-    },
-  ];
-
-  // const isEdiable = (item) => {
-  //   return editable === item.attribute;
-  // };
+  const taskElements = () => {
+    const { task } = props;
+    if (!task) return [];
+    return [
+      { label: 'タスク名', attribute: 'name', value: task.name },
+      { label: '詳細', attribute: 'description', value: task.description },
+      {
+        label: '締め切り日',
+        attribute: 'finishedAt',
+        value: Formatter.toDate(task.finished_at),
+      },
+      {
+        label: '経過時間',
+        attribute: 'elapsedTime',
+        value: Formatter.toElapsedTime(task.elapsed_time),
+      },
+    ];
+  };
 
   const handleBlur = (label) => {
     const value = event.target.value;
     updateTask({ [label]: value });
   };
 
-  // ただし、締め切り日、経過時間に関しては直接入力ではなく、カレンダー表示とする
-  // クリックされた要素の属性を見て判定する
-
   // handler
 
   const TableBody = () => {
-    return taskElements.map((item) => (
+    return taskElements().map((item) => (
       <TableRow key={item.attribute}>
         <TableCell
           colSpan={1}

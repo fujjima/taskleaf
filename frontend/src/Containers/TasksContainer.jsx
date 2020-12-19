@@ -22,7 +22,7 @@ export const TasksContainer = (props) => {
     getData();
   }, []);
 
-  const getTasks = () => {
+  function getTasks() {
     const options = {
       mode: 'cors',
       method: 'GET',
@@ -50,7 +50,7 @@ export const TasksContainer = (props) => {
       .catch((err) => {
         return err;
       });
-  };
+  }
 
   const updateTask = (params) => {
     const options = {
@@ -90,7 +90,11 @@ export const TasksContainer = (props) => {
 
   return (
     <TaskContext.Provider value={{ tasks, updateTask }}>
-      {id ? <TaskPage /> : <TasksPage />}
+      {id ? (
+        <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />
+      ) : (
+          <TasksPage />
+        )}
     </TaskContext.Provider>
   );
 };
