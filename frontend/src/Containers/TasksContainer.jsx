@@ -53,6 +53,7 @@ export const TasksContainer = (props) => {
   }
 
   const updateTask = (params) => {
+    const taskId = id || params.id;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -63,7 +64,7 @@ export const TasksContainer = (props) => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        id: task.id,
+        id: id,
         task: { ...params },
       }),
     };
@@ -79,7 +80,10 @@ export const TasksContainer = (props) => {
         if ('errors' in data) {
           return alert('error');
         }
-        return data;
+        const newTasks = tasks.filter((t) => {
+          return t.id !== parseInt(taskId);
+        });
+        setTasks([...newTasks, data.task]);
       })
       .catch((err) => {
         return err;

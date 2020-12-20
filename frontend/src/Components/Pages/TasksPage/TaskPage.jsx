@@ -14,7 +14,6 @@ import { TaskContext } from '../../../Containers/TasksContainer';
 
 const useStyles = makeStyles({
   root: {
-    // width: '100%',
     marginTop: '100px',
     display: 'flex',
     flexDirection: 'column',
@@ -29,6 +28,9 @@ const useStyles = makeStyles({
   },
   label: { width: '20%' },
   editable: {},
+  input: {
+    width: '600px',
+  },
 });
 
 export const TaskPage = (props) => {
