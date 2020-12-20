@@ -1,18 +1,22 @@
 // pathモジュールを読む(output.pathに絶対パスを指定するため)
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+// ここでの__dirnameはfrontendディレクトリ自体を指していると考えられる
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   // https://webpack.js.org/concepts/mode/#mode-development
   mode: 'development',
-  // chromeのconsole上でjsxのオリジナルを出させる
   devtool: 'source-map',
   entry: ['whatwg-fetch', src + '/index.js'],
 
   output: {
+    // ローカルにおける出力先（絶対パス）
     path: dist,
+    // publicpathを指定しないと、どうやらページをリロードした際にbundle.jsはブラウザ上のカレントディレクトリに出力されるらしい
+    // TODO: なぜbundle.jsはルート直下に置いておかないといけないのか
+    publicPath: '/',
     filename: 'bundle.js',
   },
 
@@ -44,7 +48,7 @@ module.exports = {
   },
 
   devServer: {
-    // contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'dist'),
     host: 'localhost',
     port: 8080,
     headers: {
@@ -61,6 +65,7 @@ module.exports = {
         pathRewrite: { '^/api': '' },
       },
     },
+    // :id指定でリロードした場合、何故かbundle.jsにhtmlが読み込まれている
     historyApiFallback: {
       rewrites: [{ from: /^\/*/, to: '/index.html' }],
     },

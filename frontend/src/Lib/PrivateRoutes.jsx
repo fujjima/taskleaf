@@ -8,7 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 import Sidebar from '../Components/Organisms/Sidebar/Sidebar';
 import NotFoundPage from '../Components/Pages/NotFoundPage';
-import TasksPage from '../Components/Pages/TasksPage/TasksPage';
+import { TasksContainer } from '../Containers/TasksContainer';
 
 export const PrivateRoutes = (props) => {
   const user = useSelector((state) => state.user);
@@ -19,7 +19,8 @@ export const PrivateRoutes = (props) => {
       <Sidebar>
         <Router>
           <Switch>
-            <Route path="/tasks" component={TasksPage} />
+            <Route exact path="/tasks" component={TasksContainer} />
+            <Route path="/tasks/:id" component={TasksContainer} />
             <Route component={NotFoundPage} />
           </Switch>
         </Router>
