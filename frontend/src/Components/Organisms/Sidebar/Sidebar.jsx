@@ -13,6 +13,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = '250px';
 
@@ -44,20 +45,22 @@ class SideBar extends React.Component {
   }
   // util
 
-  // 各画面へのリンクを持つアイテムを表示する
   listItem = () => {
     return [
       {
         text: 'Timer',
         icon: <TimerIcon />,
+        path: '/tasks',
       },
       {
         text: 'Report',
         icon: <AssignmentIcon />,
+        path: '/tasks',
       },
       {
         text: 'Calendar',
         icon: <CalendarTodayIcon />,
+        path: '/tasks',
       },
     ];
   };
@@ -82,7 +85,7 @@ class SideBar extends React.Component {
           <List>
             {this.listItem().map((item, idx) => {
               return (
-                <ListItem button key={idx}>
+                <ListItem button component={Link} to={item.path} key={idx}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItem>

@@ -17,13 +17,11 @@ export const PrivateRoutes = (props) => {
   if (isLoggedIn) {
     return (
       <Sidebar>
-        <Router>
-          <Switch>
-            <Route exact path="/tasks" component={TasksContainer} />
-            <Route path="/tasks/:id" component={TasksContainer} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </Router>
+        <Switch>
+          <Route exact path="/tasks" component={TasksContainer} />
+          <Route path="/tasks/:id" component={TasksContainer} />
+          <Route component={NotFoundPage} />
+        </Switch>
       </Sidebar>
     );
   } else {
