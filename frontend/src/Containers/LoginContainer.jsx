@@ -39,7 +39,7 @@ export const LoginContainer = (props) => {
           // TODO: ログイン失敗：メッセージを表示
           return alert('error');
         } else if (data.logged_in) {
-          dispatch(signin());
+          dispatch(signin({ ...data }));
           props.history.push('/tasks');
         } else {
           return alert('not authorized');

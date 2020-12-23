@@ -76,7 +76,6 @@ class LoginPage extends React.Component {
     const { email, password } = this.state;
     const { login } = this.props;
     login({ email: email, password: password });
-    // ページ更新の制御
     e.preventDefault();
   };
 

@@ -6,7 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Sidebar from '../Components/Organisms/Sidebar/Sidebar';
+import { Sidebar } from '../Components/Organisms/Sidebar/Sidebar';
 import NotFoundPage from '../Components/Pages/NotFoundPage';
 import { TasksContainer } from '../Containers/TasksContainer';
 
