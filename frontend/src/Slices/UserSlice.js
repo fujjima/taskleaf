@@ -29,8 +29,8 @@ const UserSlice = createSlice({
         'user',
         JSON.stringify(Object.assign(userInfo, state))
       );
-      // TODO: return {}の形で返却できないのか
-      state = { ...state, ...userInfo };
+      // TODO: return {}では何故駄目なのか
+      return Object.assign(state, userInfo);
     },
     signout: (state) => {
       state.isLoggedIn = false;

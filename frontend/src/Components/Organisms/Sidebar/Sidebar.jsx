@@ -7,22 +7,27 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemAvatar,
+  Avatar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import FaceIcon from '@material-ui/icons/Face';
 import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-const drawerWidth = '250px';
+const drawerWidth = '215px';
 
 const useStyles = makeStyles({
-  root: { display: 'flex', width: '100%' },
+  root: {
+    display: 'flex',
+    width: '100%',
+  },
   drawer: {
     width: drawerWidth,
-    // flexコンテナ内のflexアイテムが残りのアイテムと比較してどのぐらいの比率で縮小されるか
     // defaultは1
     flexShrink: 0,
   },
@@ -32,6 +37,14 @@ const useStyles = makeStyles({
   },
   content: {
     flexGrow: 1,
+  },
+  list: {
+    marginLeft: '10px',
+    marginTop: '10px',
+  },
+  bottom: {
+    marginTop: 'auto',
+    paddingBottom: '10px',
   },
 });
 
@@ -71,7 +84,7 @@ export const Sidebar = (props) => {
         anchor="left"
       >
         <Divider />
-        <List>
+        <List className={classes.list}>
           {listItem.map((item, idx) => {
             return (
               <ListItem button component={Link} to={item.path} key={idx}>
@@ -80,9 +93,17 @@ export const Sidebar = (props) => {
               </ListItem>
             );
           })}
-          {/* サイドバー一番下にユーザー情報+メアド+アイコンを表示したい */}
-          <ListItem>{user.name}</ListItem>
         </List>
+        <div className={classes.bottom}>
+          <ListItem>
+            <ListItemAvatar>
+              <Avatar>
+                <FaceIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={user.name} secondary={user.email} />
+          </ListItem>
+        </div>
       </Drawer>
       <main className={classes.content}>{children}</main>
     </div>
