@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
   def destroy
     # TODO: セッションの期限の設定
     reset_session
-    redirect_to root_path, notice: 'ログアウトしました！'
+    render json: { status: 200 }
   end
 
   private

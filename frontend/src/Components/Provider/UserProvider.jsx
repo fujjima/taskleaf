@@ -15,7 +15,6 @@ class UserProvider extends React.Component {
     this.state = {
       user: null,
       isLoggedIn: false,
-      // isLoggedIn: locaStorage(isLoggedIn)(この文字列が入っているかどうか)
     };
     this.login = this.login.bind(this);
   }

@@ -5,7 +5,7 @@ import { TasksPage } from '../Components/Pages/TasksPage/TasksPage';
 
 export const TaskContext = createContext();
 
-export const TasksContainer = (props) => {
+export const TasksContainer = () => {
   const { id } = useParams();
   // TODO:
   // http://localhost:3000までを取得して
