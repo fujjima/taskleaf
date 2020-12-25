@@ -10,7 +10,6 @@ import {
   ListItemAvatar,
   Avatar,
   Menu,
-  MenuList,
   MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -50,6 +49,11 @@ const useStyles = makeStyles({
     marginTop: 'auto',
     paddingBottom: '10px',
   },
+  userInfo: {
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  },
 });
 
 export const Sidebar = (props) => {
@@ -60,8 +64,6 @@ export const Sidebar = (props) => {
   const { children } = props;
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  // const anchorRef = useRef(null);
 
   const toggleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -137,7 +139,12 @@ export const Sidebar = (props) => {
           })}
         </List>
         <div className={classes.bottom}>
-          <ListItem button onClick={toggleOpen} aria-haspopup="true">
+          <ListItem
+            button
+            onClick={toggleOpen}
+            className={classes.userInfo}
+            disableRipple
+          >
             <ListItemAvatar>
               <Avatar>
                 <FaceIcon />
