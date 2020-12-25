@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Drawer,
@@ -9,6 +9,9 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Menu,
+  MenuList,
+  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -18,6 +21,7 @@ import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const drawerWidth = '215px';
 
@@ -50,8 +54,46 @@ const useStyles = makeStyles({
 
 export const Sidebar = (props) => {
   const classes = useStyles();
-  const { children } = props;
   const user = useSelector((state) => state.user);
+  const { logout } = useContext(AuthContext);
+
+  const { children } = props;
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // const anchorRef = useRef(null);
+
+  const toggleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(!open);
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const renderMenu = () => {
+    return (
+      <Menu
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          horizontal: 'right',
+        }}
+        onBlur={() => {
+          setAnchorEl(null);
+          setOpen(false);
+        }}
+        onClick={() => {
+          setAnchorEl(null);
+          setOpen(false);
+        }}
+      >
+        <MenuItem>ユーザー設定</MenuItem>
+        <MenuItem onClick={handleLogout}>ログアウト</MenuItem>
+      </Menu>
+    );
+  };
 
   // util
 
@@ -95,7 +137,7 @@ export const Sidebar = (props) => {
           })}
         </List>
         <div className={classes.bottom}>
-          <ListItem>
+          <ListItem button onClick={toggleOpen} aria-haspopup="true">
             <ListItemAvatar>
               <Avatar>
                 <FaceIcon />
@@ -103,6 +145,7 @@ export const Sidebar = (props) => {
             </ListItemAvatar>
             <ListItemText primary={user.name} secondary={user.email} />
           </ListItem>
+          {renderMenu()}
         </div>
       </Drawer>
       <main className={classes.content}>{children}</main>

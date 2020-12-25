@@ -21,7 +21,7 @@ const UserSlice = createSlice({
   reducers: {
     signin: (state, { payload }) => {
       const { user } = payload;
-      // TODO: 仮にlocalstorageにuserが残っている場合に消しておく？
+      // TODO: 仮にlocalstorageにuserが残っている場合に消しておく必要があるか
       state.isLoggedIn = true;
       const userInfo = fetchObj(user, ['name', 'email']);
       // TODO: そもそもlocalStorageを使わない方法を考えたい

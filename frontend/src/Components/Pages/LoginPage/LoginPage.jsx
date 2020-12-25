@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { UserContext } from '../../../Context';
+import { AuthContext } from '../../../Components/Provider/AuthProvider';
 
 // クラスコンポーネント内でhookは呼び出せないため、高階コンポーネントを使用する
 // https://material-ui.com/styles/basics/#higher-order-component-api
@@ -55,11 +55,10 @@ const sytles = {
 // }));
 
 class LoginPage extends React.Component {
-  static contextType = UserContext;
+  static contextType = AuthContext;
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    login: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -73,8 +72,8 @@ class LoginPage extends React.Component {
   // handler
 
   handleClick = (e) => {
+    const { login } = this.context;
     const { email, password } = this.state;
-    const { login } = this.props;
     login({ email: email, password: password });
     e.preventDefault();
   };
