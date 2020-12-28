@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Drawer,
@@ -161,6 +161,5 @@ export const Sidebar = (props) => {
 };
 
 Sidebar.propTypes = {
-  classes: PropTypes.object.isRequired,
   children: PropTypes.object.isRequired,
 };

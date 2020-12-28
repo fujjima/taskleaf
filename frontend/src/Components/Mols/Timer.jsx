@@ -1,41 +1,57 @@
-import React from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import PropTypes from 'prop-types';
 import Formatter from '../../Util/Formatter';
 
-export default class Timer extends React.Component {
-  // TODO: 記録中、タスク一覧画面の他のコンポーネントで更新された場合に変な干渉が起きないか
-  static propTypes = {
-    time: PropTypes.number,
-    taskId: PropTypes.number,
-    recordingTaskId: PropTypes.number,
-  };
+let Timer = (props, ref) => {
+  const [time, setTime] = useState(props.time || null);
+  // const [recordingTaskId, setRecordingTaskId] = useState(
+  //   props.recordingTaskId || null
+  // );
+  const [timerId, setTimerId] = useState(null);
+  const prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      time: props.time || null,
+  function usePrevious(value) {
+    const prevRef = useRef(null);
+    useEffect(() => {
+      prevRef.current = value;
+    });
+    return prevRef.current;
+  }
+
+  // 親コンポーネントからtimeを見るためのメソッドを生やしている
+  useImperativeHandle(ref, () => {
+    return {
+      time: time,
     };
-  }
+  });
 
-  componentDidUpdate(prevProps) {
-    const { taskId, recordingTaskId } = this.props;
+  useEffect(() => {
+    const { taskId, recordingTaskId } = props;
     if (taskId && taskId === recordingTaskId) {
-      this.timer = setTimeout(() => this.addSecond(), 1000);
-    } else if (
-      !recordingTaskId ||
-      prevProps.recordingTaskId !== recordingTaskId
-    ) {
-      clearTimeout(this.timer);
-    }
-  }
+      setTimerId(setInterval(addSecond, 1000));
+    } else if (!recordingTaskId || prevRecordingTaskId !== recordingTaskId) {
+      clearTimeout(timerId);
+    } else return;
+  }, [props.recordingTaskId]);
 
-  addSecond = () => {
-    const { time } = this.state;
-    this.setState({ time: time + 1 });
+  const addSecond = () => {
+    setTime((time) => time + 1);
   };
 
-  render() {
-    const { time } = this.state;
-    return <strong>{Formatter.toElapsedTime(time)}</strong>;
-  }
-}
+  return <strong>{Formatter.toElapsedTime(time)}</strong>;
+};
+
+Timer = forwardRef(Timer);
+export default Timer;
+
+Timer.propTypes = {
+  time: PropTypes.number,
+  taskId: PropTypes.number,
+  recordingTaskId: PropTypes.number,
+};
