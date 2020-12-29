@@ -60,7 +60,7 @@ export const TasksPage = (props) => {
 
   const handleRecording = (e, id) => {
     // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
-    updateTask({ id: id, elapsed_time: timerRef.current.time });
+    updateTask({ id: id, elapsedTime: timerRef.current.time });
     setRecordingTaskId(null);
     e.stopPropagation();
   };

@@ -94802,119 +94802,75 @@ var Main = /*#__PURE__*/function (_React$Component) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Timer; });
-/* harmony import */ var core_js_modules_es_date_to_string__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.date.to-string */ "./node_modules/core-js/modules/es.date.to-string.js");
-/* harmony import */ var core_js_modules_es_date_to_string__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_date_to_string__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.object.to-string */ "./node_modules/core-js/modules/es.object.to-string.js");
-/* harmony import */ var core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_es_reflect_construct__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! core-js/modules/es.reflect.construct */ "./node_modules/core-js/modules/es.reflect.construct.js");
-/* harmony import */ var core_js_modules_es_reflect_construct__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_reflect_construct__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_es_regexp_to_string__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! core-js/modules/es.regexp.to-string */ "./node_modules/core-js/modules/es.regexp.to-string.js");
-/* harmony import */ var core_js_modules_es_regexp_to_string__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_regexp_to_string__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/web.timers */ "./node_modules/core-js/modules/web.timers.js");
-/* harmony import */ var core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
-/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../Util/Formatter */ "./src/Util/Formatter.jsx");
+/* harmony import */ var core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.timers */ "./node_modules/core-js/modules/web.timers.js");
+/* harmony import */ var core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_timers__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Util/Formatter */ "./src/Util/Formatter.jsx");
 
 
 
 
 
 
+var Timer = function Timer(props, ref) {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(props.time || null),
+      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState, 2),
+      time = _useState2[0],
+      setTime = _useState2[1];
 
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(null),
+      _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState3, 2),
+      timerId = _useState4[0],
+      setTimerId = _useState4[1];
 
+  var prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
-
-
-
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_10___default()(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_10___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_9___default()(this, result); }; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-
-
-
-
-var Timer = /*#__PURE__*/function (_React$Component) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(Timer, _React$Component);
-
-  var _super = _createSuper(Timer);
-
-  // TODO: 記録中、タスク一覧画面の他のコンポーネントで更新された場合に変な干渉が起きないか
-  function Timer(props) {
-    var _this;
-
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default()(this, Timer);
-
-    _this = _super.call(this, props);
-
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default()(_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_7___default()(_this), "addSecond", function () {
-      var time = _this.state.time;
-
-      _this.setState({
-        time: time + 1
-      });
+  function usePrevious(value) {
+    var prevRef = Object(react__WEBPACK_IMPORTED_MODULE_2__["useRef"])(null);
+    Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+      prevRef.current = value;
     });
+    return prevRef.current;
+  } // 親コンポーネントからtimeを見るためのメソッドを生やしている
 
-    _this.state = {
-      time: props.time || null
+
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useImperativeHandle"])(ref, function () {
+    return {
+      time: time
     };
-    return _this;
-  }
+  });
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
+    var taskId = props.taskId,
+        recordingTaskId = props.recordingTaskId;
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_6___default()(Timer, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps) {
-      var _this2 = this;
+    if (taskId && taskId === recordingTaskId) {
+      setTimerId(setInterval(addSecond, 1000));
+    } else if (!recordingTaskId || prevRecordingTaskId !== recordingTaskId) {
+      clearTimeout(timerId);
+    } else return;
+  }, [props.recordingTaskId]);
 
-      var _this$props = this.props,
-          taskId = _this$props.taskId,
-          recordingTaskId = _this$props.recordingTaskId;
+  var addSecond = function addSecond() {
+    setTime(function (time) {
+      return time + 1;
+    });
+  };
 
-      if (taskId && taskId === recordingTaskId) {
-        this.timer = setTimeout(function () {
-          return _this2.addSecond();
-        }, 1000);
-      } else if (!recordingTaskId || prevProps.recordingTaskId !== recordingTaskId) {
-        clearTimeout(this.timer);
-      }
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var time = this.state.time;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_12___default.a.createElement("strong", null, _Util_Formatter__WEBPACK_IMPORTED_MODULE_14__["default"].toElapsedTime(time));
-    }
-  }]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("strong", null, _Util_Formatter__WEBPACK_IMPORTED_MODULE_4__["default"].toElapsedTime(time));
+};
 
-  return Timer;
-}(react__WEBPACK_IMPORTED_MODULE_12___default.a.Component);
-
-_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_11___default()(Timer, "propTypes", {
-  time: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number,
-  taskId: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number,
-  recordingTaskId: prop_types__WEBPACK_IMPORTED_MODULE_13___default.a.number
-});
-
-
+Timer = /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_2__["forwardRef"])(Timer);
+/* harmony default export */ __webpack_exports__["default"] = (Timer);
+Timer.propTypes = {
+  time: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.number,
+  taskId: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.number,
+  recordingTaskId: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.number
+};
 
 /***/ }),
 
@@ -95098,7 +95054,6 @@ var Sidebar = function Sidebar(props) {
   }, children));
 };
 Sidebar.propTypes = {
-  classes: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object.isRequired,
   children: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.object.isRequired
 };
 
@@ -95618,9 +95573,9 @@ var TasksPage = function TasksPage(props) {
       recordingTaskId = _useState2[0],
       setRecordingTaskId = _useState2[1];
 
-  var timerRef = Object(react__WEBPACK_IMPORTED_MODULE_6__["useRef"])();
   var classes = useStyles();
   var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["useHistory"])();
+  var timerRef = Object(react__WEBPACK_IMPORTED_MODULE_6__["useRef"])();
 
   var rowCount = function rowCount() {
     return Object.values(tasks).size;
@@ -95634,9 +95589,14 @@ var TasksPage = function TasksPage(props) {
     return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
   };
 
-  var handleRecording = function handleRecording(id) {
-    updateTask(id, timerRef.current.state.time);
+  var handleRecording = function handleRecording(e, id) {
+    // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
+    updateTask({
+      id: id,
+      elapsed_time: timerRef.current.time
+    });
     setRecordingTaskId(null);
+    e.stopPropagation();
   };
 
   var renderToolBar = function renderToolBar() {};
@@ -95696,13 +95656,14 @@ var TasksPage = function TasksPage(props) {
         width: "10%"
       }, isRecording(task.id) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_12___default.a, {
         key: "stop-icon-".concat(task.id),
-        onClick: function onClick() {
-          handleRecording(task.id);
+        onClick: function onClick(e) {
+          handleRecording(e, task.id);
         }
       }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_11___default.a, {
         key: "play-icon-".concat(task.id),
-        onClick: function onClick() {
-          return setRecordingTaskId(task.id);
+        onClick: function onClick(e) {
+          setRecordingTaskId(task.id);
+          e.stopPropagation();
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
         width: "10%"
@@ -95971,7 +95932,6 @@ var TasksContainer = function TasksContainer() {
 
 
   var getUrl = "http://localhost:3000/api/tasks";
-  var url = "http://localhost:3000/api/tasks/".concat(id);
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_20__["useState"])([]),
       _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_19___default()(_useState, 2),
@@ -96039,6 +95999,7 @@ var TasksContainer = function TasksContainer() {
 
   var updateTask = function updateTask(params) {
     var taskId = id || params.id;
+    var url = "http://localhost:3000/api/tasks/".concat(taskId);
     var options = {
       mode: 'cors',
       method: 'PATCH',
@@ -96049,7 +96010,7 @@ var TasksContainer = function TasksContainer() {
         Accept: 'application/json'
       },
       body: JSON.stringify({
-        id: id,
+        id: taskId,
         task: _objectSpread({}, params)
       })
     };
