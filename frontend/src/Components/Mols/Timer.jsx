@@ -10,9 +10,6 @@ import Formatter from '../../Util/Formatter';
 
 let Timer = (props, ref) => {
   const [time, setTime] = useState(props.time || null);
-  // const [recordingTaskId, setRecordingTaskId] = useState(
-  //   props.recordingTaskId || null
-  // );
   const [timerId, setTimerId] = useState(null);
   const prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
