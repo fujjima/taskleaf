@@ -42,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
 export const TasksPage = (props) => {
   const { tasks, updateTask } = useContext(TaskContext);
   const [recordingTaskId, setRecordingTaskId] = useState(null);
-  const timerRef = useRef();
   const classes = useStyles();
   const history = useHistory();
+  const timerRef = useRef();
 
   const rowCount = () => {
     return Object.values(tasks).size;
@@ -58,9 +58,11 @@ export const TasksPage = (props) => {
     return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
   };
 
-  const handleRecording = (id) => {
-    updateTask(id, timerRef.current.state.time);
+  const handleRecording = (e, id) => {
+    // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
+    updateTask({ id: id, elapsed_time: timerRef.current.time });
     setRecordingTaskId(null);
+    e.stopPropagation();
   };
 
   const renderToolBar = () => { };
@@ -130,14 +132,17 @@ export const TasksPage = (props) => {
                 {isRecording(task.id) ? (
                   <StopIcon
                     key={`stop-icon-${task.id}`}
-                    onClick={() => {
-                      handleRecording(task.id);
+                    onClick={(e) => {
+                      handleRecording(e, task.id);
                     }}
                   />
                 ) : (
                     <PlayArrowIcon
                       key={`play-icon-${task.id}`}
-                      onClick={() => setRecordingTaskId(task.id)}
+                      onClick={(e) => {
+                        setRecordingTaskId(task.id);
+                        e.stopPropagation();
+                      }}
                     />
                   )}
               </TableCell>

@@ -11,7 +11,6 @@ export const TasksContainer = () => {
   // http://localhost:3000までを取得して
   // そこにapi配下のURLを追加する
   const getUrl = `http://localhost:3000/api/tasks`;
-  const url = `http://localhost:3000/api/tasks/${id}`;
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -54,6 +53,7 @@ export const TasksContainer = () => {
 
   const updateTask = (params) => {
     const taskId = id || params.id;
+    const url = `http://localhost:3000/api/tasks/${taskId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -64,7 +64,7 @@ export const TasksContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        id: id,
+        id: taskId,
         task: { ...params },
       }),
     };
