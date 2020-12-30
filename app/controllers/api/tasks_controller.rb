@@ -4,7 +4,7 @@ class Api::TasksController < ApplicationController
 
   def index
     respond_to do |format|
-      format.json { render json: @tasks }
+      format.json
       # format.html
       # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end

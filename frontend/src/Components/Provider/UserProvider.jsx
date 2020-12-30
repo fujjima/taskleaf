@@ -49,8 +49,8 @@ class UserProvider extends React.Component {
         if ('errors' in data) {
           // TODO: ログイン失敗：メッセージを表示
           return alert('error');
-        } else if (data.logged_in) {
-          this.setState({ isLoggedIn: data.logged_in }, () => {
+        } else if (data.loggedIn) {
+          this.setState({ isLoggedIn: data.loggedIn }, () => {
             this.props.history.push('/tasks');
           });
         } else {

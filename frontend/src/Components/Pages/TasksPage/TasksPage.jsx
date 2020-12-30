@@ -118,11 +118,11 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{task.tag}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
-                {Formatter.toDate(task.finished_at)}
+                {Formatter.toDate(task.finishedAt)}
               </TableCell>
               <TableCell width="10%">
                 <Timer
-                  time={task.elapsed_time}
+                  time={task.elapsedTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
                   ref={timerRef}

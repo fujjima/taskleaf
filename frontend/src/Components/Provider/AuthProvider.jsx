@@ -41,7 +41,7 @@ export const AuthProvider = (props) => {
         if ('errors' in data) {
           // TODO: ログイン失敗：メッセージを表示
           return alert('error');
-        } else if (data.logged_in) {
+        } else if (data.loggedIn) {
           dispatch(signin({ ...data }));
           history.push('/tasks');
         } else {
