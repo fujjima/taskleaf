@@ -60,7 +60,7 @@ export const TasksPage = (props) => {
 
   const handleRecording = (e, id) => {
     // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
-    updateTask({ id: id, elapsed_time: timerRef.current.time });
+    updateTask({ id: id, elapsedTime: timerRef.current.time });
     setRecordingTaskId(null);
     e.stopPropagation();
   };
@@ -118,11 +118,11 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{task.tag}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
-                {Formatter.toDate(task.finished_at)}
+                {Formatter.toDate(task.finishedAt)}
               </TableCell>
               <TableCell width="10%">
                 <Timer
-                  time={task.elapsed_time}
+                  time={task.elapsedTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
                   ref={timerRef}

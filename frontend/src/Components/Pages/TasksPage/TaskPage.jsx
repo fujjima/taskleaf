@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   TableContainer,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
   Table,
   InputBase,
@@ -46,12 +45,12 @@ export const TaskPage = (props) => {
       {
         label: '締め切り日',
         attribute: 'finishedAt',
-        value: Formatter.toDate(task.finished_at),
+        value: Formatter.toDate(task.finishedAt),
       },
       {
         label: '経過時間',
         attribute: 'elapsedTime',
-        value: Formatter.toElapsedTime(task.elapsed_time),
+        value: Formatter.toElapsedTime(task.elapsedTime),
       },
     ];
   };
@@ -102,7 +101,6 @@ export const TaskPage = (props) => {
   );
 };
 
-// TODO: contextで受け取れる値についてproptypesを指定できるか
-// TaskPage.propTypes = {
-//   task: PropTypes.object.isRequired,
-// };
+TaskPage.propTypes = {
+  task: PropTypes.object.isRequired,
+};
