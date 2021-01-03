@@ -31,4 +31,9 @@ export default class Formatter {
   static toDate = (date) => {
     return dayjs(date).format('YYYY/MM/DD');
   };
+
+  // 今日の日付を文字列形式にフォーマットする
+  static todayString = () => {
+    return dayjs().format('YYYY-MM-DD');
+  };
 }

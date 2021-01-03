@@ -3,6 +3,14 @@ import { useParams } from 'react-router-dom';
 import { TaskPage } from '../Components/Pages/TasksPage/TaskPage';
 import { TasksPage } from '../Components/Pages/TasksPage/TasksPage';
 
+export const taskLabel = {
+  name: 'タスク名',
+  tag: 'タグ',
+  description: '詳細',
+  finisihedAt: '締め切り日',
+  elapsedTime: '経過時間',
+};
+
 export const TaskContext = createContext();
 
 export const TasksContainer = () => {
@@ -51,6 +59,44 @@ export const TasksContainer = () => {
       });
   }
 
+  const createTask = (params) => {
+    const url = `http://localhost:3000/api/tasks`;
+    const options = {
+      mode: 'cors',
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        task: { ...params },
+      }),
+    };
+
+    fetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if ('errors' in data) {
+          return alert('error');
+        }
+        const newTasks = tasks.filter((t) => {
+          return t.id !== parseInt(taskId);
+        });
+        // 生成したらタスクを受け取り、新たなtask配列を作成する
+        setTasks([...newTasks, data.task]);
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
   const updateTask = (params) => {
     const taskId = id || params.id;
     const url = `http://localhost:3000/api/tasks/${taskId}`;
@@ -93,7 +139,7 @@ export const TasksContainer = () => {
   // destroytask
 
   return (
-    <TaskContext.Provider value={{ tasks, updateTask }}>
+    <TaskContext.Provider value={{ tasks, taskLabel, updateTask, createTask }}>
       {id ? (
         <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />
       ) : (

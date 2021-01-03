@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 // pathモジュールを読む(output.pathに絶対パスを指定するため)
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
@@ -77,6 +78,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: src + '/index.html',
       filename: 'index.html',
+    }),
+    new webpack.ProvidePlugin({
+      _: 'lodash',
     }),
   ],
 };

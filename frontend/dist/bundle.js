@@ -38153,6 +38153,35 @@ var withWidth = function withWidth() {
 
 /***/ }),
 
+/***/ "./node_modules/@material-ui/icons/Add.js":
+/*!************************************************!*\
+  !*** ./node_modules/@material-ui/icons/Add.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/createSvgIcon */ "./node_modules/@material-ui/icons/utils/createSvgIcon.js"));
+
+var _default = (0, _createSvgIcon.default)(_react.default.createElement("path", {
+  d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+}), 'Add');
+
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./node_modules/@material-ui/icons/Assignment.js":
 /*!*******************************************************!*\
   !*** ./node_modules/@material-ui/icons/Assignment.js ***!
@@ -95377,10 +95406,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
-/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../Util/Formatter */ "./src/Util/Formatter.jsx");
-/* harmony import */ var _Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../Containers/TasksContainer */ "./src/Containers/TasksContainer.jsx");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
+/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../Util/Formatter */ "./src/Util/Formatter.jsx");
+/* harmony import */ var _Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../Containers/TasksContainer */ "./src/Containers/TasksContainer.jsx");
 
 
 
@@ -95391,7 +95422,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["makeStyles"])({
+
+var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["makeStyles"])({
   root: {
     marginTop: '100px',
     display: 'flex',
@@ -95416,7 +95448,7 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_6__["ma
 var TaskPage = function TaskPage(props) {
   var classes = useStyles();
 
-  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_5__["useContext"])(_Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_9__["TaskContext"]),
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_5__["useContext"])(_Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_10__["TaskContext"]),
       updateTask = _useContext.updateTask;
 
   var taskElements = function taskElements() {
@@ -95433,11 +95465,11 @@ var TaskPage = function TaskPage(props) {
     }, {
       label: '締め切り日',
       attribute: 'finishedAt',
-      value: _Util_Formatter__WEBPACK_IMPORTED_MODULE_8__["default"].toDate(task.finished_at)
+      value: _Util_Formatter__WEBPACK_IMPORTED_MODULE_9__["default"].toDate(task.finishedAt)
     }, {
       label: '経過時間',
       attribute: 'elapsedTime',
-      value: _Util_Formatter__WEBPACK_IMPORTED_MODULE_8__["default"].toElapsedTime(task.elapsed_time)
+      value: _Util_Formatter__WEBPACK_IMPORTED_MODULE_9__["default"].toElapsedTime(task.elapsedTime)
     }];
   };
 
@@ -95449,16 +95481,16 @@ var TaskPage = function TaskPage(props) {
 
   var TableBody = function TableBody() {
     return taskElements().map(function (item) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableRow"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["TableRow"], {
         key: item.attribute
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["TableCell"], {
         colSpan: 1,
         component: "th",
         scope: "row",
         className: classes.label
-      }, item.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableCell"], {
+      }, item.label), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["TableCell"], {
         className: classes.editable
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["InputBase"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["InputBase"], {
         className: classes.input,
         defaultValue: item.value,
         inputProps: {
@@ -95473,18 +95505,18 @@ var TaskPage = function TaskPage(props) {
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["TableContainer"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["TableContainer"], {
     className: classes.container
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_7__["Table"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_8__["Table"], {
     className: classes.table,
     "aria-labelledby": "tableTitle",
     size: 'medium',
     "aria-label": "simple table"
   }, TableBody())));
-}; // TODO: contextで受け取れる値についてproptypesを指定できるか
-// TaskPage.propTypes = {
-//   task: PropTypes.object.isRequired,
-// };
+};
+TaskPage.propTypes = {
+  task: prop_types__WEBPACK_IMPORTED_MODULE_6___default.a.object.isRequired
+};
 
 /***/ }),
 
@@ -95508,22 +95540,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es_function_name__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_function_name__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var core_js_modules_es_object_values__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! core-js/modules/es.object.values */ "./node_modules/core-js/modules/es.object.values.js");
 /* harmony import */ var core_js_modules_es_object_values__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_values__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
-/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
-/* harmony import */ var _material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/icons/PlayArrow */ "./node_modules/@material-ui/icons/PlayArrow.js");
-/* harmony import */ var _material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var _material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/Stop */ "./node_modules/@material-ui/icons/Stop.js");
-/* harmony import */ var _material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../../Util/Formatter */ "./src/Util/Formatter.jsx");
-/* harmony import */ var _Mols_Timer__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../Mols/Timer */ "./src/Components/Mols/Timer.jsx");
-/* harmony import */ var _Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../Containers/TasksContainer */ "./src/Containers/TasksContainer.jsx");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/extends.js");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _material_ui_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/core */ "./node_modules/@material-ui/core/esm/index.js");
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+/* harmony import */ var _material_ui_icons_Add__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/Add */ "./node_modules/@material-ui/icons/Add.js");
+/* harmony import */ var _material_ui_icons_Add__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Add__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var _material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @material-ui/icons/PlayArrow */ "./node_modules/@material-ui/icons/PlayArrow.js");
+/* harmony import */ var _material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var _material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @material-ui/icons/Stop */ "./node_modules/@material-ui/icons/Stop.js");
+/* harmony import */ var _material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_14__);
+/* harmony import */ var _Util_Formatter__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../Util/Formatter */ "./src/Util/Formatter.jsx");
+/* harmony import */ var _Mols_Timer__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../Mols/Timer */ "./src/Components/Mols/Timer.jsx");
+/* harmony import */ var _Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../../Containers/TasksContainer */ "./src/Containers/TasksContainer.jsx");
+
+
 
 
 
@@ -95541,7 +95579,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_10__["makeStyles"])(function (theme) {
+var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_11__["makeStyles"])(function (theme) {
   return {
     root: {
       width: '100 %',
@@ -95560,22 +95598,72 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_10__["m
     },
     submit: {
       margin: '36px 0 24px'
-    }
+    },
+    dialog: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    dialogContent: {
+      width: '500px',
+      display: 'flex',
+      flexDirection: 'column'
+    } // subscribeButton: {
+    //   width: '500px',
+    //   justifyContent: 'center',
+    // },
+
   };
 });
+
+var useInput = function useInput() {
+  var initialValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  // name: テストタスク、のように生成したい
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_7__["useState"])(initialValue[value]),
+      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6___default()(_useState, 2),
+      value = _useState2[0],
+      setValue = _useState2[1];
+
+  return {
+    value: value,
+    label: initialValue[formLabel],
+    onChange: function onChange(e) {
+      setValue(e.target.value);
+    }
+  };
+};
+
 var TasksPage = function TasksPage(props) {
-  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_6__["useContext"])(_Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_15__["TaskContext"]),
+  var _useContext = Object(react__WEBPACK_IMPORTED_MODULE_7__["useContext"])(_Containers_TasksContainer__WEBPACK_IMPORTED_MODULE_17__["TaskContext"]),
       tasks = _useContext.tasks,
       updateTask = _useContext.updateTask;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_6__["useState"])(null),
-      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_5___default()(_useState, 2),
-      recordingTaskId = _useState2[0],
-      setRecordingTaskId = _useState2[1];
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_7__["useState"])(null),
+      _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6___default()(_useState3, 2),
+      recordingTaskId = _useState4[0],
+      setRecordingTaskId = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_7__["useState"])(false),
+      _useState6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_6___default()(_useState5, 2),
+      open = _useState6[0],
+      setOpen = _useState6[1];
 
   var classes = useStyles();
-  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_7__["useHistory"])();
-  var timerRef = Object(react__WEBPACK_IMPORTED_MODULE_6__["useRef"])();
+  var history = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_8__["useHistory"])();
+  var timerRef = Object(react__WEBPACK_IMPORTED_MODULE_7__["useRef"])();
+  var nameInput = useInput({
+    name: ''
+  });
+  var detailInput = useInput({
+    description: ''
+  });
+  var finishedAtInput = useInput({
+    finishedAt: null
+  });
+  var elapsedTimeInput = useInput({
+    elapsedTime: 0
+  }); // utils
 
   var rowCount = function rowCount() {
     return Object.values(tasks).size;
@@ -95587,24 +95675,85 @@ var TasksPage = function TasksPage(props) {
 
   var headerCells = function headerCells() {
     return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
+  }; // handler
+
+
+  var handleClose = function handleClose() {
+    setOpen(false);
+  };
+
+  var handleSubmit = function handleSubmit(e) {
+    console.log(nameInput.value, detailInput.value); // params: {id, name, description, ....}の形で渡す
+
+    e.preventDefault();
+    setOpen(false);
   };
 
   var handleRecording = function handleRecording(e, id) {
     // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
     updateTask({
       id: id,
-      elapsed_time: timerRef.current.time
+      elapsedTime: timerRef.current.time
     });
     setRecordingTaskId(null);
     e.stopPropagation();
+  }; // render
+  // dialogの自動生成時に受け取るもの
+  // fieldのtype（text,callenderなど）
+  // fieldのlabel（タスク名、詳細など）
+  // fieldに入力された値取得のためのstate及びonChangeで呼び出すsetState(カスタムフックで定義)
+
+
+  var renderModal = function renderModal() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Dialog"], {
+      className: classes.dialog,
+      open: open,
+      onClose: handleClose
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["DialogTitle"], null, "\u30BF\u30B9\u30AF\u4F5C\u6210"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("form", {
+      onSubmit: handleSubmit
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["DialogContent"], {
+      className: classes.dialogContent
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TextField"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5___default()({
+      size: "small",
+      label: "\u30BF\u30B9\u30AF\u540D",
+      variant: "outlined",
+      margin: "normal"
+    }, nameInput)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TextField"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5___default()({
+      label: "\u8A73\u7D30",
+      placeholder: "\u30BF\u30B9\u30AF\u306B\u95A2\u3059\u308B\u8A73\u7D30",
+      rows: 3,
+      multiline: true,
+      variant: "outlined",
+      margin: "normal"
+    }, detailInput)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TextField"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5___default()({
+      label: "\u7DE0\u3081\u5207\u308A\u65E5",
+      type: "date",
+      defaultValue: _Util_Formatter__WEBPACK_IMPORTED_MODULE_15__["default"].todayString(),
+      margin: "normal"
+    }, finishedAtInput)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TextField"], _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_5___default()({
+      label: "\u7D4C\u904E\u6642\u9593",
+      variant: "outlined",
+      margin: "normal",
+      defaultValue: 0
+    }, elapsedTimeInput))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["DialogActions"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
+      color: "secondary",
+      className: classes.subscribeButton,
+      onClick: handleClose,
+      size: "large"
+    }, "\u30AD\u30E3\u30F3\u30BB\u30EB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
+      color: "primary",
+      className: classes.subscribeButton,
+      type: "submit",
+      size: "large"
+    }, "\u4F5C\u6210"))));
   };
 
   var renderToolBar = function renderToolBar() {};
 
   var renderTableHead = function renderTableHead() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableHead"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableRow"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableHead"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableRow"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
       padding: "checkbox"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Checkbox"] // 選択状態：全タスクが選択状態になっている
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Checkbox"] // 選択状態：全タスクが選択状態になっている
     // 未選択状態：一つでも未選択のタスクがある
     , {
       checked: rowCount() > 0 && numSelected === rowCount() // onChange={onSelectAllClick}
@@ -95613,7 +95762,7 @@ var TasksPage = function TasksPage(props) {
         'aria-label': 'select all desserts'
       }
     })), headerCells().map(function (hcell) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         key: hcell.id,
         align: hcell.numeric ? 'right' : 'left' // sortDirection={orderBy === headCell.id ? order : false}
 
@@ -95622,8 +95771,8 @@ var TasksPage = function TasksPage(props) {
   };
 
   var renderTableBody = function renderTableBody() {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableBody"], null, Object.values(tasks).map(function (task) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableRow"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableBody"], null, Object.values(tasks).map(function (task) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableRow"], {
         hover: true,
         role: "checkbox",
         tabIndex: -1,
@@ -95631,60 +95780,68 @@ var TasksPage = function TasksPage(props) {
         onClick: function onClick() {
           history.push("tasks/".concat(task.id));
         }
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         padding: "checkbox",
         width: "10%"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Checkbox"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Checkbox"], {
         checked: false // inputProps={{ 'aria-labelledby': labelId }}
 
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "20%"
-      }, task.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      }, task.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "15%"
-      }, task.tag), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      }, task.tag), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "25%"
-      }, task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      }, task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "10%"
-      }, _Util_Formatter__WEBPACK_IMPORTED_MODULE_13__["default"].toDate(task.finished_at)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      }, _Util_Formatter__WEBPACK_IMPORTED_MODULE_15__["default"].toDate(task.finishedAt)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "10%"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_Mols_Timer__WEBPACK_IMPORTED_MODULE_14__["default"], {
-        time: task.elapsed_time,
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_Mols_Timer__WEBPACK_IMPORTED_MODULE_16__["default"], {
+        time: task.elapsedTime,
         taskId: task.id,
         recordingTaskId: recordingTaskId,
         ref: timerRef
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "10%"
-      }, isRecording(task.id) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_12___default.a, {
+      }, isRecording(task.id) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_icons_Stop__WEBPACK_IMPORTED_MODULE_14___default.a, {
         key: "stop-icon-".concat(task.id),
         onClick: function onClick(e) {
           handleRecording(e, task.id);
         }
-      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_11___default.a, {
+      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_icons_PlayArrow__WEBPACK_IMPORTED_MODULE_13___default.a, {
         key: "play-icon-".concat(task.id),
         onClick: function onClick(e) {
           setRecordingTaskId(task.id);
           e.stopPropagation();
         }
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableCell"], {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableCell"], {
         width: "10%"
       }, "\u30C6\u30B9\u30C8"));
     }));
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement("div", {
     className: classes.root
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["TableContainer"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_9__["Table"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["TableContainer"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Button"], {
+    onClick: function onClick() {
+      return setOpen(!open);
+    },
+    variant: "outlined",
+    color: "primary",
+    className: classes.button,
+    startIcon: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_icons_Add__WEBPACK_IMPORTED_MODULE_12___default.a, null)
+  }, "\u30BF\u30B9\u30AF\u306E\u8FFD\u52A0"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7___default.a.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_10__["Table"], {
     className: classes.table,
     "aria-labelledby": "tableTitle",
     size: 'medium',
     "aria-label": "enhanced table"
-  }, renderTableHead(), renderTableBody())));
+  }, renderTableHead(), renderTableBody())), renderModal());
 };
 TasksPage.propTypes = {
-  history: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object
+  history: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.object
 };
 TasksPage.contextTypes = {
-  tasks: prop_types__WEBPACK_IMPORTED_MODULE_8___default.a.object
+  tasks: prop_types__WEBPACK_IMPORTED_MODULE_9___default.a.object
 };
 
 /***/ }),
@@ -95785,7 +95942,7 @@ var AuthProvider = function AuthProvider(props) {
       if ('errors' in data) {
         // TODO: ログイン失敗：メッセージを表示
         return alert('error');
-      } else if (data.logged_in) {
+      } else if (data.loggedIn) {
         dispatch(Object(_Slices_UserSlice__WEBPACK_IMPORTED_MODULE_15__["signin"])(_objectSpread({}, data)));
         history.push('/tasks');
       } else {
@@ -95997,6 +96154,43 @@ var TasksContainer = function TasksContainer() {
     });
   }
 
+  var createTask = function createTask(params) {
+    var taskId = id || params.id;
+    var url = "http://localhost:3000/api/tasks";
+    var options = {
+      mode: 'cors',
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        task: _objectSpread({}, params)
+      })
+    };
+    fetch(url, options).then(function (response) {
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      return response.json();
+    }).then(function (data) {
+      if ('errors' in data) {
+        return alert('error');
+      }
+
+      var newTasks = tasks.filter(function (t) {
+        return t.id !== parseInt(taskId);
+      }); // 生成したらタスクを受け取り、新たなtask配列を作成する
+
+      setTasks([].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_14___default()(newTasks), [data.task]));
+    })["catch"](function (err) {
+      return err;
+    });
+  };
+
   var updateTask = function updateTask(params) {
     var taskId = id || params.id;
     var url = "http://localhost:3000/api/tasks/".concat(taskId);
@@ -96038,7 +96232,8 @@ var TasksContainer = function TasksContainer() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_20___default.a.createElement(TaskContext.Provider, {
     value: {
       tasks: tasks,
-      updateTask: updateTask
+      updateTask: updateTask,
+      createTask: createTask
     }
   }, id ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_20___default.a.createElement(_Components_Pages_TasksPage_TaskPage__WEBPACK_IMPORTED_MODULE_22__["TaskPage"], {
     task: tasks.find(function (t) {
@@ -96260,6 +96455,10 @@ _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(For
 
 _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(Formatter, "toDate", function (date) {
   return dayjs__WEBPACK_IMPORTED_MODULE_3___default()(date).format('YYYY/MM/DD');
+});
+
+_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(Formatter, "todayString", function () {
+  return dayjs__WEBPACK_IMPORTED_MODULE_3___default()().format('YYYY-MM-DD');
 });
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -9,8 +9,15 @@ import {
   TableRow,
   Table,
   Checkbox,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 // import { } from '@material-ui/core/colors';
@@ -37,14 +44,49 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: '36px 0 24px',
   },
+  dialog: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dialogContent: {
+    width: '500px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
+// 期待する引数：{ label(インスタンスの属性): value }
+const useInput = (initialValue = {}) => {
+  const [value, setValue] = useState(_.head(_.values(initialValue)));
+  return {
+    // nameInput = {area: name, value: 'テストタスク', onChange: () => {}}のように一個ずつ作成する
+    value,
+    area: _.head(_.keys(initialValue)),
+    onChange: (e) => {
+      setValue(e.target.value);
+    },
+  };
+};
+
 export const TasksPage = (props) => {
-  const { tasks, updateTask } = useContext(TaskContext);
+  const { tasks, taskLabel, updateTask, createTask } = useContext(TaskContext);
   const [recordingTaskId, setRecordingTaskId] = useState(null);
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   const history = useHistory();
   const timerRef = useRef();
+
+  const nameInput = useInput({ name: '' });
+  const detailInput = useInput({ description: '' });
+  const finishedAtInput = useInput({ finishedAt: null });
+  const elapsedTimeInput = useInput({ elapsedTime: 0 });
+
+  const headerCells = _.values(taskLabel);
+
+  const inputers = [nameInput, detailInput, finishedAtInput, elapsedTimeInput];
+
+  // utils
 
   const rowCount = () => {
     return Object.values(tasks).size;
@@ -54,8 +96,22 @@ export const TasksPage = (props) => {
     return recordingTaskId === id;
   };
 
-  const headerCells = () => {
-    return ['タスク名', 'タグ', '詳細', '締め切り日', '経過時間', '', ''];
+  // handler
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    let params = {};
+
+    inputers.forEach((i) => {
+      params[i.area] = i.value;
+    });
+    createTask(params);
+    setOpen(false);
+    // e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleRecording = (e, id) => {
@@ -63,6 +119,73 @@ export const TasksPage = (props) => {
     updateTask({ id: id, elapsedTime: timerRef.current.time });
     setRecordingTaskId(null);
     e.stopPropagation();
+  };
+
+  // render
+
+  const renderModal = () => {
+    return (
+      <Dialog className={classes.dialog} open={open} onClose={handleClose}>
+        <DialogTitle>タスク作成</DialogTitle>
+        <form onSubmit={handleSubmit}>
+          <DialogContent className={classes.dialogContent}>
+            {/* タスク名は空欄を許容しない */}
+            {/* デフォルト：タスク名（空欄）、詳細（空欄）、締め切り日（空欄）、経過時間（0秒）*/}
+            {/* ひとまず、まだタグはないのでタグ分の設定項目は削除しておく */}
+            <TextField
+              size="small"
+              label="タスク名"
+              variant="outlined"
+              margin="normal"
+              {...nameInput}
+            />
+            <TextField
+              label="詳細"
+              placeholder="タスクに関する詳細"
+              rows={3}
+              multiline
+              variant="outlined"
+              margin="normal"
+              {...detailInput}
+            />
+            <TextField
+              label="締め切り日"
+              type="date"
+              defaultValue={Formatter.todayString()}
+              margin="normal"
+              {...finishedAtInput}
+            />
+            <TextField
+              label="経過時間"
+              variant="outlined"
+              margin="normal"
+              defaultValue={0}
+              {...elapsedTimeInput}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="secondary"
+              className={classes.subscribeButton}
+              onClick={handleClose}
+              size="large"
+            >
+              キャンセル
+            </Button>
+            {/* 経過時間は、○日○時間○分○秒のようなフォーマットにした方がいいかもしれない */}
+            {/* タスク編集ページの経過時間の編集のところと同じような仕様にしておきたい */}
+            <Button
+              color="primary"
+              className={classes.subscribeButton}
+              type="submit"
+              size="large"
+            >
+              作成
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    );
   };
 
   const renderToolBar = () => { };
@@ -80,7 +203,7 @@ export const TasksPage = (props) => {
               inputProps={{ 'aria-label': 'select all desserts' }}
             />
           </TableCell>
-          {headerCells().map((hcell) => (
+          {headerCells.map((hcell) => (
             <TableCell
               key={hcell.id}
               align={hcell.numeric ? 'right' : 'left'}
@@ -89,6 +212,8 @@ export const TasksPage = (props) => {
               {hcell}
             </TableCell>
           ))}
+          <TableCell>{''}</TableCell>
+          <TableCell>{''}</TableCell>
         </TableRow>
       </TableHead>
     );
@@ -157,6 +282,15 @@ export const TasksPage = (props) => {
   return (
     <div className={classes.root}>
       <TableContainer>
+        <Button
+          onClick={() => setOpen(!open)}
+          variant="outlined"
+          color="primary"
+          className={classes.button}
+          startIcon={<AddIcon />}
+        >
+          タスクの追加
+        </Button>
         <Table
           className={classes.table}
           aria-labelledby="tableTitle"
@@ -167,6 +301,7 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
+      {renderModal()}
     </div>
   );
 };
