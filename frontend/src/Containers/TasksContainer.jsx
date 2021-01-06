@@ -1,15 +1,15 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { TaskPage } from '../Components/Pages/TasksPage/TaskPage';
+import { TaskPage } from '../Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from '../Components/Pages/TasksPage/TasksPage';
 
-export const taskLabel = {
-  name: 'タスク名',
-  tag: 'タグ',
-  description: '詳細',
-  finisihedAt: '締め切り日',
-  elapsedTime: '経過時間',
-};
+export const taskLabel = new Map([
+  ['name', 'タスク名'],
+  ['tag', 'タグ'],
+  ['description', '詳細'],
+  ['finisihedAt', '締め切り日'],
+  ['elapsedTime', '経過時間'],
+]);
 
 export const TaskContext = createContext();
 
@@ -89,7 +89,7 @@ export const TasksContainer = () => {
         const newTasks = tasks.filter((t) => {
           return t.id !== parseInt(taskId);
         });
-        // 生成したらタスクを受け取り、新たなtask配列を作成する
+        // TODO: その際、タスク一覧のタスク表示欄が一度閉じないようにしたい
         setTasks([...newTasks, data.task]);
       })
       .catch((err) => {

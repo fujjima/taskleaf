@@ -8,8 +8,8 @@ import {
   Table,
   InputBase,
 } from '@material-ui/core';
-import Formatter from '../../../Util/Formatter';
-import { TaskContext } from '../../../Containers/TasksContainer';
+import Formatter from '../../../../Util/Formatter';
+import { TaskContext } from '../../../../Containers/TasksContainer';
 
 const useStyles = makeStyles({
   root: {

@@ -15,34 +15,42 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-// import { } from '@material-ui/core/colors';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
 import { TaskContext } from '../../../Containers/TasksContainer';
+import { CreateDialog } from './CreateDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100 %',
-    marginTop: '100px',
+    width: '100%',
+    marginTop: '30px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  table: {
-    margin: '12px',
-    // backgroundColor: grey[300],
-  },
+  table: {},
   form: {
     width: '100 %',
     marginTop: '12px',
   },
   submit: {
     margin: '36px 0 24px',
+  },
+  addButton: {
+    marginLeft: '30px',
+    marginBottom: '30px',
+  },
+  checkBox: {
+    marginLeft: '0.5em',
   },
   dialog: {
     display: 'flex',
@@ -56,11 +64,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// 期待する引数：{ label(インスタンスの属性): value }
 const useInput = (initialValue = {}) => {
   const [value, setValue] = useState(_.head(_.values(initialValue)));
   return {
-    // nameInput = {area: name, value: 'テストタスク', onChange: () => {}}のように一個ずつ作成する
     value,
     area: _.head(_.keys(initialValue)),
     onChange: (e) => {
@@ -69,21 +75,28 @@ const useInput = (initialValue = {}) => {
   };
 };
 
+// 必要ならtask行はTaskRowとして分ける
+
 export const TasksPage = (props) => {
   const { tasks, taskLabel, updateTask, createTask } = useContext(TaskContext);
+  const [checkedIds, setCheckedIds] = useState([]);
   const [recordingTaskId, setRecordingTaskId] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
   const history = useHistory();
   const timerRef = useRef();
+
+  const [menuOpenId, setMenuOpenId] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const nameInput = useInput({ name: '' });
   const detailInput = useInput({ description: '' });
   const finishedAtInput = useInput({ finishedAt: null });
   const elapsedTimeInput = useInput({ elapsedTime: 0 });
 
-  const headerCells = _.values(taskLabel);
+  const headerCells = [...taskLabel.values()];
 
+  // TODO: 仮にtaskモデル上で扱うフィールドが増えた場合に、inputers, ~Inputの二つを手動で増やさないといけない、というのは非常に分かりづらい
   const inputers = [nameInput, detailInput, finishedAtInput, elapsedTimeInput];
 
   // utils
@@ -98,19 +111,28 @@ export const TasksPage = (props) => {
 
   // handler
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   const handleSubmit = () => {
     let params = {};
 
+    // fieldを別コンポーネントにした場合、子のfield内のvalue（state）にアクセスする、という考え方になる？
     inputers.forEach((i) => {
       params[i.area] = i.value;
     });
     createTask(params);
     setOpen(false);
-    // e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleAllCheck = (e) => {
+    // 配下の全てのチェックボックスの状態を反転させる
+    e.stopPropagation();
+  };
+
+  const handleCheck = (e) => {
     e.stopPropagation();
   };
 
@@ -123,72 +145,7 @@ export const TasksPage = (props) => {
 
   // render
 
-  const renderModal = () => {
-    return (
-      <Dialog className={classes.dialog} open={open} onClose={handleClose}>
-        <DialogTitle>タスク作成</DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent className={classes.dialogContent}>
-            {/* タスク名は空欄を許容しない */}
-            {/* デフォルト：タスク名（空欄）、詳細（空欄）、締め切り日（空欄）、経過時間（0秒）*/}
-            {/* ひとまず、まだタグはないのでタグ分の設定項目は削除しておく */}
-            <TextField
-              size="small"
-              label="タスク名"
-              variant="outlined"
-              margin="normal"
-              {...nameInput}
-            />
-            <TextField
-              label="詳細"
-              placeholder="タスクに関する詳細"
-              rows={3}
-              multiline
-              variant="outlined"
-              margin="normal"
-              {...detailInput}
-            />
-            <TextField
-              label="締め切り日"
-              type="date"
-              defaultValue={Formatter.todayString()}
-              margin="normal"
-              {...finishedAtInput}
-            />
-            <TextField
-              label="経過時間"
-              variant="outlined"
-              margin="normal"
-              defaultValue={0}
-              {...elapsedTimeInput}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              color="secondary"
-              className={classes.subscribeButton}
-              onClick={handleClose}
-              size="large"
-            >
-              キャンセル
-            </Button>
-            {/* 経過時間は、○日○時間○分○秒のようなフォーマットにした方がいいかもしれない */}
-            {/* タスク編集ページの経過時間の編集のところと同じような仕様にしておきたい */}
-            <Button
-              color="primary"
-              className={classes.subscribeButton}
-              type="submit"
-              size="large"
-            >
-              作成
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    );
-  };
-
-  const renderToolBar = () => { };
+  // const renderToolBar = () => { };
 
   const renderTableHead = () => {
     return (
@@ -196,11 +153,12 @@ export const TasksPage = (props) => {
         <TableRow>
           <TableCell padding="checkbox">
             <Checkbox
+              className={classes.checkBox}
               // 選択状態：全タスクが選択状態になっている
               // 未選択状態：一つでも未選択のタスクがある
               checked={rowCount() > 0 && numSelected === rowCount()}
-              // onChange={onSelectAllClick}
               inputProps={{ 'aria-label': 'select all desserts' }}
+              onClick={handleAllCheck}
             />
           </TableCell>
           {headerCells.map((hcell) => (
@@ -235,15 +193,17 @@ export const TasksPage = (props) => {
             >
               <TableCell padding="checkbox" width="10%">
                 <Checkbox
+                  className={classes.checkBox}
                   checked={false}
-                // inputProps={{ 'aria-labelledby': labelId }}
+                  onClick={handleCheck}
                 />
               </TableCell>
               <TableCell width="20%">{task.name}</TableCell>
               <TableCell width="15%">{task.tag}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
-                {Formatter.toDate(task.finishedAt)}
+                {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
+                {task.finishedAt ? Formatter.toDate(task.finishedAt) : ''}
               </TableCell>
               <TableCell width="10%">
                 <Timer
@@ -253,7 +213,7 @@ export const TasksPage = (props) => {
                   ref={timerRef}
                 />
               </TableCell>
-              <TableCell width="10%">
+              <TableCell width="5%">
                 {isRecording(task.id) ? (
                   <StopIcon
                     key={`stop-icon-${task.id}`}
@@ -271,7 +231,15 @@ export const TasksPage = (props) => {
                     />
                   )}
               </TableCell>
-              <TableCell width="10%">テスト</TableCell>
+              <TableCell width="5%">
+                <MoreVertIcon
+                  onClick={(e) => {
+                    setMenuOpenId(task.id);
+                    e.stopPropagation();
+                  }}
+                />
+              </TableCell>
+              {/* {renderMenu()} */}
             </TableRow>
           );
         })}
@@ -283,10 +251,10 @@ export const TasksPage = (props) => {
     <div className={classes.root}>
       <TableContainer>
         <Button
-          onClick={() => setOpen(!open)}
+          className={classes.addButton}
+          onClick={() => setDialogOpen(!dialogOpen)}
           variant="outlined"
           color="primary"
-          className={classes.button}
           startIcon={<AddIcon />}
         >
           タスクの追加
@@ -301,7 +269,7 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      {renderModal()}
+      <CreateDialog open={dialogOpen} />
     </div>
   );
 };
