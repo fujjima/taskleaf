@@ -17,4 +17,13 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier/react',
   ],
+  globals: {
+    _: true,
+    IMap: true,
+    IOrderedMap: true,
+    ISeq: true,
+    ISet: true,
+    IRecord: true,
+    IList: true,
+  },
 };

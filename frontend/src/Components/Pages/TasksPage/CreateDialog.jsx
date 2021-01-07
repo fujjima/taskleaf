@@ -13,7 +13,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Formatter from '../../../Util/Formatter';
-import { TaskContext } from '../../../Containers/TasksContainer';
+import { TaskContext, taskLabel } from '../../../Containers/TasksContainer';
+import Task from '../../../Models/Task';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -28,31 +29,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const useInput = (initialValue = {}) => {
-//   const [value, setValue] = useState(_.head(_.values(initialValue)));
-//   return {
-//     value,
-//     name: _.head(_.keys(initialValue)),
-//     onChange: (e) => {
-//       setValue(e.target.value);
-//     },
-//   };
-// };
-
 export const CreateDialog = (props) => {
   const { createTask } = useContext(TaskContext);
   const classes = useStyles();
-  const [item, setItem] = useState(new Map());
+  const [item, setItem] = useState(new Task());
 
-  const handleChange = () => { };
+  const handleChange = (e) => {
+    setItem(item.set(e.target.name, e.target.value));
+  };
 
-  const handleSubmit = () => { };
+  const handleSubmit = () => {
+    props.onSubmit(item);
+  };
 
   return (
     <Dialog
       className={classes.dialog}
       open={props.open}
-      onClose={props.handleClose}
+      onClose={props.onClose}
     >
       <DialogTitle>タスク作成</DialogTitle>
       <form onSubmit={handleSubmit}>
@@ -64,12 +58,11 @@ export const CreateDialog = (props) => {
             size="small"
             variant="outlined"
             required
-            // item.nameのようにして使いたいが、itemそのものをクラスのインスタンスようにしないといけない
-            value={''}
-          // {...nameInput}
-          // {...(!nameInput.value
-          //   ? { error: true, helperText: 'タスク名を入力してください' }
-          //   : { error: false })}
+            value={item.name}
+            {...(!item.name
+              ? { error: true, helperText: 'タスク名を入力してください' }
+              : { error: false })}
+            onChange={(e) => handleChange(e)}
           />
           <TextField
             name="description"
@@ -78,31 +71,34 @@ export const CreateDialog = (props) => {
             margin="normal"
             rows={3}
             multiline
-            value={''}
+            value={item.description}
             variant="outlined"
+            onChange={(e) => handleChange(e)}
           />
           <TextField
             name="finishedAt"
             label="締め切り日"
             margin="normal"
             type="date"
-            value={''}
+            value={item.finishedAt}
             InputLabelProps={{ shrink: true }}
+            onChange={(e) => handleChange(e)}
           />
           <TextField
             name="elapsedTime"
             label="経過時間"
             margin="normal"
             variant="outlined"
-            value={''}
+            value={item.elapsedTime}
             defaultValue={0}
+            onChange={(e) => handleChange(e)}
           />
         </DialogContent>
         <DialogActions>
           <Button
             color="secondary"
             className={classes.subscribeButton}
-            onClick={props.handleClose}
+            onClick={props.onClose}
             size="large"
           >
             キャンセル
@@ -112,7 +108,7 @@ export const CreateDialog = (props) => {
             className={classes.subscribeButton}
             type="submit"
             size="large"
-          // disabled={!nameInput.value}
+            disabled={!item.name}
           >
             作成
           </Button>
@@ -124,5 +120,6 @@ export const CreateDialog = (props) => {
 
 CreateDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };

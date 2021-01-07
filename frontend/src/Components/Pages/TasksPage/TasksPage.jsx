@@ -85,15 +85,7 @@ export const TasksPage = (props) => {
   const [menuOpenId, setMenuOpenId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const nameInput = useInput({ name: '' });
-  const detailInput = useInput({ description: '' });
-  const finishedAtInput = useInput({ finishedAt: null });
-  const elapsedTimeInput = useInput({ elapsedTime: 0 });
-
   const headerCells = [...taskLabel.values()];
-
-  // TODO: 仮にtaskモデル上で扱うフィールドが増えた場合に、inputers, ~Inputの二つを手動で増やさないといけない、というのは非常に分かりづらい
-  const inputers = [nameInput, detailInput, finishedAtInput, elapsedTimeInput];
 
   // utils
 
@@ -111,13 +103,7 @@ export const TasksPage = (props) => {
     setDialogOpen(false);
   };
 
-  const handleSubmit = () => {
-    let params = {};
-
-    // fieldを別コンポーネントにした場合、子のfield内のvalue（state）にアクセスする、という考え方になる？
-    inputers.forEach((i) => {
-      params[i.area] = i.value;
-    });
+  const handleSubmit = (params) => {
     createTask(params);
     setOpen(false);
     e.stopPropagation();
@@ -265,7 +251,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      <CreateDialog open={dialogOpen} handleClose={handleClose} />
+      <CreateDialog
+        open={dialogOpen}
+        onClose={handleClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };

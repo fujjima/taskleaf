@@ -73,7 +73,7 @@ export const TasksContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        task: { ...params },
+        task: { ...params.toJS() },
       }),
     };
 
@@ -91,7 +91,7 @@ export const TasksContainer = () => {
         const newTasks = tasks.filter((t) => {
           return t.id !== parseInt(taskId);
         });
-        // TODO: その際、タスク一覧のタスク表示欄が一度閉じないようにしたい
+        // TODO: タスク一覧のタスク表示欄が一度閉じないようにしたい
         setTasks([...newTasks, data.task]);
       })
       .catch((err) => {
