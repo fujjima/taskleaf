@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { TaskPage } from '../Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from '../Components/Pages/TasksPage/TasksPage';
+import Task from '../Models/Task';
 
 export const taskLabel = new Map([
   ['name', 'タスク名'],

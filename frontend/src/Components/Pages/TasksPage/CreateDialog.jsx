@@ -16,13 +16,6 @@ import Formatter from '../../../Util/Formatter';
 import { TaskContext } from '../../../Containers/TasksContainer';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    marginTop: '30px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   dialog: {
     display: 'flex',
     alignItems: 'center',
@@ -49,19 +42,18 @@ const useStyles = makeStyles((theme) => ({
 export const CreateDialog = (props) => {
   const { createTask } = useContext(TaskContext);
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [newTask, setNewTask] = useState(new Map());
+  const [item, setItem] = useState(new Map());
 
   const handleChange = () => { };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSubmit = () => { };
 
   return (
-    <Dialog className={classes.dialog} open={props.open} onClose={handleClose}>
+    <Dialog
+      className={classes.dialog}
+      open={props.open}
+      onClose={props.handleClose}
+    >
       <DialogTitle>タスク作成</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.dialogContent}>
@@ -72,6 +64,8 @@ export const CreateDialog = (props) => {
             size="small"
             variant="outlined"
             required
+            // item.nameのようにして使いたいが、itemそのものをクラスのインスタンスようにしないといけない
+            value={''}
           // {...nameInput}
           // {...(!nameInput.value
           //   ? { error: true, helperText: 'タスク名を入力してください' }
@@ -84,6 +78,7 @@ export const CreateDialog = (props) => {
             margin="normal"
             rows={3}
             multiline
+            value={''}
             variant="outlined"
           />
           <TextField
@@ -91,6 +86,7 @@ export const CreateDialog = (props) => {
             label="締め切り日"
             margin="normal"
             type="date"
+            value={''}
             InputLabelProps={{ shrink: true }}
           />
           <TextField
@@ -98,6 +94,7 @@ export const CreateDialog = (props) => {
             label="経過時間"
             margin="normal"
             variant="outlined"
+            value={''}
             defaultValue={0}
           />
         </DialogContent>
@@ -105,7 +102,7 @@ export const CreateDialog = (props) => {
           <Button
             color="secondary"
             className={classes.subscribeButton}
-            onClick={handleClose}
+            onClick={props.handleClose}
             size="large"
           >
             キャンセル
@@ -127,4 +124,5 @@ export const CreateDialog = (props) => {
 
 CreateDialog.propTypes = {
   open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };

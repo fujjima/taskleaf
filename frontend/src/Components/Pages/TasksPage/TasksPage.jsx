@@ -10,11 +10,6 @@ import {
   Table,
   Checkbox,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   IconButton,
   Menu,
   MenuItem,
@@ -111,9 +106,9 @@ export const TasksPage = (props) => {
 
   // handler
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
 
   const handleSubmit = () => {
     let params = {};
@@ -269,7 +264,7 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      <CreateDialog open={dialogOpen} />
+      <CreateDialog open={dialogOpen} handleClose={handleClose} />
     </div>
   );
 };
