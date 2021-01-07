@@ -17,15 +17,16 @@ export const TaskContext = createContext();
 export const TasksContainer = () => {
   const { id } = useParams();
   // TODO:
-  // http://localhost:3000までを取得して
-  // そこにapi配下のURLを追加する
+  // http://localhost:3000 までを取得してそこにapi配下のURLを追加する
   const getUrl = `http://localhost:3000/api/tasks`;
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(IList());
 
   useEffect(() => {
     const getData = async () => {
       const result = await getTasks();
-      setTasks(result);
+      setTasks(() => {
+        return tasks.push(...result.map((r) => Task.fromJS(r)));
+      });
     };
     getData();
   }, []);

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import {
   TableContainer,
   TableBody,
@@ -97,7 +98,7 @@ export const TasksPage = (props) => {
   // utils
 
   const rowCount = () => {
-    return Object.values(tasks).size;
+    return tasks.size;
   };
 
   const isRecording = (id) => {
@@ -151,7 +152,7 @@ export const TasksPage = (props) => {
               className={classes.checkBox}
               // 選択状態：全タスクが選択状態になっている
               // 未選択状態：一つでも未選択のタスクがある
-              checked={rowCount() > 0 && numSelected === rowCount()}
+              // checked={rowCount() > 0 && numSelected === rowCount()}
               inputProps={{ 'aria-label': 'select all desserts' }}
               onClick={handleAllCheck}
             />
@@ -175,7 +176,7 @@ export const TasksPage = (props) => {
   const renderTableBody = () => {
     return (
       <TableBody>
-        {Object.values(tasks).map((task) => {
+        {tasks.map((task) => {
           return (
             <TableRow
               hover
@@ -274,5 +275,5 @@ TasksPage.propTypes = {
 };
 
 TasksPage.contextTypes = {
-  tasks: PropTypes.object,
+  tasks: ImmutablePropTypes.list,
 };

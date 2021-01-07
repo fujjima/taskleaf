@@ -23,5 +23,10 @@ export default class Task extends IRecord({
     elapsedTime: Proptypes.number,
   });
 
-  // この辺にTaskモデルのビジネスロジックを書くんだよ
+  // Taskモデルのビジネスロジックをこの辺りに書く
+
+  // dateの初期フォーマットとかをしたいのであればここで行う
+  static fromJS = (params) => {
+    return new Task(params);
+  };
 }
