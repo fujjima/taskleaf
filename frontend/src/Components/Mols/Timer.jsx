@@ -8,6 +8,7 @@ import React, {
 import PropTypes from 'prop-types';
 import Formatter from '../../Util/Formatter';
 
+// XXX: 本コンポーネントは時間の表示、記録（時間の加算）を担当する
 let Timer = (props, ref) => {
   const [time, setTime] = useState(props.time || null);
   const [timerId, setTimerId] = useState(null);

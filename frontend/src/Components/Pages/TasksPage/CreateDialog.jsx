@@ -38,8 +38,8 @@ export const CreateDialog = (props) => {
     setItem(item.set(e.target.name, e.target.value));
   };
 
-  const handleSubmit = () => {
-    props.onSubmit(item);
+  const handleSubmit = (e) => {
+    props.onSubmit(e, item);
   };
 
   return (

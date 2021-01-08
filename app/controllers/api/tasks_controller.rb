@@ -12,14 +12,12 @@ class Api::TasksController < ApplicationController
     render json: { status: 200, task: @task }
   end
 
-  # タスク一覧画面からのアクセスのみを想定
   def create
     @task = current_user.tasks.new(task_params)
 
     # TODO: taskをnewした際に、どこでfinisied_atの文字列がTimeWithZoneに変換されているのか
     if @task.save
-      set_tasks
-      render :index
+      render json: { status: 200, task: @task }
     else
       # TODO: エラーメッセージ
       render :new

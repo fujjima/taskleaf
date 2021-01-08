@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
@@ -11,9 +11,9 @@ import {
   Table,
   Checkbox,
   Button,
-  IconButton,
   Menu,
   MenuItem,
+  IconButton,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -58,20 +58,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  removeItem: {
+    color: 'red',
+  },
 }));
-
-const useInput = (initialValue = {}) => {
-  const [value, setValue] = useState(_.head(_.values(initialValue)));
-  return {
-    value,
-    area: _.head(_.keys(initialValue)),
-    onChange: (e) => {
-      setValue(e.target.value);
-    },
-  };
-};
-
-// 必要ならtask行はTaskRowとして分ける
 
 export const TasksPage = (props) => {
   const { tasks, taskLabel, updateTask, createTask } = useContext(TaskContext);
@@ -82,7 +72,7 @@ export const TasksPage = (props) => {
   const history = useHistory();
   const timerRef = useRef();
 
-  const [menuOpenId, setMenuOpenId] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const headerCells = [...taskLabel.values()];
@@ -103,10 +93,16 @@ export const TasksPage = (props) => {
     setDialogOpen(false);
   };
 
-  const handleSubmit = (params) => {
+  const toggleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpenMenu(!openMenu);
+    event.stopPropagation();
+  };
+
+  const handleSubmit = (e, params) => {
+    e.preventDefault();
     createTask(params);
-    setOpen(false);
-    e.stopPropagation();
+    setDialogOpen(false);
   };
 
   const handleAllCheck = (e) => {
@@ -119,7 +115,6 @@ export const TasksPage = (props) => {
   };
 
   const handleRecording = (e, id) => {
-    // timerコンポーネントは時間の表示、記録（時間の加算）を担っているため、このコンポーネントに時間の加算機能を持たせるのはよろしくない
     updateTask({ id: id, elapsedTime: timerRef.current.time });
     setRecordingTaskId(null);
     e.stopPropagation();
@@ -128,6 +123,29 @@ export const TasksPage = (props) => {
   // render
 
   // const renderToolBar = () => { };
+
+  const renderMenu = () => {
+    return (
+      <Menu
+        open={openMenu}
+        anchorEl={anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        onClick={(e) => {
+          setAnchorEl(null);
+          setOpenMenu(false);
+          e.stopPropagation();
+        }}
+      >
+        <MenuItem>複製</MenuItem>
+        {/* 論理削除？ 復活させたい時は復活できるようにする？ */}
+        <MenuItem className={classes.removeItem}>削除</MenuItem>
+      </Menu>
+    );
+  };
 
   const renderTableHead = () => {
     return (
@@ -214,14 +232,11 @@ export const TasksPage = (props) => {
                   )}
               </TableCell>
               <TableCell width="5%">
-                <MoreVertIcon
-                  onClick={(e) => {
-                    setMenuOpenId(task.id);
-                    e.stopPropagation();
-                  }}
-                />
+                <IconButton size="small" disableRipple onClick={toggleOpen}>
+                  <MoreVertIcon />
+                </IconButton>
               </TableCell>
-              {/* {renderMenu()} */}
+              {renderMenu()}
             </TableRow>
           );
         })}

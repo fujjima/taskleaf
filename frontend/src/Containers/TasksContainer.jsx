@@ -88,11 +88,9 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        const newTasks = tasks.filter((t) => {
-          return t.id !== parseInt(taskId);
+        setTasks(() => {
+          return tasks.unshift(Task.fromJS(data.task));
         });
-        // TODO: タスク一覧のタスク表示欄が一度閉じないようにしたい
-        setTasks([...newTasks, data.task]);
       })
       .catch((err) => {
         return err;
