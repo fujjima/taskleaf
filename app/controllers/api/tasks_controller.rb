@@ -1,12 +1,10 @@
 class Api::TasksController < ApplicationController
-  before_action :set_task, only: %w[show update destroy]
+  before_action :set_task, only: %w[show update create destroy]
   before_action :set_tasks, only: %w[index]
 
   def index
     respond_to do |format|
       format.json
-      # format.html
-      # format.csv { send_data @tasks.generate_csv, filename: "tasks-#{Time.zone.now.strftime('%Y%m%d%S')}.csv" }
     end
   end
 
@@ -14,26 +12,14 @@ class Api::TasksController < ApplicationController
     render json: { status: 200, task: @task }
   end
 
-  def new
-    # 保存に失敗した場合にrenderされるが、newアクションは経由しない
-    @task = Task.new
-  end
-
   def create
-    # 保存失敗時、@taskの情報（ユーザ入力情報）を保持しておく
-    # redirect_toの際に@taskを渡すと、ID値を含んだURLが返ってくる
     @task = current_user.tasks.new(task_params)
 
-    # 戻るボタンが押されたら新規作成画面に戻る
-    if params[:back].present?
-      render :new
-      return
-    end
-
+    # TODO: taskをnewした際に、どこでfinisied_atの文字列がTimeWithZoneに変換されているのか
     if @task.save
-      TaskMailer.creation_email(@task).deliver_now
-      redirect_to @task, notice: "タスク「#{@task.name}」を登録しました！"
+      render json: { status: 200, task: @task }
     else
+      # TODO: エラーメッセージ
       render :new
     end
   end
@@ -46,6 +32,7 @@ class Api::TasksController < ApplicationController
 
   def destroy
     @task.destroy
+    render json: { status: 200 }
   end
 
   # 確認画面表示

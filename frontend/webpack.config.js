@@ -1,7 +1,8 @@
-// pathモジュールを読む(output.pathに絶対パスを指定するため)
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// pathモジュールを読む(output.pathに絶対パスを指定するため)
 const path = require('path');
-// ここでの__dirnameはfrontendディレクトリ自体を指していると考えられる
+// ここでの__dirnameはfrontendディレクトリ自体を指す
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
 
@@ -12,9 +13,8 @@ module.exports = {
   entry: ['whatwg-fetch', src + '/index.js'],
 
   output: {
-    // ローカルにおける出力先（絶対パス）
     path: dist,
-    // publicpathを指定しないと、どうやらページをリロードした際にbundle.jsはブラウザ上のカレントディレクトリに出力されるらしい
+    // publicpathを指定しないと、ページリロードの際にbundle.jsはブラウザ上のカレントディレクトリに出力される
     // TODO: なぜbundle.jsはルート直下に置いておかないといけないのか
     publicPath: '/',
     filename: 'bundle.js',
@@ -23,7 +23,6 @@ module.exports = {
   module: {
     rules: [
       {
-        // loaderが処理するファイルの拡張子
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
@@ -65,7 +64,6 @@ module.exports = {
         pathRewrite: { '^/api': '' },
       },
     },
-    // :id指定でリロードした場合、何故かbundle.jsにhtmlが読み込まれている
     historyApiFallback: {
       rewrites: [{ from: /^\/*/, to: '/index.html' }],
     },
@@ -77,6 +75,16 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: src + '/index.html',
       filename: 'index.html',
+    }),
+    new webpack.ProvidePlugin({
+      _: 'lodash',
+      // JSにはMap型が既に存在しているため、ImmutableのMap型をIMapとして区別する
+      IMap: ['immutable', 'Map'],
+      IOrderedMap: ['immutable', 'OrderedMap'],
+      ISeq: ['immutable', 'Seq'],
+      ISet: ['immutable', 'Set'],
+      IRecord: ['immutable', 'Record'],
+      IList: ['immutable', 'List'],
     }),
   ],
 };
