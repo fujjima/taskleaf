@@ -88,9 +88,7 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(() => {
-          return tasks.unshift(Task.fromJS(data.task));
-        });
+        setTasks(tasks.unshift(Task.fromJS(data.task)));
       })
       .catch((err) => {
         return err;
@@ -136,10 +134,41 @@ export const TasksContainer = () => {
       });
   };
 
-  // destroytask
+  const deleteTask = (id) => {
+    const url = `http://localhost:3000/api/tasks/${id}`;
+    const options = {
+      mode: 'cors',
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    };
+
+    fetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if ('errors' in data) {
+          return alert('error');
+        }
+        setTasks(tasks.filterNot((t) => t.id === id));
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
 
   return (
-    <TaskContext.Provider value={{ tasks, taskLabel, updateTask, createTask }}>
+    <TaskContext.Provider
+      value={{ tasks, taskLabel, createTask, updateTask, deleteTask }}
+    >
       {id ? (
         <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />
       ) : (

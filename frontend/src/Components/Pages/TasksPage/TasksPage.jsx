@@ -58,13 +58,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  removeItem: {
+  deleteItem: {
     color: 'red',
   },
 }));
 
 export const TasksPage = (props) => {
-  const { tasks, taskLabel, updateTask, createTask } = useContext(TaskContext);
+  const { tasks, taskLabel, updateTask, createTask, deleteTask } = useContext(
+    TaskContext
+  );
   const [checkedIds, setCheckedIds] = useState([]);
   const [recordingTaskId, setRecordingTaskId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -72,12 +74,14 @@ export const TasksPage = (props) => {
   const history = useHistory();
   const timerRef = useRef();
 
-  const [openMenu, setOpenMenu] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const headerCells = [...taskLabel.values()];
 
   // utils
+
+  const isOpened = !_.isNull(openMenuId);
 
   const rowCount = () => {
     return tasks.size;
@@ -89,14 +93,14 @@ export const TasksPage = (props) => {
 
   // handler
 
-  const handleClose = () => {
-    setDialogOpen(false);
+  const toggleOpen = (event, id) => {
+    setAnchorEl(event.currentTarget);
+    setOpenMenuId(id);
+    event.stopPropagation();
   };
 
-  const toggleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-    setOpenMenu(!openMenu);
-    event.stopPropagation();
+  const handleClose = () => {
+    setDialogOpen(false);
   };
 
   const handleSubmit = (e, params) => {
@@ -105,12 +109,16 @@ export const TasksPage = (props) => {
     setDialogOpen(false);
   };
 
-  const handleAllCheck = (e) => {
-    // 配下の全てのチェックボックスの状態を反転させる
-    e.stopPropagation();
+  const handleDelete = (e) => {
+    deleteTask(openMenuId);
   };
 
   const handleCheck = (e) => {
+    e.stopPropagation();
+  };
+
+  // 配下の全てのチェックボックスの状態を反転させる
+  const handleAllCheck = (e) => {
     e.stopPropagation();
   };
 
@@ -127,7 +135,7 @@ export const TasksPage = (props) => {
   const renderMenu = () => {
     return (
       <Menu
-        open={openMenu}
+        open={isOpened}
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{
@@ -136,13 +144,15 @@ export const TasksPage = (props) => {
         }}
         onClick={(e) => {
           setAnchorEl(null);
-          setOpenMenu(false);
+          setOpenMenuId(null);
           e.stopPropagation();
         }}
       >
         <MenuItem>複製</MenuItem>
         {/* 論理削除？ 復活させたい時は復活できるようにする？ */}
-        <MenuItem className={classes.removeItem}>削除</MenuItem>
+        <MenuItem onClick={handleDelete} className={classes.deleteItem}>
+          削除
+        </MenuItem>
       </Menu>
     );
   };
@@ -154,8 +164,6 @@ export const TasksPage = (props) => {
           <TableCell padding="checkbox">
             <Checkbox
               className={classes.checkBox}
-              // 選択状態：全タスクが選択状態になっている
-              // 未選択状態：一つでも未選択のタスクがある
               // checked={rowCount() > 0 && numSelected === rowCount()}
               inputProps={{ 'aria-label': 'select all desserts' }}
               onClick={handleAllCheck}
@@ -232,14 +240,18 @@ export const TasksPage = (props) => {
                   )}
               </TableCell>
               <TableCell width="5%">
-                <IconButton size="small" disableRipple onClick={toggleOpen}>
+                <IconButton
+                  size="small"
+                  disableRipple
+                  onClick={(e) => toggleOpen(e, task.id)}
+                >
                   <MoreVertIcon />
                 </IconButton>
               </TableCell>
-              {renderMenu()}
             </TableRow>
           );
         })}
+        {renderMenu()}
       </TableBody>
     );
   };

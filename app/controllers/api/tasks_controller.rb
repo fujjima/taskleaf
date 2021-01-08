@@ -32,6 +32,7 @@ class Api::TasksController < ApplicationController
 
   def destroy
     @task.destroy
+    render json: { status: 200 }
   end
 
   # 確認画面表示
