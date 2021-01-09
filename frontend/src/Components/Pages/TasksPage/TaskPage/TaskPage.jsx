@@ -45,12 +45,12 @@ export const TaskPage = (props) => {
       {
         label: '締め切り日',
         attribute: 'finishedAt',
-        value: Formatter.toDate(task.finishedAt),
+        value: task.finishedAt,
       },
       {
         label: '経過時間',
         attribute: 'elapsedTime',
-        value: Formatter.toElapsedTime(task.elapsedTime),
+        value: task.elapsedTime.format('HH:mm:ss'),
       },
     ];
   };

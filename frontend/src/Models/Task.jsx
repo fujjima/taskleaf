@@ -1,5 +1,6 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
+import Formatter from '../Util/Formatter';
 
 export default class Task extends IRecord({
   id: null,
@@ -25,8 +26,14 @@ export default class Task extends IRecord({
 
   // Taskモデルのビジネスロジックをこの辺りに書く
 
-  // dateの初期フォーマットとかをしたいのであればここで行う
   static fromJS = (params) => {
-    return new Task(params);
+    // Taskを生成した後に、Taskの各種パラメータをいじりたい時にwithMutationsを使用することで、最終的な編成を一回で納めることができる
+    return new Task(params).withMutations((s) => {
+      s.set(
+        'finishedAt',
+        params.finishedAt ? Formatter.toDate(params.finishedAt) : ''
+      );
+      s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
+    });
   };
 }

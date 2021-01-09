@@ -108,7 +108,6 @@ export const TasksContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        id: taskId,
         task: { ...params },
       }),
     };
@@ -124,10 +123,12 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        const newTasks = tasks.filter((t) => {
-          return t.id !== parseInt(taskId);
-        });
-        setTasks([...newTasks, data.task]);
+        setTasks(
+          tasks.update(
+            tasks.findIndex((t) => taskId === t.id),
+            Task.fromJS(data.task)
+          )
+        );
       })
       .catch((err) => {
         return err;

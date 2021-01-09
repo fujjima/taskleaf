@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Formatter from '../../../Util/Formatter';
-import { TaskContext, taskLabel } from '../../../Containers/TasksContainer';
+import { TaskContext } from '../../../Containers/TasksContainer';
 import Task from '../../../Models/Task';
 
 const useStyles = makeStyles((theme) => ({
