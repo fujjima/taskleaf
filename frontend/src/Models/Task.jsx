@@ -19,12 +19,9 @@ export default class Task extends IRecord({
     description: Proptypes.string,
     // TODO: タグ機能はよ
     tags: ImmutablePropTypes.list,
-    // TODO: バックから文字列で来る→文字列をフォーマットしてDateを生成する、というのをここでやるべきなんだよ
     finishedAt: Proptypes.string,
     elapsedTime: Proptypes.number,
   });
-
-  // Taskモデルのビジネスロジックをこの辺りに書く
 
   static fromJS = (params) => {
     // Taskを生成した後に、Taskの各種パラメータをいじりたい時にwithMutationsを使用することで、最終的な編成を一回で納めることができる
