@@ -8,8 +8,10 @@ import {
   Table,
   InputBase,
 } from '@material-ui/core';
-import Formatter from '../../../../Util/Formatter';
 import { TaskContext } from '../../../../Containers/TasksContainer';
+import { DateField } from '../../../Mols/DateField';
+import { TimeField } from '../../../Mols/TimeField';
+import Task from '../../../../Models/Task';
 
 const useStyles = makeStyles({
   root: {
@@ -57,9 +59,25 @@ export const TaskPage = (props) => {
 
   const handleBlur = (label) => {
     // elapsedTimeを変更した際、event.target.valueだと"HH:mm:ss"の文字列のまま来てしまう
-    // 時間編集時はtimePickerを出したい
     const value = event.target.value;
-    updateTask({ [label]: value });
+    updateTask({ label: value });
+  };
+
+  const renderField = (item) => {
+    if (item.attribute === 'finishedAt') {
+      return <DateField date={item.value} className={classes.input} />;
+    }
+    // if (item.attribute === 'elapsedTime') {
+    //   return <TimeField />;
+    // }
+    return (
+      <InputBase
+        className={classes.input}
+        defaultValue={item.value}
+        inputProps={{ 'aria-label': 'naked' }}
+        onBlur={() => handleBlur(item.attribute)}
+      />
+    );
   };
 
   // handler
@@ -75,14 +93,7 @@ export const TaskPage = (props) => {
         >
           {item.label}
         </TableCell>
-        <TableCell className={classes.editable}>
-          <InputBase
-            className={classes.input}
-            defaultValue={item.value}
-            inputProps={{ 'aria-label': 'naked' }}
-            onBlur={() => handleBlur(item.attribute)}
-          />
-        </TableCell>
+        <TableCell className={classes.editable}>{renderField(item)}</TableCell>
       </TableRow>
     ));
   };
@@ -104,5 +115,5 @@ export const TaskPage = (props) => {
 };
 
 TaskPage.propTypes = {
-  task: PropTypes.object.isRequired,
+  task: PropTypes.instanceOf(Task),
 };

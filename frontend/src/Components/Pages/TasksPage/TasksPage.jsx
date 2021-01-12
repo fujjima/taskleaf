@@ -191,9 +191,9 @@ export const TasksPage = (props) => {
               onClick={handleAllCheck}
             />
           </TableCell>
-          {headerCells.map((hcell) => (
+          {headerCells.map((hcell, idx) => (
             <TableCell
-              key={hcell.id}
+              key={idx}
               align={hcell.numeric ? 'right' : 'left'}
             // sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -216,7 +216,7 @@ export const TasksPage = (props) => {
               hover
               role="checkbox"
               tabIndex={-1}
-              key
+              key={task.id}
               onClick={() => {
                 history.push(`tasks/${task.id}`);
               }}
@@ -234,11 +234,12 @@ export const TasksPage = (props) => {
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
                 {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
-                {task.finishedAt}
+                {task.finishedAt.isValid()
+                  ? task.finishedAt.format('YYYY/MM/DD')
+                  : ''}
               </TableCell>
               <TableCell width="10%">
                 <Timer
-                  key={task.id}
                   time={task.elapsedTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}

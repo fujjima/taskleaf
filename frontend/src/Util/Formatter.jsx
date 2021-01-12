@@ -32,7 +32,7 @@ export default class Formatter {
 
   // 文字列の日時情報をYYYY/MM/DDに変換
   static toDate = (date) => {
-    return dayjs(date).format('YYYY/MM/DD');
+    return dayjs(date);
   };
 
   // 今日の日付を文字列形式にフォーマットする

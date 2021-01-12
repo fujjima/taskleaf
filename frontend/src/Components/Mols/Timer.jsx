@@ -53,7 +53,7 @@ Timer = forwardRef(Timer);
 export default Timer;
 
 Timer.propTypes = {
-  time: PropTypes.number,
+  time: PropTypes.object,
   taskId: PropTypes.number,
   recordingTaskId: PropTypes.number,
 };

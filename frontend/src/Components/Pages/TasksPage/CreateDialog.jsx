@@ -1,18 +1,14 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Checkbox,
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
-  Menu,
-  MenuItem,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Formatter from '../../../Util/Formatter';
 import { TaskContext } from '../../../Containers/TasksContainer';
 import Task from '../../../Models/Task';
 
@@ -58,6 +54,9 @@ export const CreateDialog = (props) => {
             size="small"
             variant="outlined"
             required
+            // warning:
+            // 各value値は直接stateとして管理することをreactが推奨している
+            // onchangeはsetstateする関数をおく
             value={item.name}
             {...(!item.name
               ? { error: true, helperText: 'タスク名を入力してください' }

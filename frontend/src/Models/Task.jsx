@@ -24,12 +24,8 @@ export default class Task extends IRecord({
   });
 
   static fromJS = (params) => {
-    // Taskを生成した後に、Taskの各種パラメータをいじりたい時にwithMutationsを使用することで、最終的な編成を一回で納めることができる
     return new Task(params).withMutations((s) => {
-      s.set(
-        'finishedAt',
-        params.finishedAt ? Formatter.toDate(params.finishedAt) : ''
-      );
+      s.set('finishedAt', Formatter.toDate(params.finishedAt));
       // フロントで使用する際：文字列形式中心
       // バック送信時：秒（文字列、数字どちらもで可）
       s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
