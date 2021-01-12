@@ -13,11 +13,11 @@ class Api::TasksController < ApplicationController
   end
 
   def create
+    # TODO: finisied_atの文字列をTimeWithZoneに変換しているのはどこで行われているか調査
     @task = current_user.tasks.new(task_params)
 
-    # TODO: taskをnewした際に、どこでfinisied_atの文字列がTimeWithZoneに変換されているのか
     if @task.save
-      render json: { status: 200, task: @task }
+      render :show
     else
       # TODO: エラーメッセージ
       render :new

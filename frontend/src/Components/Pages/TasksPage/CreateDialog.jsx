@@ -84,6 +84,9 @@ export const CreateDialog = (props) => {
             InputLabelProps={{ shrink: true }}
             onChange={(e) => handleChange(e)}
           />
+          {/* 時間入力形式を考える */}
+          {/* 完全に手動（経過時間）を入力させるか、start〜endを入力させるか */}
+          {/* 手動の場合、○時間○分○秒を入力させる*/}
           <TextField
             name="elapsedTime"
             label="経過時間"

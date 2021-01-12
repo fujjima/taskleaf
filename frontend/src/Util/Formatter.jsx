@@ -25,7 +25,8 @@ export default class Formatter {
   };
 
   // 記録が停止された際の時間（hh:mm:ss）をミリ秒に変換する
-  static toMiliSecond = () => {
+  // ほぼほぼtaskpageでしか呼ばれないことを想定している
+  static toSecond = () => {
     return;
   };
 

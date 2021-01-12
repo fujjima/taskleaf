@@ -56,6 +56,8 @@ export const TaskPage = (props) => {
   };
 
   const handleBlur = (label) => {
+    // elapsedTimeを変更した際、event.target.valueだと"HH:mm:ss"の文字列のまま来てしまう
+    // 時間編集時はtimePickerを出したい
     const value = event.target.value;
     updateTask({ [label]: value });
   };

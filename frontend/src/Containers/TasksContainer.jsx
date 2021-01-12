@@ -88,7 +88,9 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(tasks.unshift(Task.fromJS(data.task)));
+        setTasks((prev) => {
+          return prev.unshift(Task.fromJS(data.task));
+        });
       })
       .catch((err) => {
         return err;
@@ -124,7 +126,7 @@ export const TasksContainer = () => {
           return alert('error');
         }
         setTasks(
-          tasks.update(
+          tasks.set(
             tasks.findIndex((t) => taskId === t.id),
             Task.fromJS(data.task)
           )

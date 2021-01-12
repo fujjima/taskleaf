@@ -184,6 +184,7 @@ export const TasksPage = (props) => {
         <TableRow>
           <TableCell padding="checkbox">
             <Checkbox
+              disableRipple
               className={classes.checkBox}
               checked={rowCount() > 0 && checkedIds.size === rowCount()}
               inputProps={{ 'aria-label': 'select all desserts' }}
@@ -222,6 +223,7 @@ export const TasksPage = (props) => {
             >
               <TableCell padding="checkbox" width="10%">
                 <Checkbox
+                  disableRipple
                   className={classes.checkBox}
                   checked={checkedIds.has(task.id)}
                   onClick={(e) => handleCheck(e, task.id)}
@@ -236,6 +238,7 @@ export const TasksPage = (props) => {
               </TableCell>
               <TableCell width="10%">
                 <Timer
+                  key={task.id}
                   time={task.elapsedTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
