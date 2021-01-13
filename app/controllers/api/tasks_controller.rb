@@ -62,7 +62,8 @@ class Api::TasksController < ApplicationController
   end
 
   def set_tasks
-    @q = current_user.tasks.ransack(params[:q])
-    @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
+    # @q = current_user.tasks.ransack(params[:q])
+    # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
+    @tasks = current_user.tasks.includes(:tags)
   end
 end

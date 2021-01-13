@@ -1,4 +1,5 @@
 class Task < ApplicationRecord
+  acts_as_taggable
   has_one_attached :image
 
   validates :name, presence: true, length: { maximum: 30 }
