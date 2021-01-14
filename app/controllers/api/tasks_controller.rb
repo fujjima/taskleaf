@@ -26,7 +26,7 @@ class Api::TasksController < ApplicationController
 
   def update
     @task.update!(task_params)
-    render json: { status: 200, task: @task }
+    render :show
     # redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
   end
 

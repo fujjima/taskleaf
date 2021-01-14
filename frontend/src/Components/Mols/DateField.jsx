@@ -1,17 +1,14 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
-import { InputBase, makeStyles, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 import ja from 'dayjs/locale/ja';
-// import Formatter from '../../../Util/Formatter';
 
-// widthなど
 const useStyles = (props) =>
   makeStyles({
     ...props,
@@ -27,42 +24,52 @@ class ExtendedUtils extends DayJsUtils {
   }
 }
 
-export const DateField = (props, { options }) => {
+export const DateField = (props) => {
   const classes = useStyles(props);
-  const { date } = props;
+  const { pdate, onClose, ...options } = props;
+  const [date, setDate] = useState(pdate);
+  const [open, setOpen] = useState(false);
 
-  // 入力日 <= 締め切り日のバリデーション
-  const validateDate = () => { };
-
-  const handleDateChange = () => {
-    // props関数を実行する
+  const handleClose = () => {
+    setOpen(false);
+    onClose && onClose({ finishedAt: date });
   };
 
   return (
     <MuiPickersUtilsProvider utils={ExtendedUtils} locale={ja}>
       <KeyboardDatePicker
-        // TODO: 年を跨ぐ際に面倒なのでtoolbarはあっていもいいかも
-        // TODO: キーボードでの入力を禁止する
+        open={open}
         disablePast
-        allowKeyboardControl={false}
         variant="inline"
         inputVariant="outlined"
         format="YYYY / MM / DD (dd)"
-        margin="none"
         value={date}
-        {...options}
-        onChange={handleDateChange}
-        InputProps={{ readOnly: true }}
-        okLabel="決定"
-        cancelLabel="キャンセル"
-        // 締め切り日がない時にメッセージを出させない
+        onChange={(date) => setDate(date)}
+        // テキストエリアクリック時にカレンダーを開くための設定-----
+        KeyboardButtonProps={{
+          onFocus: () => setOpen(true),
+        }}
+        PopoverProps={{
+          disableRestoreFocus: true,
+          onClose: handleClose,
+        }}
+        // ------------------------------------------------
+        InputProps={{
+          onFocus: () => {
+            setOpen(true);
+          },
+        }}
+        // バリデーションメッセージを表示させない
         error={false}
         helperText={''}
+        {...options}
       />
     </MuiPickersUtilsProvider>
   );
 };
 
 DateField.propTypes = {
-  date: PropTypes.instanceOf(dayjs).isRequired,
+  pdate: PropTypes.instanceOf(dayjs).isRequired,
+  // 親から受け取る可能性がある
+  onClose: PropTypes.func,
 };

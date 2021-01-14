@@ -11,6 +11,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { TaskContext } from '../../../Containers/TasksContainer';
 import Task from '../../../Models/Task';
+import { DateField } from '../../Mols/DateField';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -34,6 +35,13 @@ export const CreateDialog = (props) => {
     setItem(item.set(e.target.name, e.target.value));
   };
 
+  const handleDateChange = (value) => {
+    if (!value) return;
+
+    // value = { finishedAt: dayjs }の想定
+    setItem(item.merge(value));
+  };
+
   const handleSubmit = (e) => {
     props.onSubmit(e, item);
   };
@@ -54,9 +62,9 @@ export const CreateDialog = (props) => {
             size="small"
             variant="outlined"
             required
-            // warning:
-            // 各value値は直接stateとして管理することをreactが推奨している
-            // onchangeはsetstateする関数をおく
+            // XXX:
+            // value値はstateとして管理することをreactが推奨している
+            // onchangeにはsetstateする関数を設定する
             value={item.name}
             {...(!item.name
               ? { error: true, helperText: 'タスク名を入力してください' }
@@ -74,7 +82,7 @@ export const CreateDialog = (props) => {
             variant="outlined"
             onChange={(e) => handleChange(e)}
           />
-          <TextField
+          {/* <TextField
             name="finishedAt"
             label="締め切り日"
             margin="normal"
@@ -82,6 +90,15 @@ export const CreateDialog = (props) => {
             value={item.finishedAt}
             InputLabelProps={{ shrink: true }}
             onChange={(e) => handleChange(e)}
+          /> */}
+          <DateField
+            pdate={item.finishedAt}
+            className={classes.input}
+            name={item.finishedAt}
+            onClose={handleDateChange}
+            label="締め切り日"
+            margin="normal"
+            InputLabelProps={{ shrink: true }}
           />
           {/* 時間入力形式を考える */}
           {/* 完全に手動（経過時間）を入力させるか、start〜endを入力させるか */}

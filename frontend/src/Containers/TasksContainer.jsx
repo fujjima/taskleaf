@@ -125,12 +125,12 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(
-          tasks.set(
-            tasks.findIndex((t) => taskId === t.id),
+        setTasks((prev) => {
+          return prev.set(
+            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
             Task.fromJS(data.task)
-          )
-        );
+          );
+        });
       })
       .catch((err) => {
         return err;

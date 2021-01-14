@@ -57,15 +57,19 @@ export const TaskPage = (props) => {
     ];
   };
 
-  const handleBlur = (label) => {
-    // elapsedTimeを変更した際、event.target.valueだと"HH:mm:ss"の文字列のまま来てしまう
+  const handleBlur = (val) => {
+    // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
+    // このページ内でレンダリングされているコンポーネントからはeventが取得できる
+    const name = event.target.name;
     const value = event.target.value;
-    updateTask({ label: value });
+    name ? updateTask({ [name]: value }) : updateTask(val);
   };
 
   const renderField = (item) => {
     if (item.attribute === 'finishedAt') {
-      return <DateField date={item.value} className={classes.input} />;
+      return (
+        <DateField pdate={item.value} onClose={handleBlur} margin="none" />
+      );
     }
     // if (item.attribute === 'elapsedTime') {
     //   return <TimeField />;
@@ -74,8 +78,9 @@ export const TaskPage = (props) => {
       <InputBase
         className={classes.input}
         defaultValue={item.value}
+        name={item.attribute}
         inputProps={{ 'aria-label': 'naked' }}
-        onBlur={() => handleBlur(item.attribute)}
+        onBlur={handleBlur}
       />
     );
   };
@@ -83,8 +88,8 @@ export const TaskPage = (props) => {
   // handler
 
   const TableBody = () => {
-    return taskElements().map((item) => (
-      <TableRow key={item.attribute}>
+    return taskElements().map((item, idx) => (
+      <TableRow key={idx}>
         <TableCell
           colSpan={1}
           component="th"
