@@ -26,9 +26,8 @@ export default class Task extends IRecord({
   static fromJS = (params) => {
     return new Task(params).withMutations((s) => {
       s.set('finishedAt', Formatter.toDate(params.finishedAt));
-      // フロントで使用する際：文字列形式中心
-      // バック送信時：秒（文字列、数字どちらもで可）
       s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
+      s.set('tags', IList(params.tags.map((t) => IMap(t))));
     });
   };
 }

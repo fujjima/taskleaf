@@ -14,6 +14,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Chip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -100,6 +101,19 @@ export const TasksPage = (props) => {
     return recordingTaskId === id;
   };
 
+  const displayTags = (tags) => {
+    if (tags.size === 0) return tags;
+
+    return tags.map((tag) => (
+      <Chip
+        key={tag.get('id')}
+        label={tag.get('name')}
+        onDelete={handleTagDelete}
+      // className={classes.chip}
+      />
+    ));
+  };
+
   // handler
 
   const toggleOpen = (event, id) => {
@@ -121,6 +135,8 @@ export const TasksPage = (props) => {
   const handleDelete = (e) => {
     deleteTask(openMenuId);
   };
+
+  const handleTagDelete = () => { };
 
   const handleCheck = (e, id) => {
     setCheckedIds((prev) => {
@@ -208,6 +224,7 @@ export const TasksPage = (props) => {
   };
 
   const renderTableBody = () => {
+    console.log(tasks);
     return (
       <TableBody>
         {tasks.map((task) => {
@@ -230,7 +247,7 @@ export const TasksPage = (props) => {
                 />
               </TableCell>
               <TableCell width="20%">{task.name}</TableCell>
-              <TableCell width="15%">{task.tag}</TableCell>
+              <TableCell width="15%">{displayTags(task.tags)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
                 {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
