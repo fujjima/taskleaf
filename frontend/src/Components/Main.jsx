@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from '../../src/Stores/Store';
-import { PrivateRoutes } from '../Lib/PrivateRoutes';
-import LoginPage from './Pages/LoginPage/LoginPage';
-import { AuthProvider } from './Provider/AuthProvider';
+import store from 'Stores/Store';
+import { PrivateRoutes } from 'Lib/PrivateRoutes';
+import LoginPage from 'Components/Pages/LoginPage/LoginPage';
+import { AuthProvider } from 'Components/Provider/AuthProvider';
 
 export default class Main extends React.Component {
   constructor(props) {

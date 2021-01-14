@@ -8,10 +8,10 @@ import {
   Table,
   InputBase,
 } from '@material-ui/core';
-import { TaskContext } from '../../../../Containers/TasksContainer';
-import { DateField } from '../../../Mols/DateField';
-import { TimeField } from '../../../Mols/TimeField';
-import Task from '../../../../Models/Task';
+import { TaskContext } from 'Containers/TasksContainer';
+import { DateField } from 'Components/Mols/DateField';
+import { TimeField } from 'Components/Mols/TimeField';
+import Task from 'Models/Task';
 
 const useStyles = makeStyles({
   root: {
@@ -43,6 +43,7 @@ export const TaskPage = (props) => {
     if (!task) return [];
     return [
       { label: 'タスク名', attribute: 'name', value: task.name },
+      { label: 'タグ', attribute: 'tags', value: task.tags },
       { label: '詳細', attribute: 'description', value: task.description },
       {
         label: '締め切り日',

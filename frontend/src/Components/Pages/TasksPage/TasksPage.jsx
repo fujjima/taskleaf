@@ -21,8 +21,8 @@ import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Timer from '../../Mols/Timer';
-import { TaskContext } from '../../../Containers/TasksContainer';
+import Timer from 'Components/Mols/Timer';
+import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -224,7 +224,6 @@ export const TasksPage = (props) => {
   };
 
   const renderTableBody = () => {
-    console.log(tasks);
     return (
       <TableBody>
         {tasks.map((task) => {
