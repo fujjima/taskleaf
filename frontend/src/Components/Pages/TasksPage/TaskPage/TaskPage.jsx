@@ -8,8 +8,10 @@ import {
   Table,
   InputBase,
 } from '@material-ui/core';
-import Formatter from '../../../../Util/Formatter';
 import { TaskContext } from '../../../../Containers/TasksContainer';
+import { DateField } from '../../../Mols/DateField';
+import { TimeField } from '../../../Mols/TimeField';
+import Task from '../../../../Models/Task';
 
 const useStyles = makeStyles({
   root: {
@@ -45,26 +47,49 @@ export const TaskPage = (props) => {
       {
         label: '締め切り日',
         attribute: 'finishedAt',
-        value: Formatter.toDate(task.finishedAt),
+        value: task.finishedAt,
       },
       {
         label: '経過時間',
         attribute: 'elapsedTime',
-        value: Formatter.toElapsedTime(task.elapsedTime),
+        value: task.elapsedTime.format('HH:mm:ss'),
       },
     ];
   };
 
-  const handleBlur = (label) => {
+  const handleBlur = (val) => {
+    // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
+    // このページ内でレンダリングされているコンポーネントからはeventが取得できる
+    const name = event.target.name;
     const value = event.target.value;
-    updateTask({ [label]: value });
+    name ? updateTask({ [name]: value }) : updateTask(val);
+  };
+
+  const renderField = (item) => {
+    if (item.attribute === 'finishedAt') {
+      return (
+        <DateField pdate={item.value} onClose={handleBlur} margin="none" />
+      );
+    }
+    // if (item.attribute === 'elapsedTime') {
+    //   return <TimeField />;
+    // }
+    return (
+      <InputBase
+        className={classes.input}
+        defaultValue={item.value}
+        name={item.attribute}
+        inputProps={{ 'aria-label': 'naked' }}
+        onBlur={handleBlur}
+      />
+    );
   };
 
   // handler
 
   const TableBody = () => {
-    return taskElements().map((item) => (
-      <TableRow key={item.attribute}>
+    return taskElements().map((item, idx) => (
+      <TableRow key={idx}>
         <TableCell
           colSpan={1}
           component="th"
@@ -73,14 +98,7 @@ export const TaskPage = (props) => {
         >
           {item.label}
         </TableCell>
-        <TableCell className={classes.editable}>
-          <InputBase
-            className={classes.input}
-            defaultValue={item.value}
-            inputProps={{ 'aria-label': 'naked' }}
-            onBlur={() => handleBlur(item.attribute)}
-          />
-        </TableCell>
+        <TableCell className={classes.editable}>{renderField(item)}</TableCell>
       </TableRow>
     ));
   };
@@ -102,5 +120,5 @@ export const TaskPage = (props) => {
 };
 
 TaskPage.propTypes = {
-  task: PropTypes.object.isRequired,
+  task: PropTypes.instanceOf(Task),
 };

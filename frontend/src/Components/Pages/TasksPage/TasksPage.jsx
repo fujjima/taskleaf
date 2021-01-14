@@ -20,7 +20,6 @@ import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Formatter from '../../../Util/Formatter';
 import Timer from '../../Mols/Timer';
 import { TaskContext } from '../../../Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
@@ -58,6 +57,16 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  recordingIcon: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
+  menuButton: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   deleteItem: {
     color: 'red',
   },
@@ -67,7 +76,7 @@ export const TasksPage = (props) => {
   const { tasks, taskLabel, updateTask, createTask, deleteTask } = useContext(
     TaskContext
   );
-  const [checkedIds, setCheckedIds] = useState([]);
+  const [checkedIds, setCheckedIds] = useState(new Set());
   const [recordingTaskId, setRecordingTaskId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
@@ -113,12 +122,24 @@ export const TasksPage = (props) => {
     deleteTask(openMenuId);
   };
 
-  const handleCheck = (e) => {
+  const handleCheck = (e, id) => {
+    setCheckedIds((prev) => {
+      prev.has(id) ? prev.delete(id) : prev.add(id);
+      return new Set(prev);
+    });
     e.stopPropagation();
   };
 
-  // 配下の全てのチェックボックスの状態を反転させる
   const handleAllCheck = (e) => {
+    const checked = e.target.checked;
+    setCheckedIds((prev) => {
+      if (checked) {
+        prev = tasks.map((t) => t.id).toJS();
+      } else {
+        prev.clear();
+      }
+      return new Set(prev);
+    });
     e.stopPropagation();
   };
 
@@ -149,7 +170,7 @@ export const TasksPage = (props) => {
         }}
       >
         <MenuItem>複製</MenuItem>
-        {/* 論理削除？ 復活させたい時は復活できるようにする？ */}
+        {/* 論理削除にするかどうかについて */}
         <MenuItem onClick={handleDelete} className={classes.deleteItem}>
           削除
         </MenuItem>
@@ -163,15 +184,16 @@ export const TasksPage = (props) => {
         <TableRow>
           <TableCell padding="checkbox">
             <Checkbox
+              disableRipple
               className={classes.checkBox}
-              // checked={rowCount() > 0 && numSelected === rowCount()}
+              checked={rowCount() > 0 && checkedIds.size === rowCount()}
               inputProps={{ 'aria-label': 'select all desserts' }}
               onClick={handleAllCheck}
             />
           </TableCell>
-          {headerCells.map((hcell) => (
+          {headerCells.map((hcell, idx) => (
             <TableCell
-              key={hcell.id}
+              key={idx}
               align={hcell.numeric ? 'right' : 'left'}
             // sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -194,16 +216,17 @@ export const TasksPage = (props) => {
               hover
               role="checkbox"
               tabIndex={-1}
-              key
+              key={task.id}
               onClick={() => {
                 history.push(`tasks/${task.id}`);
               }}
             >
               <TableCell padding="checkbox" width="10%">
                 <Checkbox
+                  disableRipple
                   className={classes.checkBox}
-                  checked={false}
-                  onClick={handleCheck}
+                  checked={checkedIds.has(task.id)}
+                  onClick={(e) => handleCheck(e, task.id)}
                 />
               </TableCell>
               <TableCell width="20%">{task.name}</TableCell>
@@ -211,7 +234,9 @@ export const TasksPage = (props) => {
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
                 {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
-                {task.finishedAt ? Formatter.toDate(task.finishedAt) : ''}
+                {task.finishedAt.isValid()
+                  ? task.finishedAt.format('YYYY/MM/DD')
+                  : ''}
               </TableCell>
               <TableCell width="10%">
                 <Timer
@@ -223,24 +248,35 @@ export const TasksPage = (props) => {
               </TableCell>
               <TableCell width="5%">
                 {isRecording(task.id) ? (
-                  <StopIcon
+                  <IconButton
+                    size="small"
+                    disableRipple
+                    className={classes.recordingIcon}
                     key={`stop-icon-${task.id}`}
                     onClick={(e) => {
                       handleRecording(e, task.id);
                     }}
-                  />
+                  >
+                    <StopIcon />
+                  </IconButton>
                 ) : (
-                    <PlayArrowIcon
+                    <IconButton
+                      size="small"
+                      disableRipple
+                      className={classes.recordingIcon}
                       key={`play-icon-${task.id}`}
                       onClick={(e) => {
                         setRecordingTaskId(task.id);
                         e.stopPropagation();
                       }}
-                    />
+                    >
+                      <PlayArrowIcon />
+                    </IconButton>
                   )}
               </TableCell>
               <TableCell width="5%">
                 <IconButton
+                  className={classes.menuButton}
                   size="small"
                   disableRipple
                   onClick={(e) => toggleOpen(e, task.id)}

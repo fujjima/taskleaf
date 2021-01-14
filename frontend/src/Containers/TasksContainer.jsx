@@ -88,7 +88,9 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(tasks.unshift(Task.fromJS(data.task)));
+        setTasks((prev) => {
+          return prev.unshift(Task.fromJS(data.task));
+        });
       })
       .catch((err) => {
         return err;
@@ -108,7 +110,6 @@ export const TasksContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        id: taskId,
         task: { ...params },
       }),
     };
@@ -124,10 +125,12 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        const newTasks = tasks.filter((t) => {
-          return t.id !== parseInt(taskId);
+        setTasks((prev) => {
+          return prev.set(
+            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
+            Task.fromJS(data.task)
+          );
         });
-        setTasks([...newTasks, data.task]);
       })
       .catch((err) => {
         return err;
