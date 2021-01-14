@@ -8,9 +8,12 @@ import React, {
 import PropTypes from 'prop-types';
 import Formatter from '../../Util/Formatter';
 
-// XXX: 本コンポーネントは時間の表示、記録（時間の加算）を担当する
+// XXX: 本コンポーネントは時間の表示、記録（時間の加算）を行う
 let Timer = (props, ref) => {
-  const [time, setTime] = useState(props.time || null);
+  //
+  const [time, setTime] = useState(() => {
+    return props.time || null;
+  });
   const [timerId, setTimerId] = useState(null);
   const prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
@@ -23,9 +26,10 @@ let Timer = (props, ref) => {
   }
 
   // 親コンポーネントからtimeを見るためのメソッドを生やしている
+  // timerが停止された際、計測された時間は最終的にDBに保存される値になることが予想されるため秒数に変換している
   useImperativeHandle(ref, () => {
     return {
-      time: time,
+      time: time.asSeconds(),
     };
   });
 
@@ -39,17 +43,17 @@ let Timer = (props, ref) => {
   }, [props.recordingTaskId]);
 
   const addSecond = () => {
-    setTime((time) => time + 1);
+    setTime((time) => time.add(1, 'seconds'));
   };
 
-  return <strong>{Formatter.toElapsedTime(time)}</strong>;
+  return <strong>{time.format('HH:mm:ss')}</strong>;
 };
 
 Timer = forwardRef(Timer);
 export default Timer;
 
 Timer.propTypes = {
-  time: PropTypes.number,
+  time: PropTypes.object,
   taskId: PropTypes.number,
   recordingTaskId: PropTypes.number,
 };

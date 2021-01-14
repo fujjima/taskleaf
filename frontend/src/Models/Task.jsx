@@ -1,5 +1,6 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
+import Formatter from '../Util/Formatter';
 
 export default class Task extends IRecord({
   id: null,
@@ -18,15 +19,16 @@ export default class Task extends IRecord({
     description: Proptypes.string,
     // TODO: タグ機能はよ
     tags: ImmutablePropTypes.list,
-    // TODO: バックから文字列で来る→文字列をフォーマットしてDateを生成する、というのをここでやるべきなんだよ
     finishedAt: Proptypes.string,
     elapsedTime: Proptypes.number,
   });
 
-  // Taskモデルのビジネスロジックをこの辺りに書く
-
-  // dateの初期フォーマットとかをしたいのであればここで行う
   static fromJS = (params) => {
-    return new Task(params);
+    return new Task(params).withMutations((s) => {
+      s.set('finishedAt', Formatter.toDate(params.finishedAt));
+      // フロントで使用する際：文字列形式中心
+      // バック送信時：秒（文字列、数字どちらもで可）
+      s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
+    });
   };
 }
