@@ -82,15 +82,6 @@ export const CreateDialog = (props) => {
             variant="outlined"
             onChange={(e) => handleChange(e)}
           />
-          {/* <TextField
-            name="finishedAt"
-            label="締め切り日"
-            margin="normal"
-            type="date"
-            value={item.finishedAt}
-            InputLabelProps={{ shrink: true }}
-            onChange={(e) => handleChange(e)}
-          /> */}
           <DateField
             pdate={item.finishedAt}
             className={classes.input}
