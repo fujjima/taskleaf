@@ -1,11 +1,12 @@
 class Task < ApplicationRecord
-  acts_as_taggable
   has_one_attached :image
 
   validates :name, presence: true, length: { maximum: 30 }
   validate :validate_name_not_including_comma
 
   belongs_to :user
+  has_many :task_tags, dependent: :destroy
+  has_many :tags, through: :task_tags
 
   paginates_per 20
 

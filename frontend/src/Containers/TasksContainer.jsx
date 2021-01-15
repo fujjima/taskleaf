@@ -20,13 +20,21 @@ export const TasksContainer = () => {
   // http://localhost:3000 までを取得してそこにapi配下のURLを追加する
   const getUrl = `http://localhost:3000/api/tasks`;
   const [tasks, setTasks] = useState(IList());
+  const [usableTags, setUsableTags] = useState(IList());
 
   useEffect(() => {
     const getData = async () => {
       const result = await getTasks();
-      setTasks(() => {
-        return tasks.push(...result.map((r) => Task.fromJS(r)));
-      });
+      if (result.tasks) {
+        setTasks(() => {
+          return tasks.push(...result.tasks.map((r) => Task.fromJS(r)));
+        });
+      }
+      if (result.usableTags) {
+        setUsableTags((prev) => {
+          return prev.push(...result.usableTags.map((r) => r));
+        });
+      }
     };
     getData();
   }, []);

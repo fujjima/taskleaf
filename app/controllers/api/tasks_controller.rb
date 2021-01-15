@@ -2,7 +2,9 @@ class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update create destroy]
   before_action :set_tasks, only: %w[index]
 
+  # userが持つtagsも返す
   def index
+    @tags = current_user.tags
     respond_to do |format|
       format.json
     end
