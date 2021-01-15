@@ -14,7 +14,6 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  Chip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -24,6 +23,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
+import { TagChips } from 'Components/Mols/TagChips';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,14 +104,7 @@ export const TasksPage = (props) => {
   const displayTags = (tags) => {
     if (tags.size === 0) return tags;
 
-    return tags.map((tag) => (
-      <Chip
-        key={tag.get('id')}
-        label={tag.get('name')}
-        onDelete={handleTagDelete}
-      // className={classes.chip}
-      />
-    ));
+    return <TagChips tags={tags} onDelete={handleTagDelete} />;
   };
 
   // handler

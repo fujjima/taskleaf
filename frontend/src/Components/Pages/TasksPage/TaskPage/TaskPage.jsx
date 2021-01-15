@@ -7,6 +7,7 @@ import {
   TableRow,
   Table,
   InputBase,
+  Chip,
 } from '@material-ui/core';
 import { TaskContext } from 'Containers/TasksContainer';
 import { DateField } from 'Components/Mols/DateField';
@@ -38,12 +39,14 @@ export const TaskPage = (props) => {
   const classes = useStyles();
   const { updateTask } = useContext(TaskContext);
 
+  // utils
+
   const taskElements = () => {
     const { task } = props;
     if (!task) return [];
     return [
       { label: 'タスク名', attribute: 'name', value: task.name },
-      { label: 'タグ', attribute: 'tags', value: task.tags },
+      { label: 'タグ', attribute: 'tags', value: displayTags(task.tags) },
       { label: '詳細', attribute: 'description', value: task.description },
       {
         label: '締め切り日',
@@ -58,6 +61,23 @@ export const TaskPage = (props) => {
     ];
   };
 
+  // TODO:Tag.jsxのようなモデルを作成してそこに切り出すか、いっそのことContainerに切り出すか
+  const displayTags = (tags) => {
+    if (tags.size === 0) return tags;
+
+    return tags.map((tag) => (
+      <Chip
+        key={tag.get('id')}
+        label={tag.get('name')}
+        onDelete={handleTagDelete}
+      // className={classes.chip}
+      />
+    ));
+  };
+
+  // handler
+  const handleTagDelete = () => { };
+
   const handleBlur = (val) => {
     // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
     // このページ内でレンダリングされているコンポーネントからはeventが取得できる
@@ -65,6 +85,8 @@ export const TaskPage = (props) => {
     const value = event.target.value;
     name ? updateTask({ [name]: value }) : updateTask(val);
   };
+
+  // render
 
   const renderField = (item) => {
     if (item.attribute === 'finishedAt') {
@@ -86,9 +108,7 @@ export const TaskPage = (props) => {
     );
   };
 
-  // handler
-
-  const TableBody = () => {
+  const renderTableBody = () => {
     return taskElements().map((item, idx) => (
       <TableRow key={idx}>
         <TableCell
@@ -113,7 +133,7 @@ export const TaskPage = (props) => {
           size={'medium'}
           aria-label="simple table"
         >
-          {TableBody()}
+          {renderTableBody()}
         </Table>
       </TableContainer>
     </div>
