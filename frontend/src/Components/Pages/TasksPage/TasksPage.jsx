@@ -74,9 +74,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TasksPage = (props) => {
-  const { tasks, taskLabel, updateTask, createTask, deleteTask } = useContext(
-    TaskContext
-  );
+  const {
+    tasks,
+    usableTags,
+    taskLabel,
+    updateTask,
+    createTask,
+    deleteTask,
+  } = useContext(TaskContext);
   const [checkedIds, setCheckedIds] = useState(new Set());
   const [recordingTaskId, setRecordingTaskId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -104,7 +109,13 @@ export const TasksPage = (props) => {
   const displayTags = (tags) => {
     if (tags.size === 0) return tags;
 
-    return <TagChips tags={tags} onDelete={handleTagDelete} />;
+    return (
+      <TagChips
+        tags={tags}
+        onDelete={handleTagDelete}
+        usableTags={usableTags}
+      />
+    );
   };
 
   // handler
@@ -170,7 +181,7 @@ export const TasksPage = (props) => {
         getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center',
+          horizontal: 'right',
         }}
         onClick={(e) => {
           setAnchorEl(null);

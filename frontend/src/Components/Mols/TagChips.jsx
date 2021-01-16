@@ -1,18 +1,30 @@
 import React, { useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Chip, Menu, MenuItem } from '@material-ui/core';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { makeStyles } from '@material-ui/core/styles';
+import { Chip, Menu, MenuItem, Checkbox } from '@material-ui/core';
 
-// タグのList
 // タグの新規作成、紐づくタグの変更、削除など、タスクに紐づくタグの総数の変更の管理
-// 各種タグの内容の変更については、一旦考えない
-// やるのであれば、必ずTagChipのように個別のコンポーネントに切り分ける
+// 各種タグの編集についてはTagChipのように個別のコンポーネントに切り分けたうえで、別ページで行う
 
-// タグ自体の変更自体はそれ専用のページを用意する
+const useStyles = makeStyles({});
+
 export const TagChips = (props) => {
-  const { onDelete } = props;
+  const classes = useStyles();
+  const { onDelete, usableTags } = props;
   const [tags, setTags] = useState(props.tags || null);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+
+  // utils
+
+  const tagIds = tags.map((t) => t.get('id'));
+
+  const isTagged = (tagId) => {
+    return tagIds.includes(tagId);
+  };
+
+  // handler
 
   const handleOpenMenu = (e) => {
     setOpen(!open);
@@ -20,23 +32,41 @@ export const TagChips = (props) => {
     e.stopPropagation();
   };
 
+  const handleChange = () => { };
+
   const chipMenu = () => {
     return (
       <Menu
         open={open}
         anchorEl={anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
         onClose={(e) => {
           setOpen(false);
           setAnchorEl(null);
           e.stopPropagation();
         }}
+        PaperProps={{
+          style: {
+            height: '100px',
+            width: '20ch',
+          },
+        }}
       >
-        <MenuItem>this is test</MenuItem>
+        {usableTags.map((u) => (
+          <MenuItem key={u.id}>
+            {/* menuをクローズするまでは、タグ紐付け状態を変更するのみ */}
+            <Checkbox checked={isTagged(u.id)} onClick={''} />
+            {u.name}
+          </MenuItem>
+        ))}
       </Menu>
     );
   };
 
-  // クリック時に所有しているタグを表示、複数選択可能
   // 検索ウインドウにて検索、入力された文字列によるタグの作成を可能とさせる
 
   return (
@@ -47,6 +77,7 @@ export const TagChips = (props) => {
           label={tag.get('name')}
           onDelete={onDelete}
           onClick={handleOpenMenu}
+          component="button"
         />
       ))}
       {chipMenu()}
@@ -54,7 +85,8 @@ export const TagChips = (props) => {
   );
 };
 
-TagChips.PropTypes = {
+TagChips.propTypes = {
   tags: PropTypes.obj,
   onDelete: PropTypes.func,
+  usableTags: ImmutablePropTypes.list,
 };

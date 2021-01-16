@@ -1,8 +1,9 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams } from 'react-router-dom';
+import Task from 'Models/Task';
+import Tag from 'Models/Tag';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
-import Task from 'Models/Task';
 
 export const taskLabel = new Map([
   ['name', 'タスク名'],
@@ -32,7 +33,7 @@ export const TasksContainer = () => {
       }
       if (result.usableTags) {
         setUsableTags((prev) => {
-          return prev.push(...result.usableTags.map((r) => r));
+          return prev.push(...result.usableTags.map((r) => Tag.fromJS(r)));
         });
       }
     };
@@ -178,7 +179,14 @@ export const TasksContainer = () => {
 
   return (
     <TaskContext.Provider
-      value={{ tasks, taskLabel, createTask, updateTask, deleteTask }}
+      value={{
+        tasks,
+        usableTags,
+        taskLabel,
+        createTask,
+        updateTask,
+        deleteTask,
+      }}
     >
       {id ? (
         <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />

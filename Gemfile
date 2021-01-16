@@ -35,7 +35,7 @@ gem 'bcrypt', '~> 3.1.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'acts-as-taggable-on'
+gem 'activerecord-import'
 gem 'factory_bot_rails', '~> 4.11'
 gem 'jquery-rails'
 gem 'kaminari'
