@@ -81,6 +81,7 @@ export const TasksPage = (props) => {
     updateTask,
     createTask,
     deleteTask,
+    updateTags,
   } = useContext(TaskContext);
   const [checkedIds, setCheckedIds] = useState(new Set());
   const [recordingTaskId, setRecordingTaskId] = useState(null);
@@ -106,14 +107,17 @@ export const TasksPage = (props) => {
     return recordingTaskId === id;
   };
 
-  const displayTags = (tags) => {
+  const displayTags = (task) => {
+    const tags = task.tags;
     if (tags.size === 0) return tags;
 
     return (
       <TagChips
+        taskId={task.id}
         tags={tags}
-        onDelete={handleTagDelete}
+        tagChange={handleTagChange}
         usableTags={usableTags}
+        size="small"
       />
     );
   };
@@ -140,7 +144,9 @@ export const TasksPage = (props) => {
     deleteTask(openMenuId);
   };
 
-  const handleTagDelete = () => { };
+  const handleTagChange = (taskId, tags) => {
+    updateTags({ id: taskId, tagIds: tags });
+  };
 
   const handleCheck = (e, id) => {
     setCheckedIds((prev) => {
@@ -250,7 +256,7 @@ export const TasksPage = (props) => {
                 />
               </TableCell>
               <TableCell width="20%">{task.name}</TableCell>
-              <TableCell width="15%">{displayTags(task.tags)}</TableCell>
+              <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
                 {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}

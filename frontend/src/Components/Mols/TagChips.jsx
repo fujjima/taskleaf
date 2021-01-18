@@ -1,27 +1,32 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { makeStyles } from '@material-ui/core/styles';
 import { Chip, Menu, MenuItem, Checkbox } from '@material-ui/core';
 
-// タグの新規作成、紐づくタグの変更、削除など、タスクに紐づくタグの総数の変更の管理
-// 各種タグの編集についてはTagChipのように個別のコンポーネントに切り分けたうえで、別ページで行う
-
+// close時にtaskIdが必要になるケースが大半
 const useStyles = makeStyles({});
 
 export const TagChips = (props) => {
   const classes = useStyles();
-  const { onDelete, usableTags } = props;
-  const [tags, setTags] = useState(props.tags || null);
+
+  const { usableTags, tags, taskId } = props;
+
+  const [checkedTagIds, setCheckedTagIds] = useState(tagIds());
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [prevCheckedTagIds, setPrevCheckedTagIds] = useState(null);
 
   // utils
 
-  const tagIds = tags.map((t) => t.get('id'));
+  function tagIds() {
+    return !_.isEmpty(tags)
+      ? new Set(tags.map((t) => t.get('id')).toArray())
+      : new Set();
+  }
 
   const isTagged = (tagId) => {
-    return tagIds.includes(tagId);
+    return checkedTagIds.has(tagId);
   };
 
   // handler
@@ -32,12 +37,37 @@ export const TagChips = (props) => {
     e.stopPropagation();
   };
 
-  const handleChange = () => { };
+  const handleChange = (e, tagId) => {
+    const checked = e.target.checked;
+    if (checked) {
+      setCheckedTagIds((prev) => {
+        prev.add(tagId);
+        return new Set(prev);
+      });
+    } else {
+      setCheckedTagIds((prev) => {
+        prev.delete(tagId);
+        return new Set(prev);
+      });
+    }
+  };
+
+  const handleMenuClose = (e) => {
+    if (!U.eqSet(prevCheckedTagIds, checkedTagIds) && props.tagChange) {
+      props.tagChange(taskId, [...checkedTagIds]);
+    }
+    setOpen(false);
+    setAnchorEl(null);
+    e.stopPropagation();
+  };
 
   const chipMenu = () => {
     return (
       <Menu
         open={open}
+        onEnter={() => {
+          setPrevCheckedTagIds(new Set(checkedTagIds));
+        }}
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{
@@ -45,9 +75,7 @@ export const TagChips = (props) => {
           horizontal: 'left',
         }}
         onClose={(e) => {
-          setOpen(false);
-          setAnchorEl(null);
-          e.stopPropagation();
+          handleMenuClose(e);
         }}
         PaperProps={{
           style: {
@@ -57,9 +85,11 @@ export const TagChips = (props) => {
         }}
       >
         {usableTags.map((u) => (
-          <MenuItem key={u.id}>
-            {/* menuをクローズするまでは、タグ紐付け状態を変更するのみ */}
-            <Checkbox checked={isTagged(u.id)} onClick={''} />
+          <MenuItem key={u.id} onClick={(e) => e.stopPropagation()}>
+            <Checkbox
+              checked={isTagged(u.id)}
+              onChange={(e) => handleChange(e, u.id)}
+            />
             {u.name}
           </MenuItem>
         ))}
@@ -67,17 +97,13 @@ export const TagChips = (props) => {
     );
   };
 
-  // 検索ウインドウにて検索、入力された文字列によるタグの作成を可能とさせる
-
   return (
     <>
-      {tags.map((tag) => (
+      {props.tags.map((tag) => (
         <Chip
           key={tag.get('id')}
           label={tag.get('name')}
-          onDelete={onDelete}
           onClick={handleOpenMenu}
-          component="button"
         />
       ))}
       {chipMenu()}
@@ -86,7 +112,8 @@ export const TagChips = (props) => {
 };
 
 TagChips.propTypes = {
+  taskId: PropTypes.number,
   tags: PropTypes.obj,
-  onDelete: PropTypes.func,
   usableTags: ImmutablePropTypes.list,
+  tagChange: PropTypes.func,
 };

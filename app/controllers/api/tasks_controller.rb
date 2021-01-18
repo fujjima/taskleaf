@@ -26,6 +26,7 @@ class Api::TasksController < ApplicationController
     end
   end
 
+  # tag_idsが含まれている場合、タグとの紐付けの更新となる
   def update
     @task.update!(task_params)
     render :show
@@ -56,7 +57,7 @@ class Api::TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time)
+    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time, tag_ids: [])
   end
 
   def set_task

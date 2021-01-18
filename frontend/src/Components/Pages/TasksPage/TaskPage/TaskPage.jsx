@@ -12,6 +12,7 @@ import {
 import { TaskContext } from 'Containers/TasksContainer';
 import { DateField } from 'Components/Mols/DateField';
 import { TimeField } from 'Components/Mols/TimeField';
+import { TagChips } from 'Components/Mols/TagChips';
 import Task from 'Models/Task';
 
 const useStyles = makeStyles({
@@ -37,7 +38,7 @@ const useStyles = makeStyles({
 
 export const TaskPage = (props) => {
   const classes = useStyles();
-  const { updateTask } = useContext(TaskContext);
+  const { updateTask, usableTags } = useContext(TaskContext);
 
   // utils
 
@@ -46,7 +47,7 @@ export const TaskPage = (props) => {
     if (!task) return [];
     return [
       { label: 'タスク名', attribute: 'name', value: task.name },
-      { label: 'タグ', attribute: 'tags', value: displayTags(task.tags) },
+      { label: 'タグ', attribute: 'tags', value: task.tags },
       { label: '詳細', attribute: 'description', value: task.description },
       {
         label: '締め切り日',
@@ -61,22 +62,7 @@ export const TaskPage = (props) => {
     ];
   };
 
-  // TODO:Tag.jsxのようなモデルを作成してそこに切り出すか、いっそのことContainerに切り出すか
-  const displayTags = (tags) => {
-    if (tags.size === 0) return tags;
-
-    return tags.map((tag) => (
-      <Chip
-        key={tag.get('id')}
-        label={tag.get('name')}
-        onDelete={handleTagDelete}
-      // className={classes.chip}
-      />
-    ));
-  };
-
   // handler
-  const handleTagDelete = () => { };
 
   const handleBlur = (val) => {
     // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
@@ -97,6 +83,9 @@ export const TaskPage = (props) => {
     // if (item.attribute === 'elapsedTime') {
     //   return <TimeField />;
     // }
+    if (item.attribute === 'tags') {
+      return <TagChips tags={item.value} usableTags={usableTags} />;
+    }
     return (
       <InputBase
         className={classes.input}

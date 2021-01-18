@@ -177,6 +177,52 @@ export const TasksContainer = () => {
       });
   };
 
+  const updateTags = (params) => {
+    const taskId = id || params.id;
+    const url = `http://localhost:3000/api/tasks/${taskId}`;
+    const options = {
+      mode: 'cors',
+      method: 'PATCH',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        task: params,
+      }),
+    };
+
+    fetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if ('errors' in data) {
+          return alert('error');
+        }
+        setTasks((prev) => {
+          const task = prev.find((t) => parseInt(taskId, 10) === t.id);
+          const newTask = task.set(
+            'tags',
+            IList(data.task.tags.map((r) => Tag.fromJS(r)))
+          );
+
+          return prev.set(
+            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
+            newTask
+          );
+        });
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
   return (
     <TaskContext.Provider
       value={{
@@ -186,6 +232,7 @@ export const TasksContainer = () => {
         createTask,
         updateTask,
         deleteTask,
+        updateTags,
       }}
     >
       {id ? (

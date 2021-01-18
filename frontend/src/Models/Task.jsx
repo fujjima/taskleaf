@@ -1,6 +1,7 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
 import Formatter from 'Util/Formatter';
+import Tag from 'Models/Tag';
 
 export default class Task extends IRecord({
   id: null,
@@ -29,7 +30,7 @@ export default class Task extends IRecord({
       s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
       _.isEmpty(params.tags)
         ? IList()
-        : s.set('tags', IList(params.tags.map((t) => IMap(t))));
+        : s.set('tags', IList(params.tags.map((t) => Tag.fromJS(t))));
     });
   };
 }
