@@ -38,7 +38,7 @@ const useStyles = makeStyles({
 
 export const TaskPage = (props) => {
   const classes = useStyles();
-  const { updateTask, usableTags } = useContext(TaskContext);
+  const { updateTask, usableTags, updateTags } = useContext(TaskContext);
 
   // utils
 
@@ -72,6 +72,10 @@ export const TaskPage = (props) => {
     name ? updateTask({ [name]: value }) : updateTask(val);
   };
 
+  const handleTagChange = (taskId, tags) => {
+    updateTags({ id: taskId, tagIds: tags });
+  };
+
   // render
 
   const renderField = (item) => {
@@ -84,7 +88,13 @@ export const TaskPage = (props) => {
     //   return <TimeField />;
     // }
     if (item.attribute === 'tags') {
-      return <TagChips tags={item.value} usableTags={usableTags} />;
+      return (
+        <TagChips
+          tags={item.value}
+          usableTags={usableTags}
+          tagChange={handleTagChange}
+        />
+      );
     }
     return (
       <InputBase
