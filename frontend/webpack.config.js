@@ -44,6 +44,7 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.jsx'],
+    modules: [path.resolve(`${src}`), path.resolve('./node_modules')],
   },
 
   devServer: {
@@ -78,6 +79,7 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       _: 'lodash',
+      U: path.resolve(`${src}/Util/Utils`),
       // JSにはMap型が既に存在しているため、ImmutableのMap型をIMapとして区別する
       IMap: ['immutable', 'Map'],
       IOrderedMap: ['immutable', 'OrderedMap'],

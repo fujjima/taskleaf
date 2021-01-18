@@ -5,6 +5,8 @@ class Task < ApplicationRecord
   validate :validate_name_not_including_comma
 
   belongs_to :user
+  has_many :task_tags, dependent: :destroy
+  has_many :tags, through: :task_tags
 
   paginates_per 20
 

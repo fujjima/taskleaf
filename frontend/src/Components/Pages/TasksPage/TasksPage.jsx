@@ -20,9 +20,10 @@ import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Timer from '../../Mols/Timer';
-import { TaskContext } from '../../../Containers/TasksContainer';
+import Timer from 'Components/Mols/Timer';
+import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
+import { TagChips } from 'Components/Mols/TagChips';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,9 +74,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const TasksPage = (props) => {
-  const { tasks, taskLabel, updateTask, createTask, deleteTask } = useContext(
-    TaskContext
-  );
+  const {
+    tasks,
+    usableTags,
+    taskLabel,
+    updateTask,
+    createTask,
+    deleteTask,
+    updateTags,
+  } = useContext(TaskContext);
   const [checkedIds, setCheckedIds] = useState(new Set());
   const [recordingTaskId, setRecordingTaskId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -100,6 +107,21 @@ export const TasksPage = (props) => {
     return recordingTaskId === id;
   };
 
+  const displayTags = (task) => {
+    const tags = task.tags;
+    if (tags.size === 0) return tags;
+
+    return (
+      <TagChips
+        taskId={task.id}
+        tags={tags}
+        tagChange={handleTagChange}
+        usableTags={usableTags}
+        size="small"
+      />
+    );
+  };
+
   // handler
 
   const toggleOpen = (event, id) => {
@@ -120,6 +142,10 @@ export const TasksPage = (props) => {
 
   const handleDelete = (e) => {
     deleteTask(openMenuId);
+  };
+
+  const handleTagChange = (taskId, tags) => {
+    updateTags({ id: taskId, tagIds: tags });
   };
 
   const handleCheck = (e, id) => {
@@ -161,7 +187,7 @@ export const TasksPage = (props) => {
         getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'center',
+          horizontal: 'right',
         }}
         onClick={(e) => {
           setAnchorEl(null);
@@ -230,7 +256,7 @@ export const TasksPage = (props) => {
                 />
               </TableCell>
               <TableCell width="20%">{task.name}</TableCell>
-              <TableCell width="15%">{task.tag}</TableCell>
+              <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
                 {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}

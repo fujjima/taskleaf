@@ -7,11 +7,13 @@ import {
   TableRow,
   Table,
   InputBase,
+  Chip,
 } from '@material-ui/core';
-import { TaskContext } from '../../../../Containers/TasksContainer';
-import { DateField } from '../../../Mols/DateField';
-import { TimeField } from '../../../Mols/TimeField';
-import Task from '../../../../Models/Task';
+import { TaskContext } from 'Containers/TasksContainer';
+import { DateField } from 'Components/Mols/DateField';
+import { TimeField } from 'Components/Mols/TimeField';
+import { TagChips } from 'Components/Mols/TagChips';
+import Task from 'Models/Task';
 
 const useStyles = makeStyles({
   root: {
@@ -36,13 +38,16 @@ const useStyles = makeStyles({
 
 export const TaskPage = (props) => {
   const classes = useStyles();
-  const { updateTask } = useContext(TaskContext);
+  const { updateTask, usableTags, updateTags } = useContext(TaskContext);
+
+  // utils
 
   const taskElements = () => {
     const { task } = props;
     if (!task) return [];
     return [
       { label: 'タスク名', attribute: 'name', value: task.name },
+      { label: 'タグ', attribute: 'tags', value: task.tags },
       { label: '詳細', attribute: 'description', value: task.description },
       {
         label: '締め切り日',
@@ -57,6 +62,8 @@ export const TaskPage = (props) => {
     ];
   };
 
+  // handler
+
   const handleBlur = (val) => {
     // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
     // このページ内でレンダリングされているコンポーネントからはeventが取得できる
@@ -64,6 +71,12 @@ export const TaskPage = (props) => {
     const value = event.target.value;
     name ? updateTask({ [name]: value }) : updateTask(val);
   };
+
+  const handleTagChange = (taskId, tags) => {
+    updateTags({ id: taskId, tagIds: tags });
+  };
+
+  // render
 
   const renderField = (item) => {
     if (item.attribute === 'finishedAt') {
@@ -74,6 +87,15 @@ export const TaskPage = (props) => {
     // if (item.attribute === 'elapsedTime') {
     //   return <TimeField />;
     // }
+    if (item.attribute === 'tags') {
+      return (
+        <TagChips
+          tags={item.value}
+          usableTags={usableTags}
+          tagChange={handleTagChange}
+        />
+      );
+    }
     return (
       <InputBase
         className={classes.input}
@@ -85,9 +107,7 @@ export const TaskPage = (props) => {
     );
   };
 
-  // handler
-
-  const TableBody = () => {
+  const renderTableBody = () => {
     return taskElements().map((item, idx) => (
       <TableRow key={idx}>
         <TableCell
@@ -112,7 +132,7 @@ export const TaskPage = (props) => {
           size={'medium'}
           aria-label="simple table"
         >
-          {TableBody()}
+          {renderTableBody()}
         </Table>
       </TableContainer>
     </div>

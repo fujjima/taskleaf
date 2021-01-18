@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // import { Redirect } from 'react-router-dom';
-import { UserContext } from '../../../src/Context';
+import { UserContext } from 'Context';
 import { withRouter } from 'react-router-dom';
 
 class UserProvider extends React.Component {

@@ -2,7 +2,9 @@ class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update create destroy]
   before_action :set_tasks, only: %w[index]
 
+  # userが持つtagsも返す
   def index
+    @tags = current_user.tags
     respond_to do |format|
       format.json
     end
@@ -24,6 +26,7 @@ class Api::TasksController < ApplicationController
     end
   end
 
+  # tag_idsが含まれている場合、タグとの紐付けの更新となる
   def update
     @task.update!(task_params)
     render :show
@@ -54,7 +57,7 @@ class Api::TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time)
+    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time, tag_ids: [])
   end
 
   def set_task
@@ -62,7 +65,8 @@ class Api::TasksController < ApplicationController
   end
 
   def set_tasks
-    @q = current_user.tasks.ransack(params[:q])
-    @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
+    # @q = current_user.tasks.ransack(params[:q])
+    # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
+    @tasks = current_user.tasks.includes(:tags)
   end
 end

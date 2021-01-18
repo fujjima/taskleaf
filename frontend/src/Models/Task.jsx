@@ -1,6 +1,7 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
-import Formatter from '../Util/Formatter';
+import Formatter from 'Util/Formatter';
+import Tag from 'Models/Tag';
 
 export default class Task extends IRecord({
   id: null,
@@ -26,9 +27,10 @@ export default class Task extends IRecord({
   static fromJS = (params) => {
     return new Task(params).withMutations((s) => {
       s.set('finishedAt', Formatter.toDate(params.finishedAt));
-      // フロントで使用する際：文字列形式中心
-      // バック送信時：秒（文字列、数字どちらもで可）
       s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
+      _.isEmpty(params.tags)
+        ? IList()
+        : s.set('tags', IList(params.tags.map((t) => Tag.fromJS(t))));
     });
   };
 }
