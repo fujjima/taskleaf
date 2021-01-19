@@ -15,8 +15,10 @@ Rails.application.routes.draw do
       post :confirm, action: :confirm_new, on: :new
       post :import, on: :collection
     end
-    # タスク一覧画面でのタスク別の更新
+    # タスク一覧画面でのタスク別の更新することがある
     put 'tasks', to: 'tasks#update'
+    # タグ一覧画面からの処理
+    resources :tags, only: %w[index create update destroy]
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

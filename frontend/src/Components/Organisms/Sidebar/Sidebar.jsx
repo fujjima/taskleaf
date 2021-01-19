@@ -16,11 +16,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import FaceIcon from '@material-ui/icons/Face';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import { grey } from '@material-ui/core/colors';
 import TimerIcon from '@material-ui/icons/Timer';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { AuthContext } from '../../Provider/AuthProvider';
+import { AuthContext } from 'Components/Provider/AuthProvider';
 
 const drawerWidth = '215px';
 
@@ -104,6 +105,11 @@ export const Sidebar = (props) => {
       text: 'Timer',
       icon: <TimerIcon />,
       path: '/tasks',
+    },
+    {
+      text: 'Tags',
+      icon: <LocalOfferIcon />,
+      path: '/tags',
     },
     {
       text: 'Report',
