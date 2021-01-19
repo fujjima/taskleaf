@@ -8,6 +8,7 @@ import {
   MenuItem,
   Chip,
   TextField,
+  ClickAwayListener,
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { TagContext } from 'Containers/TagsContainer';
@@ -68,9 +69,14 @@ export const TagsPage = () => {
   };
 
   const handleClose = () => {
-    setEditingTagId(null);
     setOpen(false);
     setAnchorEl(null);
+  };
+
+  const handleBlur = () => {
+    updateTag({ id: editingTagId, name: event.target.value });
+    setEditing(false);
+    setEditingTagId(null);
   };
 
   // render
@@ -84,7 +90,12 @@ export const TagsPage = () => {
       <TableBody>
         {tags.map((t) =>
           editing && isEditing(t.get('id')) ? (
-            <TextField variant="outlined" />
+            <TextField
+              // TODO: autofocusできない
+              variant="outlined"
+              defaultValue={t.get('name')}
+              onBlur={() => handleBlur()}
+            />
           ) : (
               <Chip
                 onClick={() => handleClick(t)}

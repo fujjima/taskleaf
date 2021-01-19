@@ -89,8 +89,8 @@ export const TagsContainer = () => {
   };
 
   const updateTag = (params) => {
-    const taskId = id || params.id;
-    const url = `http://localhost:3000/api/tasks/${taskId}`;
+    const tagId = params.id;
+    const url = `http://localhost:3000/api/tags/${tagId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -101,7 +101,7 @@ export const TagsContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        task: { ...params },
+        tag: params,
       }),
     };
 
@@ -116,10 +116,10 @@ export const TagsContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks((prev) => {
+        setTags((prev) => {
           return prev.set(
-            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
-            Task.fromJS(data.task)
+            prev.findIndex((t) => parseInt(tagId, 10) === t.id),
+            Tag.fromJS(data.tag)
           );
         });
       })
