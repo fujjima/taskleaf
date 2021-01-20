@@ -61,7 +61,7 @@ class Api::TasksController < ApplicationController
   end
 
   def set_task
-    @task = current_user.tasks.find_by(id: params[:id]) || current_user.tasks.find_by(id: params[:task][:id])
+    @task = current_user.tasks.find(params[:id]) || current_user.tasks.find(params[:task][:id])
   end
 
   def set_tasks
