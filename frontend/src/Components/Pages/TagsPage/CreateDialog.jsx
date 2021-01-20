@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  DialogContentText,
+  TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { TagContext } from 'Containers/TagsContainer';
@@ -24,12 +24,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const DeleteDialog = (props) => {
-  const { deleteTag } = useContext(TagContext);
+export const CreateDialog = (props) => {
+  const { createTag } = useContext(TagContext);
+  const [name, setName] = useState(null);
   const classes = useStyles();
 
+  const handleChange = (e) => {
+    setName(e.target.value);
+  };
+
   const handleSubmit = () => {
-    deleteTag(props.tagId);
+    createTag({ name: name });
   };
 
   return (
@@ -38,15 +43,26 @@ export const DeleteDialog = (props) => {
       open={props.open}
       onClose={props.onClose}
     >
-      <DialogTitle>タグ削除</DialogTitle>
+      <DialogTitle>タグの追加</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.dialogContent}>
-          <DialogContentText id="alert-dialog-description">
-            一度消したタグは復活できません。削除しますか？
-          </DialogContentText>
+          <TextField
+            name="name"
+            label="タグ名"
+            margin="normal"
+            size="small"
+            variant="outlined"
+            required
+            value={name}
+            {...(!name
+              ? { error: true, helperText: 'タグ名を入力してください' }
+              : { error: false })}
+            onChange={(e) => handleChange(e)}
+          />
         </DialogContent>
         <DialogActions>
           <Button
+            color="secondary"
             className={classes.subscribeButton}
             onClick={props.onClose}
             size="large"
@@ -54,12 +70,13 @@ export const DeleteDialog = (props) => {
             キャンセル
           </Button>
           <Button
-            color="secondary"
+            color="primary"
             className={classes.subscribeButton}
             type="submit"
             size="large"
+            disabled={!name}
           >
-            削除
+            作成
           </Button>
         </DialogActions>
       </form>
@@ -67,8 +84,7 @@ export const DeleteDialog = (props) => {
   );
 };
 
-DeleteDialog.propTypes = {
+CreateDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  tagId: PropTypes.number.isRequired,
 };

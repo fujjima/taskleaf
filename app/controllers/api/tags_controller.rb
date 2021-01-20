@@ -2,12 +2,9 @@ class Api::TagsController < ApplicationController
   before_action :set_tags, only: %w[index]
   before_action :set_tag, only: %w[update destroy]
 
-  def index
-  end
+  def index; end
 
-  # タグ個体の返却をする場合
-  def show
-  end
+  def show; end
 
   def update
     @tag.update!(tag_params)
@@ -15,7 +12,13 @@ class Api::TagsController < ApplicationController
   end
 
   def create
-
+    @tag = current_user.tags.new(tag_params)
+    if @tag.save
+      render :show
+    else
+      # TODO: エラーメッセージ
+      render :new
+    end
   end
 
   def destroy

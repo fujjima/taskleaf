@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   TableContainer,
   TableBody,
@@ -8,23 +8,32 @@ import {
   MenuItem,
   Chip,
   TextField,
-  ClickAwayListener,
+  Button,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AddIcon from '@material-ui/icons/Add';
 import { TagContext } from 'Containers/TagsContainer';
 import { DeleteDialog } from './DeleteDialog';
+import { CreateDialog } from './CreateDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    marginTop: '100px',
+    marginTop: '30px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
+  container: {
+    marginLeft: '30px',
+  },
   menuItem: {
     color: 'red',
+  },
+  addButton: {
+    marginLeft: '30px',
+    marginBottom: '30px',
   },
 }));
 
@@ -34,6 +43,7 @@ export const TagsPage = () => {
   const [editingTagId, setEditingTagId] = useState(null);
   const [editing, setEditing] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const classes = useStyles();
 
@@ -108,6 +118,10 @@ export const TagsPage = () => {
     return setOpenDeleteDialog(false);
   };
 
+  const closeCreateDialog = () => {
+    return setOpenCreateDialog(false);
+  };
+
   // render
 
   const renderTableHead = () => {
@@ -144,7 +158,16 @@ export const TagsPage = () => {
 
   return (
     <div className={classes.root}>
-      <TableContainer>
+      <TableContainer className={classes.container}>
+        <Button
+          className={classes.addButton}
+          onClick={() => setOpenCreateDialog(!openCreateDialog)}
+          variant="outlined"
+          color="primary"
+          startIcon={<AddIcon />}
+        >
+          タグの追加
+        </Button>
         <Table>
           {renderTableHead()}
           {renderTableBody()}
@@ -153,8 +176,9 @@ export const TagsPage = () => {
       <DeleteDialog
         open={openDeleteDialog}
         onClose={closeDeleteDialog}
-        onSubmit={handleSubmit}
+        tagId={editingTagId}
       />
+      <CreateDialog open={openCreateDialog} onClose={closeCreateDialog} />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { useParams } from 'react-router-dom';
 import { TagsPage } from 'Components/Pages/TagsPage/TagsPage';
 import Tag from 'Models/Tag';
 
@@ -53,7 +52,7 @@ export const TagsContainer = () => {
   }
 
   const createTag = (params) => {
-    const url = `http://localhost:3000/api/tasks`;
+    const url = `http://localhost:3000/api/tags`;
     const options = {
       mode: 'cors',
       method: 'POST',
@@ -64,7 +63,7 @@ export const TagsContainer = () => {
         Accept: 'application/json',
       },
       body: JSON.stringify({
-        task: { ...params.toJS() },
+        tag: params,
       }),
     };
 
@@ -79,8 +78,8 @@ export const TagsContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks((prev) => {
-          return prev.unshift(Task.fromJS(data.task));
+        setTags((prev) => {
+          return prev.unshift(Tag.fromJS(data.tag));
         });
       })
       .catch((err) => {
