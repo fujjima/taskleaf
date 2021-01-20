@@ -10,8 +10,23 @@ import {
   TextField,
   ClickAwayListener,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { TagContext } from 'Containers/TagsContainer';
+import { DeleteDialog } from './DeleteDialog';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    marginTop: '100px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  menuItem: {
+    color: 'red',
+  },
+}));
 
 export const TagsPage = () => {
   const { tags, updateTag, deleteTag } = useContext(TagContext);
@@ -19,6 +34,8 @@ export const TagsPage = () => {
   const [editingTagId, setEditingTagId] = useState(null);
   const [editing, setEditing] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const classes = useStyles();
 
   // utils
 
@@ -48,8 +65,9 @@ export const TagsPage = () => {
           編集
         </MenuItem>
         <MenuItem
+          className={classes.menuItem}
           onClick={() => {
-            setEditing(!editing);
+            setOpenDeleteDialog(!openDeleteDialog);
             setOpen(false);
             setAnchorEl(null);
           }}
@@ -77,6 +95,17 @@ export const TagsPage = () => {
     updateTag({ id: editingTagId, name: event.target.value });
     setEditing(false);
     setEditingTagId(null);
+  };
+
+  const handleSubmit = (e) => {
+    // stopとの違いについて
+    e.stopPropagation();
+    deleteTag(editingTagId);
+    setEditingTagId(null);
+  };
+
+  const closeDeleteDialog = () => {
+    return setOpenDeleteDialog(false);
   };
 
   // render
@@ -114,11 +143,18 @@ export const TagsPage = () => {
   };
 
   return (
-    <TableContainer>
-      <Table>
-        {renderTableHead()}
-        {renderTableBody()}
-      </Table>
-    </TableContainer>
+    <div className={classes.root}>
+      <TableContainer>
+        <Table>
+          {renderTableHead()}
+          {renderTableBody()}
+        </Table>
+      </TableContainer>
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={closeDeleteDialog}
+        onSubmit={handleSubmit}
+      />
+    </div>
   );
 };

@@ -19,7 +19,8 @@ class Api::TagsController < ApplicationController
   end
 
   def destroy
-
+    @tag.destroy
+    render json: { status: 200 }
   end
 
   private
@@ -29,7 +30,7 @@ class Api::TagsController < ApplicationController
   end
 
   def set_tag
-    @tag = current_user.tags.find(params[:tag][:id])
+    @tag = current_user.tags.find(params[:id]) || current_user.tags.find(params[:tag][:id])
   end
 
   def tag_params

@@ -129,7 +129,7 @@ export const TagsContainer = () => {
   };
 
   const deleteTag = (id) => {
-    const url = `http://localhost:3000/api/tasks/${id}`;
+    const url = `http://localhost:3000/api/tags/${id}`;
     const options = {
       mode: 'cors',
       method: 'DELETE',
@@ -152,7 +152,7 @@ export const TagsContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(tasks.filterNot((t) => t.id === id));
+        setTags(tags.filterNot((t) => t.id === id));
       })
       .catch((err) => {
         return err;
