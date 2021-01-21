@@ -10,8 +10,9 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { TaskContext } from '../../../Containers/TasksContainer';
-import Task from '../../../Models/Task';
-import { DateField } from '../../Mols/DateField';
+import Task from 'Models/Task';
+import { DateField } from 'Components/Mols/DateField';
+import { TimeField } from 'Components/Mols/TimeField';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -31,6 +32,7 @@ export const CreateDialog = (props) => {
   const classes = useStyles();
   const [item, setItem] = useState(new Task());
 
+  // 時間に関して言えばonblurの関数を用意した方がいい
   const handleChange = (e) => {
     setItem(item.set(e.target.name, e.target.value));
   };
@@ -91,18 +93,16 @@ export const CreateDialog = (props) => {
             margin="normal"
             InputLabelProps={{ shrink: true }}
           />
-          {/* 時間入力形式を考える */}
-          {/* 完全に手動（経過時間）を入力させるか、start〜endを入力させるか */}
-          {/* 手動の場合、○時間○分○秒を入力させる*/}
-          <TextField
+          <TimeField time={item.elapsedTime} />
+          {/* <TextField
             name="elapsedTime"
             label="経過時間"
             margin="normal"
             variant="outlined"
-            value={item.elapsedTime}
+            value={item.elapsedTime.format('HH:mm:ss')}
             defaultValue={0}
             onChange={(e) => handleChange(e)}
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button
