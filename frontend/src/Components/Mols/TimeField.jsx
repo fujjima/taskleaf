@@ -1,53 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { TextField } from '@material-ui/core';
 import dayjs from 'dayjs';
-import NumberFormat from 'react-number-format';
-import { makeStyles } from '@material-ui/core';
-
-// タスク編集、タスク作成画面（タスク一覧ではTimerが担当）
+import MaskedInput from 'react-text-mask';
 
 const NumberFormatCustom = (props) => {
-  const { value, inputRef, onChange, ...other } = props;
+  const { ...options } = props;
 
   return (
-    // TODO: 値の入力制限用関数の用意
-    // 制限しない場合は、換算処理を入れる（12:62:30→13:2:30のように）
-    // 12:30:30のように入力した状態で12を消すと、30:30:ssのようになるので、
-    // HH:30:30のような入力状態になるようにしたい
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      // onValueChange={(values) => {
-      //   onChange({
-      //     target: {
-      //       value: values.value,
-      //     },
-      //   });
-      // }}
-      isNumericString
-      defaultValue={value}
-      format="##:##:##"
-      mask={['H', 'm', 's']}
+    <MaskedInput
+      mask={[/\d/, /\d/, ':', /[0-5]/, /\d/, ':', /[0-5]/, /\d/]}
+      {...options}
     />
   );
 };
 
 NumberFormatCustom.propTypes = {
-  time: PropTypes.instanceOf(dayjs).isRequired,
-  inputRef: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
-export const TimeField = (props) => {
-  const handleChange = () => { };
+let TimeField = (props, ref) => {
+  const [elapsedTime, setElapsedTime] = useState(props.time);
+
+  useImperativeHandle(ref, () => {
+    return {
+      newTaskElapsedTime: elapsedTime,
+    };
+  });
+
+  const handleChange = ({ target }) => {
+    const { value } = target;
+    setElapsedTime(value);
+  };
 
   return (
     <TextField
       name="elapsedTime"
       label="経過時間"
-      value={props.time.format('HH:mm:ss')}
-      onChange={(e) => handleChange(e)}
+      value={elapsedTime}
+      onChange={handleChange}
+      placeholder="HH:MM:SS"
       InputProps={{
         inputComponent: NumberFormatCustom,
       }}
@@ -55,6 +47,9 @@ export const TimeField = (props) => {
     />
   );
 };
+
+TimeField = forwardRef(TimeField);
+export default TimeField;
 
 TimeField.propTypes = {
   time: PropTypes.instanceOf(dayjs).isRequired,
