@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -9,10 +9,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { TaskContext } from '../../../Containers/TasksContainer';
+import { TaskContext } from 'Containers/TasksContainer';
 import Task from 'Models/Task';
 import { DateField } from 'Components/Mols/DateField';
-import { TimeField } from 'Components/Mols/TimeField';
+import TimeField from 'Components/Mols/TimeField';
+import Formatter from '../../../Util/Formatter';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -28,11 +29,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const CreateDialog = (props) => {
-  const { createTask } = useContext(TaskContext);
   const classes = useStyles();
+  const timeRef = useRef();
   const [item, setItem] = useState(new Task());
 
-  // 時間に関して言えばonblurの関数を用意した方がいい
   const handleChange = (e) => {
     setItem(item.set(e.target.name, e.target.value));
   };
@@ -40,12 +40,15 @@ export const CreateDialog = (props) => {
   const handleDateChange = (value) => {
     if (!value) return;
 
-    // value = { finishedAt: dayjs }の想定
+    // value = { finishedAt: dayjs }
     setItem(item.merge(value));
   };
 
   const handleSubmit = (e) => {
-    props.onSubmit(e, item);
+    const newTask = item.merge({
+      elapsedTime: Formatter.toSecond(timeRef.current.newTaskElapsedTime),
+    });
+    props.onSubmit(e, newTask);
   };
 
   return (
@@ -93,16 +96,7 @@ export const CreateDialog = (props) => {
             margin="normal"
             InputLabelProps={{ shrink: true }}
           />
-          <TimeField time={item.elapsedTime} />
-          {/* <TextField
-            name="elapsedTime"
-            label="経過時間"
-            margin="normal"
-            variant="outlined"
-            value={item.elapsedTime.format('HH:mm:ss')}
-            defaultValue={0}
-            onChange={(e) => handleChange(e)}
-          /> */}
+          <TimeField time={item.elapsedTime.format('HH:mm:ss')} ref={timeRef} />
         </DialogContent>
         <DialogActions>
           <Button
