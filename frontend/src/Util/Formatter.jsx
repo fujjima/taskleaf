@@ -12,7 +12,6 @@ export default class Formatter {
     const dayjsTime = dayjs(time * 1000).add(-9, 'hours');
     const dur = dayjs.duration({ seconds: time });
     // TODO: duration.format()が下記のような変換をできるようになったら書き換える
-    // const pop = dayjs.duration({ seconds: time }).format('HH:mm:ss');
     let h = Math.floor(dur.asHours());
     let m = dayjsTime.minute();
     let s = dayjsTime.second();
@@ -24,10 +23,10 @@ export default class Formatter {
     return dayjs.duration({ hours: h, minutes: m, seconds: s });
   };
 
-  // 記録が停止された際の時間（hh:mm:ss）をミリ秒に変換する
-  // ほぼほぼtaskpageでしか呼ばれないことを想定している
-  static toSecond = () => {
-    return;
+  // hh:mm:ssを秒に変換する
+  static toSecond = (time) => {
+    const [h, m, s] = time.split(':');
+    return dayjs.duration({ hours: h, minutes: m, seconds: s }).asSeconds();
   };
 
   // 文字列の日時情報をYYYY/MM/DDに変換

@@ -1,5 +1,5 @@
 class Api::TasksController < ApplicationController
-  before_action :set_task, only: %w[show update create destroy]
+  before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
   # userが持つtagsも返す

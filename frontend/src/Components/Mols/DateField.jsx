@@ -70,6 +70,5 @@ export const DateField = (props) => {
 
 DateField.propTypes = {
   pdate: PropTypes.instanceOf(dayjs).isRequired,
-  // 親から受け取る可能性がある
   onClose: PropTypes.func,
 };

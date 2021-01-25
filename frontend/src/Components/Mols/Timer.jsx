@@ -6,11 +6,8 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import PropTypes from 'prop-types';
-import Formatter from '../../Util/Formatter';
 
-// XXX: 本コンポーネントは時間の表示、記録（時間の加算）を行う
 let Timer = (props, ref) => {
-  //
   const [time, setTime] = useState(() => {
     return props.time || null;
   });
