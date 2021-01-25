@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -7,11 +7,10 @@ import {
   TableRow,
   Table,
   InputBase,
-  Chip,
 } from '@material-ui/core';
 import { TaskContext } from 'Containers/TasksContainer';
 import { DateField } from 'Components/Mols/DateField';
-import { TimeField } from 'Components/Mols/TimeField';
+import TimeField from 'Components/Mols/TimeField';
 import { TagChips } from 'Components/Mols/TagChips';
 import Task from 'Models/Task';
 
@@ -38,6 +37,7 @@ const useStyles = makeStyles({
 
 export const TaskPage = (props) => {
   const classes = useStyles();
+  const timeRef = useRef();
   const { updateTask, usableTags, updateTags } = useContext(TaskContext);
 
   // utils
@@ -84,9 +84,18 @@ export const TaskPage = (props) => {
         <DateField pdate={item.value} onClose={handleBlur} margin="none" />
       );
     }
-    // if (item.attribute === 'elapsedTime') {
-    //   return <TimeField />;
-    // }
+    // とりあえず経過時間の編集は蓋
+    if (item.attribute === 'elapsedTime') {
+      return (
+        <TimeField
+          time={item.value}
+          ref={timeRef}
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      );
+    }
     if (item.attribute === 'tags') {
       return (
         <TagChips

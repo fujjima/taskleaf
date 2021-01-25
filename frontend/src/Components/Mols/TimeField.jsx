@@ -20,6 +20,7 @@ NumberFormatCustom.propTypes = {
 };
 
 let TimeField = (props, ref) => {
+  const { ...options } = props;
   const [elapsedTime, setElapsedTime] = useState(props.time);
 
   useImperativeHandle(ref, () => {
@@ -44,6 +45,7 @@ let TimeField = (props, ref) => {
         inputComponent: NumberFormatCustom,
       }}
       InputLabelProps={{ shrink: true }}
+      {...options}
     />
   );
 };
