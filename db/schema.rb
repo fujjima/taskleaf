@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_15_085537) do
+ActiveRecord::Schema.define(version: 2021_01_27_151141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,7 +75,18 @@ ActiveRecord::Schema.define(version: 2021_01_15_085537) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "working_times", force: :cascade do |t|
+    t.date "recorded_at", null: false
+    t.jsonb "times", default: []
+    t.bigint "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_id"], name: "index_working_times_on_task_id"
+    t.index ["times"], name: "index_working_times_on_times", using: :gin
+  end
+
   add_foreign_key "tags", "users"
   add_foreign_key "task_tags", "tags"
   add_foreign_key "task_tags", "tasks"
+  add_foreign_key "working_times", "tasks"
 end

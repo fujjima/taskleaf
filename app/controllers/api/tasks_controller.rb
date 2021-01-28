@@ -2,9 +2,9 @@ class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update destroy]
   before_action :set_tasks, only: %w[index]
 
-  # userが持つtagsも返す
   def index
     @tags = current_user.tags
+    @working_times = WorkingTime.working_time_with_task_id_hash
     respond_to do |format|
       format.json
     end
@@ -44,15 +44,15 @@ class Api::TasksController < ApplicationController
     render :new unless @task.valid?
   end
 
-  def import
-    if params[:files].nil?
-      set_tasks
-      redirect_to tasks_path, flash: { danger: 'ファイルを選択してください' }
-      return
-    end
-    current_user.tasks.import(params[:files])
-    redirect_to tasks_url, notice: 'タスクを追加しました'
-  end
+  # def import
+  #   if params[:files].nil?
+  #     set_tasks
+  #     redirect_to tasks_path, flash: { danger: 'ファイルを選択してください' }
+  #     return
+  #   end
+  #   current_user.tasks.import(params[:files])
+  #   redirect_to tasks_url, notice: 'タスクを追加しました'
+  # end
 
   private
 

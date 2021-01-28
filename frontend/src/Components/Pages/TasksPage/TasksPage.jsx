@@ -196,7 +196,6 @@ export const TasksPage = (props) => {
         }}
       >
         <MenuItem>複製</MenuItem>
-        {/* 論理削除にするかどうかについて */}
         <MenuItem onClick={handleDelete} className={classes.deleteItem}>
           削除
         </MenuItem>
@@ -259,14 +258,14 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
-                {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
+                {/* TODO: 締め切り日でのソート */}
                 {task.finishedAt.isValid()
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>
               <TableCell width="10%">
                 <Timer
-                  time={task.elapsedTime}
+                  time={task.workingTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
                   ref={timerRef}
@@ -340,11 +339,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      <CreateDialog
+      {/* <CreateDialog
         open={dialogOpen}
         onClose={handleClose}
         onSubmit={handleSubmit}
-      />
+      /> */}
     </div>
   );
 };

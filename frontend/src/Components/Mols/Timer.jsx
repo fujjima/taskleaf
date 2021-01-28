@@ -6,11 +6,13 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import PropTypes from 'prop-types';
+import Formatter from 'Util/Formatter.jsx';
 
 let Timer = (props, ref) => {
   const [time, setTime] = useState(() => {
     return props.time || null;
   });
+  // startAt,endAtは別管理（作業記録終了時にはこのhashを送信する）
   const [timerId, setTimerId] = useState(null);
   const prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
@@ -22,11 +24,9 @@ let Timer = (props, ref) => {
     return prevRef.current;
   }
 
-  // 親コンポーネントからtimeを見るためのメソッドを生やしている
-  // timerが停止された際、計測された時間は最終的にDBに保存される値になることが予想されるため秒数に変換している
   useImperativeHandle(ref, () => {
     return {
-      time: time.asSeconds(),
+      time: time,
     };
   });
 
@@ -40,17 +40,17 @@ let Timer = (props, ref) => {
   }, [props.recordingTaskId]);
 
   const addSecond = () => {
-    setTime((time) => time.add(1, 'seconds'));
+    setTime((time) => time + 1);
   };
 
-  return <strong>{time.format('HH:mm:ss')}</strong>;
+  return <strong>{Formatter.fromSecondToHour(time)}</strong>;
 };
 
 Timer = forwardRef(Timer);
 export default Timer;
 
 Timer.propTypes = {
-  time: PropTypes.object,
+  time: PropTypes.number,
   taskId: PropTypes.number,
   recordingTaskId: PropTypes.number,
 };

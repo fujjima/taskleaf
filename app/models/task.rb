@@ -7,16 +7,12 @@ class Task < ApplicationRecord
   belongs_to :user
   has_many :task_tags, dependent: :destroy
   has_many :tags, through: :task_tags
+  has_many :working_times, dependent: :destroy
 
   paginates_per 20
 
-  # elapsed_timeの更新が含まれている時に整形
-  # before_save :format_elapsed_time, if: :will_save_change_to_elapsed_time?
-
-  # データについて、新しい順に取得する
   scope :recent, -> { order(created_at: :desc) }
 
-  # 検索可能なカラムの指定
   def self.ransackable_attributes(_auth_object = nil)
     %w[name created_at]
   end
@@ -38,21 +34,17 @@ class Task < ApplicationRecord
     end
   end
 
-  # def format_elapsed_time
+  # def self.import(files)
+  #   files.each do |file|
+  #     CSV.foreach(file.path, headers: true) do |row|
+  #       # importがTaskから呼ばれている場合に、Task.newと同義となる（今回はcurrent_user.tasksから呼ばれているので、タスクにユーザを紐づけてからnewする）
+  #       # headerがないファイルだと、rowの各要素に対して、キーが割り当てられない
+  #       task = new
+  #       task.attributes = row.to_hash.slice(*csv_attributes)
+  #       task.save!
+  #     end
+  #   end
   # end
-
-  # 1行ごとにデータを抜き取り、1セルずつ属性ごとにデータを格納する
-  def self.import(files)
-    files.each do |file|
-      CSV.foreach(file.path, headers: true) do |row|
-        # importがTaskから呼ばれている場合に、Task.newと同義となる（今回はcurrent_user.tasksから呼ばれているので、タスクにユーザを紐づけてからnewする）
-        # headerがないファイルだと、rowの各要素に対して、キーが割り当てられない（row時点で）
-        task = new
-        task.attributes = row.to_hash.slice(*csv_attributes)
-        task.save!
-      end
-    end
-  end
 
   private
 
