@@ -26,22 +26,32 @@ class Api::TasksController < ApplicationController
     end
   end
 
-  # tag_idsが含まれている場合、タグとの紐付けの更新となる
   def update
+    # update! + working_timeに関する更新はtransactionで囲む
+    # TODO: モデルに関する検索、更新あたりをモデルに移す
     @task.update!(task_params)
+    times = params[:task][:times]
+    if times
+      update_target = WorkingTime.find_by(task_id: @task.id, recorded_at: Date.parse(params[:task][:times][:start_at]))
+      if update_target
+        update_target.times << times
+        update_target.save!
+      else
+        working_time = WorkingTime.new(
+          task_id: @task.id,
+          times: [times],
+          # end_atによる分割（日を跨いだ場合の調整など）はあるが、start_atを基本的にrecorded_atにする
+          recorded_at: Date.parse(params[:task][:times][:start_at])
+        )
+        working_time.save!
+      end
+    end
     render :show
-    # redirect_to tasks_path, notice: "タスク 「#{@task.name}を更新しました」"
   end
 
   def destroy
     @task.destroy
     render json: { status: 200 }
-  end
-
-  # 確認画面表示
-  def confirm_new
-    @task = current_user.tasks.new(task_params)
-    render :new unless @task.valid?
   end
 
   # def import
@@ -56,8 +66,9 @@ class Api::TasksController < ApplicationController
 
   private
 
+  # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのはどうなのだろうか
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at, :elapsed_time, tag_ids: [])
+    params.require(:task).permit(:name, :description, :image, :finished_at, :times, tag_ids: [])
   end
 
   def set_task

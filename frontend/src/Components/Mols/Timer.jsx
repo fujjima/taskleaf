@@ -24,6 +24,7 @@ let Timer = (props, ref) => {
     return prevRef.current;
   }
 
+  // そもそも必要なくなったので消してよし
   useImperativeHandle(ref, () => {
     return {
       time: time,
