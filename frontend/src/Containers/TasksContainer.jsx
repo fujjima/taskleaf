@@ -10,7 +10,7 @@ export const taskLabel = new Map([
   ['tag', 'タグ'],
   ['description', '詳細'],
   ['finisihedAt', '締め切り日'],
-  ['elapsedTime', '経過時間'],
+  ['workingTime', '経過時間'],
 ]);
 
 export const TaskContext = createContext();

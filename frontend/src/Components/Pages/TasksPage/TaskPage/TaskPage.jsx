@@ -8,11 +8,12 @@ import {
   Table,
   InputBase,
 } from '@material-ui/core';
+import Task from 'Models/Task';
 import { TaskContext } from 'Containers/TasksContainer';
 import { DateField } from 'Components/Mols/DateField';
 import TimeField from 'Components/Mols/TimeField';
 import { TagChips } from 'Components/Mols/TagChips';
-import Task from 'Models/Task';
+import Formatter from 'Util/Formatter';
 
 const useStyles = makeStyles({
   root: {
@@ -56,8 +57,8 @@ export const TaskPage = (props) => {
       },
       {
         label: '経過時間',
-        attribute: 'elapsedTime',
-        value: task.elapsedTime.format('HH:mm:ss'),
+        attribute: 'workingTime',
+        value: Formatter.fromSecondToHour(task.workingTime),
       },
     ];
   };
@@ -84,8 +85,8 @@ export const TaskPage = (props) => {
         <DateField pdate={item.value} onClose={handleBlur} margin="none" />
       );
     }
-    // とりあえず経過時間の編集は蓋
-    if (item.attribute === 'elapsedTime') {
+    // FIXME: 経過時間の編集ができるようになったらreadonlyは消す
+    if (item.attribute === 'workingTime') {
       return (
         <TimeField
           time={item.value}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import Formatter from 'Util/Formatter.jsx';
+import Formatter from 'Util/Formatter';
 
 let Timer = (props, ref) => {
   const [time, setTime] = useState(() => {
