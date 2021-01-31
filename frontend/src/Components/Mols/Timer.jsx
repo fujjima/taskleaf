@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import Formatter from 'Util/Formatter.jsx';
 
@@ -12,7 +6,6 @@ let Timer = (props, ref) => {
   const [time, setTime] = useState(() => {
     return props.time || null;
   });
-  // startAt,endAtは別管理（作業記録終了時にはこのhashを送信する）
   const [timerId, setTimerId] = useState(null);
   const prevRecordingTaskId = usePrevious(props.recordingTaskId);
 
@@ -24,13 +17,7 @@ let Timer = (props, ref) => {
     return prevRef.current;
   }
 
-  // そもそも必要なくなったので消してよし
-  useImperativeHandle(ref, () => {
-    return {
-      time: time,
-    };
-  });
-
+  // FIXME: 停止ボタンの押下が時間ピッタリとかでないと、たまに1秒進んでたりする
   useEffect(() => {
     const { taskId, recordingTaskId } = props;
     if (taskId && taskId === recordingTaskId) {

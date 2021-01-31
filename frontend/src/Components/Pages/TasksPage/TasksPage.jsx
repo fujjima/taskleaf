@@ -105,23 +105,31 @@ export const TasksPage = (props) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  // 記録タスクの切り替え用
+  const prevStartAt = usePrevious(startAt);
   const prevRecordingTaskId = usePrevious(recordingTaskId);
 
-  // startIconとstopIconが押された際のstartAtとendAtの記録
-  // useEffect(() => {
-  //   if (isMounted.current) {
-  //     if (recordingTaskId) {
-  //       setStartAt(dayjs());
-  //     } else if (!recordingTaskId || prevRecordingTaskId !== recordingTaskId) {
-  //       setEndAt(dayjs());
-  //     } else return;
-  //   } else {
-  //     isMounted.current = true;
-  //   }
-  // }, [recordingTaskId]);
+  useEffect(() => {
+    if (isMounted.current) {
+      // 切り替え時のみ（通常の記録→停止は含めない）
+      if (
+        prevRecordingTaskId &&
+        recordingTaskId &&
+        prevRecordingTaskId !== recordingTaskId
+      ) {
+        setEndAt(() => {
+          const endAt = dayjs().format('YYYY/MM/DD HH:mm:ss');
+          updateTask({
+            id: prevRecordingTaskId,
+            times: { startAt: prevStartAt, endAt },
+          });
+          return endAt;
+        });
+      } else return;
+    } else {
+      isMounted.current = true;
+    }
+  }, [recordingTaskId]);
 
-  // 他タスクの記録中に他タスクを記録するケースで使用される
   function usePrevious(value) {
     const prevRef = useRef(null);
     useEffect(() => {

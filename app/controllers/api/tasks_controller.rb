@@ -28,7 +28,6 @@ class Api::TasksController < ApplicationController
 
   def update
     # update! + working_timeに関する更新はtransactionで囲む
-    # TODO: モデルに関する検索、更新あたりをモデルに移す
     @task.update!(task_params)
     times = params[:task][:times]
     if times
@@ -40,7 +39,7 @@ class Api::TasksController < ApplicationController
         working_time = WorkingTime.new(
           task_id: @task.id,
           times: [times],
-          # end_atによる分割（日を跨いだ場合の調整など）はあるが、start_atを基本的にrecorded_atにする
+          # TODO: end_atが日を跨いだ場合の対応
           recorded_at: Date.parse(params[:task][:times][:start_at])
         )
         working_time.save!
