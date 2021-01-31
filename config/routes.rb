@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   root to: 'tasks#index'
   namespace 'api', format: :json do
     resources :tasks do
-      post :confirm, action: :confirm_new, on: :new
       post :import, on: :collection
     end
     # タスク一覧画面でのタスク別の更新することがある

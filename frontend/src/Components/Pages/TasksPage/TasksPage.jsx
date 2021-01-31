@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
@@ -24,6 +24,7 @@ import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
+import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
+// 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
+// recordingTaskIdが入っている状態で他のstartIconがクリックされる：(+ clearTimeoutの実施)、recordingTaskIdのセット、setIntervalの作成
 export const TasksPage = (props) => {
   const {
     tasks,
@@ -83,19 +87,60 @@ export const TasksPage = (props) => {
     deleteTask,
     updateTags,
   } = useContext(TaskContext);
-  const [checkedIds, setCheckedIds] = useState(new Set());
-  const [recordingTaskId, setRecordingTaskId] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
   const history = useHistory();
-  const timerRef = useRef();
 
+  const timerRef = useRef();
+  const isMounted = useRef(false);
+
+  const [startAt, setStartAt] = useState(null);
+  const [endAt, setEndAt] = useState(null);
+
+  // 記録中タスク判定用
+  const [recordingTaskId, setRecordingTaskId] = useState(null);
+
+  // その他
+  const [checkedIds, setCheckedIds] = useState(new Set());
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const headerCells = [...taskLabel.values()];
+  const prevStartAt = usePrevious(startAt);
+  const prevRecordingTaskId = usePrevious(recordingTaskId);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      // 切り替え時のみ（通常の記録→停止は含めない）
+      if (
+        prevRecordingTaskId &&
+        recordingTaskId &&
+        prevRecordingTaskId !== recordingTaskId
+      ) {
+        setEndAt(() => {
+          const endAt = dayjs().format('YYYY/MM/DD HH:mm:ss');
+          updateTask({
+            id: prevRecordingTaskId,
+            times: { startAt: prevStartAt, endAt },
+          });
+          return endAt;
+        });
+      } else return;
+    } else {
+      isMounted.current = true;
+    }
+  }, [recordingTaskId]);
+
+  function usePrevious(value) {
+    const prevRef = useRef(null);
+    useEffect(() => {
+      prevRef.current = value;
+    });
+    return prevRef.current;
+  }
 
   // utils
+
+  const headerCells = [...taskLabel.values()];
 
   const isOpened = !_.isNull(openMenuId);
 
@@ -122,26 +167,17 @@ export const TasksPage = (props) => {
     );
   };
 
+  const executeDelete = () => {
+    deleteTask(openMenuId);
+  };
+
   // handler
 
-  const toggleOpen = (event, id) => {
-    setAnchorEl(event.currentTarget);
+  // メニューボタン開閉切り替え
+  const handleOpenMenu = (e, id) => {
+    setAnchorEl(e.currentTarget);
     setOpenMenuId(id);
-    event.stopPropagation();
-  };
-
-  const handleClose = () => {
-    setDialogOpen(false);
-  };
-
-  const handleSubmit = (e, params) => {
-    e.preventDefault();
-    createTask(params);
-    setDialogOpen(false);
-  };
-
-  const handleDelete = (e) => {
-    deleteTask(openMenuId);
+    e.stopPropagation();
   };
 
   const handleTagChange = (taskId, tags) => {
@@ -169,10 +205,36 @@ export const TasksPage = (props) => {
     e.stopPropagation();
   };
 
-  const handleRecording = (e, id) => {
-    updateTask({ id: id, elapsedTime: timerRef.current.time });
+  const handleStart = (e, id) => {
+    // バックに送信する際に何故かGMTになってしまうため、文字列をフォーマットして格納している
+    setStartAt(dayjs().format('YYYY/MM/DD HH:mm:ss'));
+    setRecordingTaskId(id);
+    e.stopPropagation();
+  };
+
+  // stopIconがクリックされる：endAtのセット、recordingTaskIdを削除、clearTimeoutの実施
+  const handleStop = (e, id) => {
+    setEndAt(() => {
+      const endAt = dayjs().format('YYYY/MM/DD HH:mm:ss');
+      updateTask({ id: id, times: { startAt, endAt } });
+      return endAt;
+    });
+
+    setStartAt(null);
     setRecordingTaskId(null);
     e.stopPropagation();
+  };
+
+  // ダイアログ関連
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleSubmit = (e, params) => {
+    e.preventDefault();
+    createTask(params);
+    setDialogOpen(false);
   };
 
   // render
@@ -196,8 +258,7 @@ export const TasksPage = (props) => {
         }}
       >
         <MenuItem>複製</MenuItem>
-        {/* 論理削除にするかどうかについて */}
-        <MenuItem onClick={handleDelete} className={classes.deleteItem}>
+        <MenuItem onClick={executeDelete} className={classes.deleteItem}>
           削除
         </MenuItem>
       </Menu>
@@ -259,14 +320,14 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">
-                {/* TODO: そのうち締め切り日でのソートとかをしたくなるはず */}
+                {/* TODO: 締め切り日でのソート */}
                 {task.finishedAt.isValid()
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>
               <TableCell width="10%">
                 <Timer
-                  time={task.elapsedTime}
+                  time={task.workingTime}
                   taskId={task.id}
                   recordingTaskId={recordingTaskId}
                   ref={timerRef}
@@ -280,7 +341,7 @@ export const TasksPage = (props) => {
                     className={classes.recordingIcon}
                     key={`stop-icon-${task.id}`}
                     onClick={(e) => {
-                      handleRecording(e, task.id);
+                      handleStop(e, task.id);
                     }}
                   >
                     <StopIcon />
@@ -292,8 +353,7 @@ export const TasksPage = (props) => {
                       className={classes.recordingIcon}
                       key={`play-icon-${task.id}`}
                       onClick={(e) => {
-                        setRecordingTaskId(task.id);
-                        e.stopPropagation();
+                        handleStart(e, task.id);
                       }}
                     >
                       <PlayArrowIcon />
@@ -305,7 +365,7 @@ export const TasksPage = (props) => {
                   className={classes.menuButton}
                   size="small"
                   disableRipple
-                  onClick={(e) => toggleOpen(e, task.id)}
+                  onClick={(e) => handleOpenMenu(e, task.id)}
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -340,11 +400,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      <CreateDialog
+      {/* <CreateDialog
         open={dialogOpen}
-        onClose={handleClose}
+        onClose={handleDialogClose}
         onSubmit={handleSubmit}
-      />
+      /> */}
     </div>
   );
 };

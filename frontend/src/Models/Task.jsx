@@ -11,7 +11,7 @@ export default class Task extends IRecord({
   // TODO: バックから文字列で来る→文字列をフォーマットするというのが主になってしまっている
   // Date→dayjsの変換が可能であれば、型をDateとかにしたい
   finishedAt: '',
-  elapsedTime: Formatter.toElapsedTime(0),
+  workingTime: 0,
 }) {
   static t = ImmutablePropTypes.recordOf({
     id: Proptypes.number,
@@ -19,13 +19,13 @@ export default class Task extends IRecord({
     description: Proptypes.string,
     tags: ImmutablePropTypes.list,
     finishedAt: Proptypes.string,
-    elapsedTime: Proptypes.number,
+    workingTime: Proptypes.number,
   });
 
   static fromJS = (params) => {
     return new Task(params).withMutations((s) => {
       s.set('finishedAt', Formatter.toDate(params.finishedAt));
-      s.set('elapsedTime', Formatter.toElapsedTime(params.elapsedTime));
+      s.set('workingTime', params.workingTime);
       _.isEmpty(params.tags)
         ? IList()
         : s.set('tags', IList(params.tags.map((t) => Tag.fromJS(t))));

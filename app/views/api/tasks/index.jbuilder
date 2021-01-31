@@ -6,5 +6,8 @@ json.tasks do
   json.array! @tasks do |task|
     json.extract! task, :id, :name, :description, :finished_at, :elapsed_time
     json.partial! 'shared/tags', tags: task.tags
+    if working_time = @working_times[task.id]
+      json.working_time working_time
+    end
   end
 end

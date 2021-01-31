@@ -46,7 +46,7 @@ export const CreateDialog = (props) => {
 
   const handleSubmit = (e) => {
     const newTask = item.merge({
-      elapsedTime: Formatter.toSecond(timeRef.current.newTaskElapsedTime),
+      workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
     });
     props.onSubmit(e, newTask);
   };
@@ -96,7 +96,8 @@ export const CreateDialog = (props) => {
             margin="normal"
             InputLabelProps={{ shrink: true }}
           />
-          <TimeField time={item.elapsedTime.format('HH:mm:ss')} ref={timeRef} />
+          {/* FIXME: 時間の編集フィールドを修正したらここも直す */}
+          <TimeField time={item.workingTime.format('HH:mm:ss')} ref={timeRef} />
         </DialogContent>
         <DialogActions>
           <Button
