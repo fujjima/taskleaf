@@ -114,7 +114,7 @@ export const Sidebar = (props) => {
     {
       text: 'Report',
       icon: <AssignmentIcon />,
-      path: '/tasks',
+      path: '/reports',
     },
     {
       text: 'Calendar',
