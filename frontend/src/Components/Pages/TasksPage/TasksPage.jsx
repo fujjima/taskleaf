@@ -46,12 +46,19 @@ const useStyles = makeStyles((theme) => ({
   },
   addButton: {
     marginLeft: '30px',
-    marginBottom: '30px',
+    marginBottom: '10px',
+  },
+  // 複数選択メニュー -------------------------------
+  multipleMenu: {
+    // backgroundColor: 'red',
   },
   hiddenMultipleMenu: {
     visibility: 'hidden',
   },
-  multipleMenu: {},
+  multipleTrashIcon: {
+    marginLeft: '13px',
+  },
+  // ---------------------------------------------
   checkBox: {
     marginLeft: '0.5em',
   },
@@ -402,11 +409,12 @@ export const TasksPage = (props) => {
           タスクの追加
         </Button>
         <div
-          className={
-            selected() ? classes.multipleMenu : classes.hiddenMultipleMenu
-          }
+          className={cn(classes.multipleMenu, {
+            [classes.hiddenMultipleMenu]: !selected(),
+          })}
         >
           <IconButton
+            className={classes.multipleTrashIcon}
             size="large"
             disableRipple
             onClick={() => executeDelete()}
@@ -431,11 +439,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      {/* <CreateDialog
+      <CreateDialog
         open={dialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleSubmit}
-      /> */}
+      />
     </div>
   );
 };
