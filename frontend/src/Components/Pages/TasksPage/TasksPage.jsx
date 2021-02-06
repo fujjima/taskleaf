@@ -20,6 +20,8 @@ import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
@@ -44,8 +46,19 @@ const useStyles = makeStyles((theme) => ({
   },
   addButton: {
     marginLeft: '30px',
-    marginBottom: '30px',
+    marginBottom: '10px',
   },
+  // 複数選択メニュー -------------------------------
+  multipleMenu: {
+    // backgroundColor: 'red',
+  },
+  hiddenMultipleMenu: {
+    visibility: 'hidden',
+  },
+  multipleTrashIcon: {
+    marginLeft: '13px',
+  },
+  // ---------------------------------------------
   checkBox: {
     marginLeft: '0.5em',
   },
@@ -76,7 +89,6 @@ const useStyles = makeStyles((theme) => ({
 
 // TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
 // 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
-// recordingTaskIdが入っている状態で他のstartIconがクリックされる：(+ clearTimeoutの実施)、recordingTaskIdのセット、setIntervalの作成
 export const TasksPage = (props) => {
   const {
     tasks,
@@ -148,6 +160,10 @@ export const TasksPage = (props) => {
     return tasks.size;
   };
 
+  const selected = () => {
+    return checkedIds.size > 0;
+  };
+
   const isRecording = (id) => {
     return recordingTaskId === id;
   };
@@ -168,7 +184,9 @@ export const TasksPage = (props) => {
   };
 
   const executeDelete = () => {
-    deleteTask(openMenuId);
+    const ids = checkedIds || openMenuId;
+    deleteTask(ids);
+    setCheckedIds(new Set());
   };
 
   // handler
@@ -390,6 +408,26 @@ export const TasksPage = (props) => {
         >
           タスクの追加
         </Button>
+        <div
+          className={cn(classes.multipleMenu, {
+            [classes.hiddenMultipleMenu]: !selected(),
+          })}
+        >
+          <IconButton
+            className={classes.multipleTrashIcon}
+            size="large"
+            disableRipple
+            onClick={() => executeDelete()}
+          >
+            <DeleteIcon />
+          </IconButton>
+          {/* <IconButton
+            size="large"
+            disableRipple
+          >
+            <EditIcon />
+          </IconButton> */}
+        </div>
         <Table
           className={classes.table}
           aria-labelledby="tableTitle"
@@ -400,11 +438,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      {/* <CreateDialog
+      <CreateDialog
         open={dialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleSubmit}
-      /> */}
+      />
     </div>
   );
 };
