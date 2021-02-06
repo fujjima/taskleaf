@@ -421,13 +421,12 @@ export const TasksPage = (props) => {
           >
             <DeleteIcon />
           </IconButton>
-          <IconButton
+          {/* <IconButton
             size="large"
             disableRipple
-          // onClick={(e) => handleOpenMenu(e, task.id)}
           >
             <EditIcon />
-          </IconButton>
+          </IconButton> */}
         </div>
         <Table
           className={classes.table}
