@@ -20,6 +20,8 @@ import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
@@ -46,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '30px',
     marginBottom: '30px',
   },
+  hiddenMultipleMenu: {
+    visibility: 'hidden',
+  },
+  multipleMenu: {},
   checkBox: {
     marginLeft: '0.5em',
   },
@@ -146,6 +152,10 @@ export const TasksPage = (props) => {
 
   const rowCount = () => {
     return tasks.size;
+  };
+
+  const selected = () => {
+    return checkedIds.size > 0;
   };
 
   const isRecording = (id) => {
@@ -390,6 +400,26 @@ export const TasksPage = (props) => {
         >
           タスクの追加
         </Button>
+        <div
+          className={
+            selected() ? classes.multipleMenu : classes.hiddenMultipleMenu
+          }
+        >
+          <IconButton
+            size="large"
+            disableRipple
+          // onClick={(e) => handleOpenMenu(e, task.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            disableRipple
+          // onClick={(e) => handleOpenMenu(e, task.id)}
+          >
+            <EditIcon />
+          </IconButton>
+        </div>
         <Table
           className={classes.table}
           aria-labelledby="tableTitle"
