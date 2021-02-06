@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
 
 // TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
 // 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
-// recordingTaskIdが入っている状態で他のstartIconがクリックされる：(+ clearTimeoutの実施)、recordingTaskIdのセット、setIntervalの作成
 export const TasksPage = (props) => {
   const {
     tasks,
@@ -178,7 +177,9 @@ export const TasksPage = (props) => {
   };
 
   const executeDelete = () => {
-    deleteTask(openMenuId);
+    const ids = checkedIds || openMenuId;
+    deleteTask(ids);
+    setCheckedIds(new Set());
   };
 
   // handler
@@ -408,7 +409,7 @@ export const TasksPage = (props) => {
           <IconButton
             size="large"
             disableRipple
-          // onClick={(e) => handleOpenMenu(e, task.id)}
+            onClick={() => executeDelete()}
           >
             <DeleteIcon />
           </IconButton>
