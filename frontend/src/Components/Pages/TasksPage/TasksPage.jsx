@@ -326,7 +326,7 @@ export const TasksPage = (props) => {
                 history.push(`tasks/${task.id}`);
               }}
             >
-              <TableCell padding="checkbox" width="10%">
+              <TableCell padding="checkbox" width="5%">
                 <Checkbox
                   disableRipple
                   className={classes.checkBox}
@@ -334,9 +334,10 @@ export const TasksPage = (props) => {
                   onClick={(e) => handleCheck(e, task.id)}
                 />
               </TableCell>
-              <TableCell width="20%">{task.name}</TableCell>
+              <TableCell width="15%">{task.name}</TableCell>
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
+              <TableCell width="10%">{task.statusLabel}</TableCell>
               <TableCell width="10%">
                 {/* TODO: 締め切り日でのソート */}
                 {task.finishedAt.isValid()

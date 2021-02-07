@@ -57,7 +57,7 @@ class Api::TasksController < ApplicationController
 
   # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのが面倒
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at, :times, tag_ids: [])
+    params.require(:task).permit(:name, :description, :image, :finished_at, :times, :status, tag_ids: [])
   end
 
   def set_task
