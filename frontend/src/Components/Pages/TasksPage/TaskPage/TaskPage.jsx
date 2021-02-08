@@ -7,6 +7,8 @@ import {
   TableRow,
   Table,
   InputBase,
+  Select,
+  MenuItem,
 } from '@material-ui/core';
 import Task from 'Models/Task';
 import { TaskContext } from 'Containers/TasksContainer';
@@ -25,6 +27,12 @@ const useStyles = makeStyles({
   container: {
     width: '90%',
     overflowX: 'hidden',
+  },
+  statusMenu: {
+    '& .MuiOutlinedInput-input': {
+      paddingBottom: '7px',
+      paddingTop: '7px',
+    },
   },
   table: {
     margin: '12px',
@@ -50,6 +58,7 @@ export const TaskPage = (props) => {
       { label: 'タスク名', attribute: 'name', value: task.name },
       { label: 'タグ', attribute: 'tags', value: task.tags },
       { label: '詳細', attribute: 'description', value: task.description },
+      { label: '状態', attribute: 'status', value: task.status },
       {
         label: '締め切り日',
         attribute: 'finishedAt',
@@ -80,41 +89,59 @@ export const TaskPage = (props) => {
   // render
 
   const renderField = (item) => {
-    if (item.attribute === 'finishedAt') {
-      return (
-        <DateField pdate={item.value} onClose={handleBlur} margin="none" />
-      );
+    switch (item.attribute) {
+      case 'status':
+        return (
+          <Select
+            id="demo-simple-select-filled"
+            value={item.value}
+            variant="outlined"
+            className={classes.statusMenu}
+            onChange={(e) => {
+              updateTask({ id: props.task.id, status: e.target.value });
+              e.stopPropagation();
+            }}
+          >
+            <MenuItem value="waiting">未着手</MenuItem>
+            <MenuItem value="working">作業中</MenuItem>
+            <MenuItem value="completed">完了</MenuItem>
+            <MenuItem value="pending">保留</MenuItem>
+          </Select>
+        );
+      case 'finishedAt':
+        return (
+          <DateField pdate={item.value} onClose={handleBlur} margin="none" />
+        );
+      // FIXME: 経過時間の編集ができるようになったらreadonlyは消す
+      case 'workingTime':
+        return (
+          <TimeField
+            time={item.value}
+            ref={timeRef}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        );
+      case 'tags':
+        return (
+          <TagChips
+            tags={item.value}
+            usableTags={usableTags}
+            tagChange={handleTagChange}
+          />
+        );
+      default:
+        return (
+          <InputBase
+            className={classes.input}
+            defaultValue={item.value}
+            name={item.attribute}
+            inputProps={{ 'aria-label': 'naked' }}
+            onBlur={handleBlur}
+          />
+        );
     }
-    // FIXME: 経過時間の編集ができるようになったらreadonlyは消す
-    if (item.attribute === 'workingTime') {
-      return (
-        <TimeField
-          time={item.value}
-          ref={timeRef}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      );
-    }
-    if (item.attribute === 'tags') {
-      return (
-        <TagChips
-          tags={item.value}
-          usableTags={usableTags}
-          tagChange={handleTagChange}
-        />
-      );
-    }
-    return (
-      <InputBase
-        className={classes.input}
-        defaultValue={item.value}
-        name={item.attribute}
-        inputProps={{ 'aria-label': 'naked' }}
-        onBlur={handleBlur}
-      />
-    );
   };
 
   const renderTableBody = () => {

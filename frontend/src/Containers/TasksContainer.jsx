@@ -9,6 +9,7 @@ export const taskLabel = new Map([
   ['name', 'タスク名'],
   ['tag', 'タグ'],
   ['description', '詳細'],
+  ['status', '状態'],
   ['finisihedAt', '締め切り日'],
   ['workingTime', '経過時間'],
 ]);
