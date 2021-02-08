@@ -30,7 +30,7 @@ export default class Task extends IRecord({
         return '未着手';
       case 'working':
         return '作業中';
-      case 'complete':
+      case 'completed':
         return '完了';
       case 'pending':
         return '保留';

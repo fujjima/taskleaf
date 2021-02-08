@@ -14,6 +14,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Select,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -59,6 +60,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: '13px',
   },
   // ---------------------------------------------
+  statusMenu: {
+    '& .MuiOutlinedInput-input': {
+      paddingBottom: '7px',
+      paddingTop: '7px',
+    },
+  },
   checkBox: {
     marginLeft: '0.5em',
   },
@@ -259,6 +266,26 @@ export const TasksPage = (props) => {
 
   // const renderToolBar = () => { };
 
+  const renderSelectStatusMenu = (task) => {
+    return (
+      <Select
+        id="demo-simple-select-filled"
+        value={task.status}
+        variant="outlined"
+        className={classes.statusMenu}
+        onChange={(e) => {
+          updateTask({ id: task.id, status: e.target.value });
+          e.stopPropagation();
+        }}
+      >
+        <MenuItem value="waiting">未着手</MenuItem>
+        <MenuItem value="working">作業中</MenuItem>
+        <MenuItem value="completed">完了</MenuItem>
+        <MenuItem value="pending">保留</MenuItem>
+      </Select>
+    );
+  };
+
   const renderMenu = () => {
     return (
       <Menu
@@ -337,7 +364,7 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{task.name}</TableCell>
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
-              <TableCell width="10%">{task.statusLabel}</TableCell>
+              <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
               <TableCell width="10%">
                 {/* TODO: 締め切り日でのソート */}
                 {task.finishedAt.isValid()
