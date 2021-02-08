@@ -14,12 +14,15 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Select,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
@@ -44,7 +47,24 @@ const useStyles = makeStyles((theme) => ({
   },
   addButton: {
     marginLeft: '30px',
-    marginBottom: '30px',
+    marginBottom: '10px',
+  },
+  // 複数選択メニュー -------------------------------
+  multipleMenu: {
+    // backgroundColor: 'red',
+  },
+  hiddenMultipleMenu: {
+    visibility: 'hidden',
+  },
+  multipleTrashIcon: {
+    marginLeft: '13px',
+  },
+  // ---------------------------------------------
+  statusMenu: {
+    '& .MuiOutlinedInput-input': {
+      paddingBottom: '7px',
+      paddingTop: '7px',
+    },
   },
   checkBox: {
     marginLeft: '0.5em',
@@ -76,7 +96,6 @@ const useStyles = makeStyles((theme) => ({
 
 // TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
 // 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
-// recordingTaskIdが入っている状態で他のstartIconがクリックされる：(+ clearTimeoutの実施)、recordingTaskIdのセット、setIntervalの作成
 export const TasksPage = (props) => {
   const {
     tasks,
@@ -148,6 +167,10 @@ export const TasksPage = (props) => {
     return tasks.size;
   };
 
+  const selected = () => {
+    return checkedIds.size > 0;
+  };
+
   const isRecording = (id) => {
     return recordingTaskId === id;
   };
@@ -168,7 +191,9 @@ export const TasksPage = (props) => {
   };
 
   const executeDelete = () => {
-    deleteTask(openMenuId);
+    const ids = checkedIds || openMenuId;
+    deleteTask(ids);
+    setCheckedIds(new Set());
   };
 
   // handler
@@ -241,6 +266,26 @@ export const TasksPage = (props) => {
 
   // const renderToolBar = () => { };
 
+  const renderSelectStatusMenu = (task) => {
+    return (
+      <Select
+        id="demo-simple-select-filled"
+        value={task.status}
+        variant="outlined"
+        className={classes.statusMenu}
+        onChange={(e) => {
+          updateTask({ id: task.id, status: e.target.value });
+          e.stopPropagation();
+        }}
+      >
+        <MenuItem value="waiting">未着手</MenuItem>
+        <MenuItem value="working">作業中</MenuItem>
+        <MenuItem value="completed">完了</MenuItem>
+        <MenuItem value="pending">保留</MenuItem>
+      </Select>
+    );
+  };
+
   const renderMenu = () => {
     return (
       <Menu
@@ -308,7 +353,7 @@ export const TasksPage = (props) => {
                 history.push(`tasks/${task.id}`);
               }}
             >
-              <TableCell padding="checkbox" width="10%">
+              <TableCell padding="checkbox" width="5%">
                 <Checkbox
                   disableRipple
                   className={classes.checkBox}
@@ -316,9 +361,10 @@ export const TasksPage = (props) => {
                   onClick={(e) => handleCheck(e, task.id)}
                 />
               </TableCell>
-              <TableCell width="20%">{task.name}</TableCell>
+              <TableCell width="15%">{task.name}</TableCell>
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
+              <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
               <TableCell width="10%">
                 {/* TODO: 締め切り日でのソート */}
                 {task.finishedAt.isValid()
@@ -390,6 +436,26 @@ export const TasksPage = (props) => {
         >
           タスクの追加
         </Button>
+        <div
+          className={cn(classes.multipleMenu, {
+            [classes.hiddenMultipleMenu]: !selected(),
+          })}
+        >
+          <IconButton
+            className={classes.multipleTrashIcon}
+            size="large"
+            disableRipple
+            onClick={() => executeDelete()}
+          >
+            <DeleteIcon />
+          </IconButton>
+          {/* <IconButton
+            size="large"
+            disableRipple
+          >
+            <EditIcon />
+          </IconButton> */}
+        </div>
         <Table
           className={classes.table}
           aria-labelledby="tableTitle"
@@ -400,11 +466,11 @@ export const TasksPage = (props) => {
           {renderTableBody()}
         </Table>
       </TableContainer>
-      {/* <CreateDialog
+      <CreateDialog
         open={dialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleSubmit}
-      /> */}
+      />
     </div>
   );
 };

@@ -97,7 +97,7 @@ export const CreateDialog = (props) => {
             InputLabelProps={{ shrink: true }}
           />
           {/* FIXME: 時間の編集フィールドを修正したらここも直す */}
-          <TimeField time={item.workingTime.format('HH:mm:ss')} ref={timeRef} />
+          {/* <TimeField time={item.workingTime.format('HH:mm:ss')} ref={timeRef} /> */}
         </DialogContent>
         <DialogActions>
           <Button

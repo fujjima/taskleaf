@@ -1,5 +1,5 @@
 class Api::TasksController < ApplicationController
-  before_action :set_task, only: %w[show update destroy]
+  before_action :set_task, only: %w[show update]
   before_action :set_tasks, only: %w[index]
 
   def index
@@ -49,25 +49,15 @@ class Api::TasksController < ApplicationController
   end
 
   def destroy
-    @task.destroy
+    Task.where(id: params[:id]).destroy_all
     render json: { status: 200 }
   end
 
-  # def import
-  #   if params[:files].nil?
-  #     set_tasks
-  #     redirect_to tasks_path, flash: { danger: 'ファイルを選択してください' }
-  #     return
-  #   end
-  #   current_user.tasks.import(params[:files])
-  #   redirect_to tasks_url, notice: 'タスクを追加しました'
-  # end
-
   private
 
-  # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのはどうなのだろうか
+  # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのが面倒
   def task_params
-    params.require(:task).permit(:name, :description, :image, :finished_at, :times, tag_ids: [])
+    params.require(:task).permit(:name, :description, :image, :finished_at, :times, :status, tag_ids: [])
   end
 
   def set_task

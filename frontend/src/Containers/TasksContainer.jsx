@@ -9,6 +9,7 @@ export const taskLabel = new Map([
   ['name', 'タスク名'],
   ['tag', 'タグ'],
   ['description', '詳細'],
+  ['status', '状態'],
   ['finisihedAt', '締め切り日'],
   ['workingTime', '経過時間'],
 ]);
@@ -146,8 +147,9 @@ export const TasksContainer = () => {
       });
   };
 
-  const deleteTask = (id) => {
-    const url = `http://localhost:3000/api/tasks/${id}`;
+  const deleteTask = (ids) => {
+    const paramsIds = _.isArray(ids) ? ids : Array.from(ids);
+    const url = `http://localhost:3000/api/tasks`;
     const options = {
       mode: 'cors',
       method: 'DELETE',
@@ -157,6 +159,7 @@ export const TasksContainer = () => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
+      body: JSON.stringify({ id: paramsIds }),
     };
 
     fetch(url, options)
@@ -170,7 +173,7 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(tasks.filterNot((t) => t.id === id));
+        setTasks(tasks.filterNot((t) => paramsIds.includes(t.id)));
       })
       .catch((err) => {
         return err;
