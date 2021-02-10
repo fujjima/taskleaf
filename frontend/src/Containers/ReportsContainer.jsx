@@ -3,15 +3,13 @@ import { ReportsPage } from 'Components/Pages/ReportsPage/ReportsPage';
 
 export const ReportsContainer = () => {
   const getUrl = `http://localhost:3000/api/reports`;
-  const [reports, setReports] = useState(IList());
+  const [reports, setReports] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
       const result = await getReports();
       if (result.reports) {
-        setReports((prev) => {
-          return prev.push(...result.reports.map((r) => Tag.fromJS(r)));
-        });
+        setReports(result.reports);
       }
     };
     getData();
@@ -47,5 +45,5 @@ export const ReportsContainer = () => {
       });
   }
 
-  return <ReportsPage />;
+  return <ReportsPage reports={reports} />;
 };
