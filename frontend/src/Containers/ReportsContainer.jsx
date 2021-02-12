@@ -3,7 +3,7 @@ import { ReportsPage } from 'Components/Pages/ReportsPage/ReportsPage';
 
 export const ReportsContainer = () => {
   const getUrl = `http://localhost:3000/api/reports`;
-  const [reports, setReports] = useState(null);
+  const [reports, setReports] = useState([]);
 
   useEffect(() => {
     const getData = async () => {

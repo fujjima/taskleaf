@@ -1,5 +1,4 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import Paper from '@material-ui/core/Paper';
 import {
   BarChart,
   Bar,
@@ -8,16 +7,35 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  Cell,
 } from 'recharts';
 import PropTypes from 'prop-types';
-// import ImmutablePropTypes from 'react-immutable-proptypes';
-import { duration } from 'dayjs';
+import dayjs, { duration } from 'dayjs';
 import { TasksPage } from '../TasksPage/TasksPage';
-import { Unstable_TrapFocus } from '@material-ui/core';
+import Formatter from 'Util/Formatter';
 
 export const ReportsPage = (props) => {
   const reports = props.reports;
+
+  // [{recordedAt: MM/DD, taskname1: HH:mm:ss, taskname2: HH:mm:ss}]
+  const chartDatas = () => {
+    let chartData = _.cloneDeep(reports);
+    const test = chartData.map((h) => {
+      // {}内の数字の型は問答無用でdayjs、keyがrecordedAtならdate型、もしくは単にparseしたもの
+      for (let key in h) {
+        h[key] = Number.isFinite(h[key])
+          ? Formatter.fromSecondToHour(h[key])
+          : dayjs(h[key]);
+      }
+    });
+    return test;
+  };
+
+  const ticks = [0, 18000, 36000, 54000, 72000, 86400];
+
+  const toHour = (time) => {
+    const hour = Math.floor(time / 3600);
+    return `${hour}H`;
+  };
 
   const taskNames = () => {
     // if (division === 'tag') return;
@@ -42,10 +60,17 @@ export const ReportsPage = (props) => {
   return (
     <BarChart width={1000} height={500} data={reports}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="recordedAt" />
-      <YAxis />
+      <XAxis
+        dataKey="recordedAt"
+        tickFormatter={(recordedAt) => dayjs(recordedAt).format('M/D')}
+      />
+      {/* オンカーソル時の表示については taskName: HH:mm:ss */}
+      <YAxis domain={[0, 86400]} ticks={ticks} tickFormatter={toHour} />
+      {/* {chartDatas()} */}
 
-      <Tooltip />
+      <Tooltip
+        formatter={(value) => dayjs.duration(value * 1000).format('H:mm:ss')}
+      />
       <Legend />
       {taskNames().map((tn, idx) => {
         return (

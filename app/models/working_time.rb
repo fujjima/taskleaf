@@ -1,3 +1,11 @@
+# -------------------------------------------------
+# WorkintTime
+# 
+# 各タスクに紐づく作業時間を管理する
+# 
+# recorded_at: 記録がされた日
+# times: ある日における作業時間の開始時刻及び終了時刻の配列
+# -------------------------------------------------
 class WorkingTime < ApplicationRecord
   belongs_to :task
 
@@ -8,7 +16,6 @@ class WorkingTime < ApplicationRecord
 
   class << self
 
-    # タスク一覧画面での使用
     def working_time_with_task_id_hash
       WorkingTime.all.group_by(&:task_id).each_with_object({}) do |(task_id, working_times), hash|
         sum_working_times = working_times.sum { |wt| sum_working_time_per_task(wt) }
@@ -17,8 +24,7 @@ class WorkingTime < ApplicationRecord
       end
     end
 
-    # XXX: 特定タスクにおける特定日のworking_timeについてtimesの合計を取得する
-    # working_timeをid以外で特定するには[task_id, recorded_at]の組み合わせが必要
+    # 特定日のworking_timeのtimesの合計を取得する（返却は秒）
     def sum_working_time_per_task(working_time)
       working_time&.times&.sum { |time| (Time.parse(time['end_at']) - Time.parse(time['start_at'])).to_i }
     end

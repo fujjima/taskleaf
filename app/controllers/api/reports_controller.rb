@@ -1,18 +1,22 @@
 class Api::ReportsController < ApplicationController
-
   def index
-    a_week_ago_day = Date.today - 7
-    @report_datas = WorkingTime.where(recorded_at: [a_week_ago_day..Date.today])
-                               .group_by(&:recorded_at)
-                               .each_with_object([]) do |(recorded_at, working_times), ary|
-                                # 1.入出力の比較を雑に書いておく
-                                # { re(date): [wt1, wt2], re2: [wt1, wt2] }
-                                # →{ re: date, taskname: sum1(wt1のtimesのsum) }
-                                hash = {}
-                                hash[:recorded_at] = recorded_at
-                                ary << sum_hash(working_times, hash)
-                                ary
-                               end
+    a_week_ago_day = Date.today - 15
+    working_times_group_by_recorded_at = WorkingTime.where(recorded_at: period_range)
+                                                    .group_by(&:recorded_at)
+
+    datas = period_range.map do |date|
+              hash = {}
+              # XXX: ここでキャメルケース使いたくない
+              hash['recordedAt'] = date
+              working_times = working_times_group_by_recorded_at[date]
+              next hash unless working_times
+
+              hash.merge(sum_hash(working_times))
+            end.compact
+
+    @report_datas = datas.map do |d|
+      Hash[d.sort]
+    end
   end
 
   private
@@ -21,15 +25,16 @@ class Api::ReportsController < ApplicationController
     WorkingTime.specify(task_id, date)
   end
 
-  # 特定のworking_timeのsumを求める時に使え
-  def sum_working_time(time)
-    WorkingTime.sum_working_time_per_task(time)
+  # FIXME: ここでレコード回数分の計算をしてしまっている
+  def sum_hash(working_times)
+    working_times.each_with_object({}) do |wt, result|
+      result[wt.task.name] = WorkingTime.sum_working_time_per_task(wt)
+      result
+    end
   end
 
-  def sum_hash(working_times, hash)
-    working_times.each do |wt|
-      hash[wt.task.name] = sum_working_time(wt)
-    end
-    hash
+  def period_range
+    # paramsが来ていたら範囲指定する
+    (Date.today.beginning_of_week..Date.today.end_of_week).to_a
   end
 end
