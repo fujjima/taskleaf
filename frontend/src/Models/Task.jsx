@@ -44,7 +44,7 @@ export default class Task extends IRecord({
       s.set('finishedAt', Formatter.toDate(params.finishedAt));
       s.set('workingTime', params.workingTime);
       _.isEmpty(params.tags)
-        ? IList()
+        ? s.set('tags', IList())
         : s.set('tags', IList(params.tags.map((t) => Tag.fromJS(t))));
     });
   };
