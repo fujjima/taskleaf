@@ -22,7 +22,6 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
@@ -177,7 +176,6 @@ export const TasksPage = (props) => {
 
   const displayTags = (task) => {
     const tags = task.tags;
-    if (tags.size === 0) return tags;
 
     return (
       <TagChips
