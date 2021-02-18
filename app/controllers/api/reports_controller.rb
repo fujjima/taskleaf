@@ -1,5 +1,6 @@
 class Api::ReportsController < ApplicationController
   def index
+    # binding.pry
     a_week_ago_day = Date.today - 15
     working_times_group_by_recorded_at = WorkingTime.where(recorded_at: period_range)
                                                     .group_by(&:recorded_at)
@@ -20,6 +21,10 @@ class Api::ReportsController < ApplicationController
   end
 
   private
+
+  def report_params
+    params(:report).require(:period)
+  end
 
   def working_time(task_id, date)
     WorkingTime.specify(task_id, date)

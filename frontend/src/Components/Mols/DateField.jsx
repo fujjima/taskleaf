@@ -38,6 +38,7 @@ export const DateField = (props) => {
   return (
     <MuiPickersUtilsProvider utils={ExtendedUtils} locale={ja}>
       <KeyboardDatePicker
+        disableToolbar
         open={open}
         disablePast
         variant="inline"

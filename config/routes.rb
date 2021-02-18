@@ -19,8 +19,8 @@ Rails.application.routes.draw do
     put 'tasks', to: 'tasks#update'
     resources :tags, only: %w[index create update destroy]
     resources :reports, only: %w[index] do
-      # レポート画面での期間を指定された時の検索アクション
-      get 'period', to: 'reports#period'
+      # 単にparamsで取得できる情報があるかないかの違いでOK？
+      # get 'period', to: 'reports#period'
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
