@@ -17,8 +17,11 @@ Rails.application.routes.draw do
     end
     # タスク一覧画面でのタスク別の更新することがある
     put 'tasks', to: 'tasks#update'
-    # タグ一覧画面からの処理
     resources :tags, only: %w[index create update destroy]
+    resources :reports, only: %w[index] do
+      # 単にparamsで取得できる情報があるかないかの違いでOK？
+      # get 'period', to: 'reports#period'
+    end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

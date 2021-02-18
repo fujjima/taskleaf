@@ -10,7 +10,6 @@ export default class Task extends IRecord({
   status: '',
   tags: IList(),
   // TODO: バックから文字列で来る→文字列をフォーマットするというのが主になってしまっている
-  // Date→dayjsの変換が可能であれば、型をDateとかにしたい
   finishedAt: '',
   workingTime: 0,
 }) {

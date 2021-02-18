@@ -23,6 +23,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(sa|sc|c)ss$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
@@ -79,7 +83,7 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       _: 'lodash',
-      cn: 'classNames',
+      cn: 'classnames',
       U: path.resolve(`${src}/Util/Utils`),
       // JSにはMap型が既に存在しているため、ImmutableのMap型をIMapとして区別する
       IMap: ['immutable', 'Map'],
