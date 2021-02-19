@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import Task from 'Models/Task';
 import Tag from 'Models/Tag';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
@@ -18,9 +18,9 @@ export const TaskContext = createContext();
 
 export const TasksContainer = () => {
   const { id } = useParams();
-  // TODO:
-  // http://localhost:3000 までを取得してそこにapi配下のURLを追加する
-  const getUrl = `http://localhost:3000/api/tasks`;
+  const location = useLocation();
+  const url = `${API_URL}${location.pathname}`;
+
   const [tasks, setTasks] = useState(IList());
   const [usableTags, setUsableTags] = useState(IList());
 
@@ -53,7 +53,7 @@ export const TasksContainer = () => {
       },
     };
 
-    return fetch(getUrl, options)
+    return fetch(url, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -72,7 +72,6 @@ export const TasksContainer = () => {
   }
 
   const createTask = (params) => {
-    const url = `http://localhost:3000/api/tasks`;
     const options = {
       mode: 'cors',
       method: 'POST',
@@ -109,7 +108,7 @@ export const TasksContainer = () => {
 
   const updateTask = (params) => {
     const taskId = id || params.id;
-    const url = `http://localhost:3000/api/tasks/${taskId}`;
+    const url = `${url}/${taskId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -149,7 +148,6 @@ export const TasksContainer = () => {
 
   const deleteTask = (ids) => {
     const paramsIds = _.isArray(ids) ? ids : Array.from(ids);
-    const url = `http://localhost:3000/api/tasks`;
     const options = {
       mode: 'cors',
       method: 'DELETE',
@@ -182,7 +180,7 @@ export const TasksContainer = () => {
 
   const updateTags = (params) => {
     const taskId = id || params.id;
-    const url = `http://localhost:3000/api/tasks/${taskId}`;
+    const url = `${url}/${taskId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',

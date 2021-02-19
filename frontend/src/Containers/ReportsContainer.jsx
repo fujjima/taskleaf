@@ -3,16 +3,7 @@ import { useParams } from 'react-router-dom';
 import { ReportsPage } from 'Components/Pages/ReportsPage/ReportsPage';
 
 export const ReportsContainer = (props) => {
-  // 下記のURLのヘッド部分に、railsに送信できるURLを自動で追加してほしい
-  // webpack側でどうにかするより、グローバルでフルパスを取得できる方法を考えた方がいいか
-  // 環境に応じて、（railsが起動している）フルパスを取得する方法について
   const getUrl = `http://localhost:3000/api//reports`;
-  // locationの中身
-  // {
-  //   "pathname": "/reports",
-  //     "search": "?test=fujji",
-  //       "hash": ""
-  // }
   // const location = useLocation();
   const [reports, setReports] = useState([]);
 
