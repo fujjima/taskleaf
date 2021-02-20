@@ -1,12 +1,13 @@
 import React, { useState, useEffect, createContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { TagsPage } from 'Components/Pages/TagsPage/TagsPage';
 import Tag from 'Models/Tag';
 
 export const TagContext = createContext();
 
 export const TagsContainer = () => {
-  // TODO:
-  const getUrl = `http://localhost:3000/api/tags`;
+  const location = useLocation();
+  const url = `${API_URL}${location.pathname}`;
   const [tags, setTags] = useState(IList());
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export const TagsContainer = () => {
       },
     };
 
-    return fetch(getUrl, options)
+    return fetch(url, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -52,7 +53,6 @@ export const TagsContainer = () => {
   }
 
   const createTag = (params) => {
-    const url = `http://localhost:3000/api/tags`;
     const options = {
       mode: 'cors',
       method: 'POST',
@@ -89,7 +89,7 @@ export const TagsContainer = () => {
 
   const updateTag = (params) => {
     const tagId = params.id;
-    const url = `http://localhost:3000/api/tags/${tagId}`;
+    const url = `${url}/${tagId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -128,7 +128,7 @@ export const TagsContainer = () => {
   };
 
   const deleteTag = (id) => {
-    const url = `http://localhost:3000/api/tags/${id}`;
+    const url = `${url}/${id}`;
     const options = {
       mode: 'cors',
       method: 'DELETE',
