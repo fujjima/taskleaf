@@ -1,7 +1,5 @@
 class Api::ReportsController < ApplicationController
   def index
-    # binding.pry
-    a_week_ago_day = Date.today - 15
     working_times_group_by_recorded_at = WorkingTime.where(recorded_at: period_range)
                                                     .group_by(&:recorded_at)
 
@@ -39,7 +37,12 @@ class Api::ReportsController < ApplicationController
   end
 
   def period_range
-    # paramsが来ていたら範囲指定する
-    (Date.today.beginning_of_week..Date.today.end_of_week).to_a
+    if params[:start] && params[:end]
+      # Invalid Dateは弾く
+      # きちんとした値が入っているかを見る
+      (Date.parse(params[:start])..Date.parse(params[:end])).to_a
+    else
+      (Date.today.beginning_of_week..Date.today.end_of_week).to_a
+    end
   end
 end

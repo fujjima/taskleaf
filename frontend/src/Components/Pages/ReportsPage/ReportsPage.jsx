@@ -86,12 +86,14 @@ export const ReportsPage = (props) => {
 
     if (!target || target !== 'calendar') {
       setOpen(false);
-      // ここをcontainer内に入れたい
+      if (!(startDate && endDate)) return;
+
+      // TODO: この辺りのURL操作はcontainerでやりたい
       history.push({
         pathname: '/reports',
-        search: `?startDate=${dayjs(startDate).format(
-          'YYYY-MM-DD'
-        )}&endDate=${dayjs(endDate).format('YYYY-MM-DD')}`,
+        search: `?start=${dayjs(startDate).format('YYYY-MM-DD')}&end=${dayjs(
+          endDate
+        ).format('YYYY-MM-DD')}`,
       });
       props.changePeriod(dateRange);
     }
