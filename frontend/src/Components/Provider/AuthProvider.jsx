@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { signin, signout } from '../../Slices/UserSlice';
+import { signin, signout } from 'Slices/UserSlice';
 
 export const AuthContext = createContext();
 
@@ -12,7 +12,7 @@ export const AuthProvider = (props) => {
   const { children } = props;
 
   const login = (data) => {
-    const url = 'http://localhost:3000/login';
+    const url = `${API_URL}/login`;
     const options = {
       mode: 'cors',
       method: 'POST',
@@ -54,7 +54,7 @@ export const AuthProvider = (props) => {
   };
 
   const logout = () => {
-    const url = 'http://localhost:3000/logout';
+    const url = `${API_URL}/logout`;
     const options = {
       mode: 'cors',
       method: 'GET',

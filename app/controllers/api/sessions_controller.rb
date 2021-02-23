@@ -1,11 +1,11 @@
-class SessionsController < ApplicationController
+class Api::SessionsController < ApplicationController
   skip_before_action :login_required
 
   # 未ログイン：ここにリダイレクト
   def new; end
 
   def create
-    user = User.find_by(email: params[:email])
+    user = User.find_by(email: params[:session][:email])
     if user&.authenticate(params[:session][:password])
       # TODO: params内のsessionについて
       # https://qiita.com/zettaittenani/items/a75f0da8f44cfe0f85c0#session%E3%81%AE%E5%AE%9F%E4%BD%93%E3%81%AF%E3%81%A9%E3%81%93%E3%81%AB%E3%81%82%E3%82%8B%E3%81%8B
