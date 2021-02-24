@@ -88,7 +88,6 @@ class LoginPage extends React.Component {
           <Avatar className={classes.avater}>
             <LockOutlinedIcon />
           </Avatar>
-          {/* variant:文字サイズ component:<h1></h1>で出力 */}
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>

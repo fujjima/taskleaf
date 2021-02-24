@@ -1,19 +1,18 @@
 Rails.application.routes.draw do
-  get '/login', to: 'sessions#new'
-  post '/login', to: 'sessions#create'
-  get '/logout', to: 'sessions#destroy'
-  get 'session/new'
-  get '/signup', to: 'signup#new'
-  post '/signup', to: 'signup#create'
+  root to: 'tasks#index'
+
   namespace :admin do
     resources :users
   end
 
-  root to: 'tasks#index'
   namespace 'api', format: :json do
+    get '/login', to: 'sessions#new'
+    post '/login', to: 'sessions#create'
+    get '/logout', to: 'sessions#destroy'
+    get '/signup', to: 'signup#new'
+    post '/signup', to: 'signup#create'
     resources :tasks, except: :destroy do
       delete :destroy, on: :collection
-      post :import, on: :collection
     end
     # タスク一覧画面でのタスク別の更新することがある
     put 'tasks', to: 'tasks#update'
