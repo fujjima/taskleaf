@@ -36,6 +36,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'activerecord-import'
+gem 'dotenv-rails'
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'rack-cors'

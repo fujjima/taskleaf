@@ -8,8 +8,17 @@ RSpec.describe 'task_management', type: :request do
   let!(:default_request_headers) { { 'HTTP_ACCEPT': 'application/json' } }
 
   before do
+    # session = defined?(rspec_session) ? rspec_session : {}
+    # session.class_eval {
+    #   def destroy
+    #     nil
+    #   end
+    # }
     allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return(user_id: user_a.id)
-    # request.env["HTTP_ACCEPT"] = 'application/json'
+  end
+
+  def reset_session
+    allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return({})
   end
 
   # shared_examples_for 'ユーザーAが作成したタスクが表示される' do
@@ -27,42 +36,43 @@ RSpec.describe 'task_management', type: :request do
         expect(json['tasks'].first['name']).to eq('タスクA')
       end
     end
+
+    context 'ユーザーA非ログイン時' do
+      it 'ログイン画面にリダイレクトされること' do
+        reset_session
+        get api_tasks_path, params: {}
+        expect(response.status).to eq(302)
+        expect(response.status).to redirect_to api_login_path
+      end
+    end
   end
 
   describe 'task#show' do
     context 'ユーザーAのログイン時' do
-      get api_tasks_path, params: {}
-      json = JSON.parse(response.body)
-      expect(response.status).to eq(200)
-      # ユーザーBのタスクが混じっていないこと
-      expect(json['tasks'].length).to eq(1)
-      expect(json['tasks'].first['name']).to eq('タスクA')
+      it '選択したタスクの詳細が表示されること' do
+        get api_task_path(task_a.id), params: {}
+        json = JSON.parse(response.body)
+        expect(response.status).to eq(200)
+        expect(json['task']['name']).to eq('タスクA')
+      end
     end
   end
 
-  describe '新規作成機能' do
-    let(:login_user) { user_a }
-
-    before do
-      visit new_task_path
-      fill_in '名称', with: task_name
-      click_button '登録する'
-    end
-
-    context '新規作成画面で名称を入力した時' do
-      let(:task_name) { '新規作成のテストを書く' }
+  describe 'task#create' do
+    context 'タスク作成成功時' do
+      # let(:task_name) { '新規作成のテストを書く' }
 
       it '正常に登録される' do
-        expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
+        # expect(page).to have_selector '.alert-success', text: '新規作成のテストを書く'
       end
     end
 
-    context '新規作成画面で名称を入力しなかった時' do
-      let(:task_name) { '' }
+    context 'タスク作成失敗時' do
+      # let(:task_name) { '' }
 
       it 'エラーとなる' do
         within '#error_explanation' do
-          expect(page).to have_content '名称を入力してください'
+          # expect(page).to have_content '名称を入力してください'
         end
       end
     end

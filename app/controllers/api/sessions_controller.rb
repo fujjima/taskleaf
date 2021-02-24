@@ -1,7 +1,7 @@
 class Api::SessionsController < ApplicationController
   skip_before_action :login_required
 
-  # 未ログイン：ここにリダイレクト
+  # TODO: リダイレクトされた場合、メッセージを返して新規登録を促す
   def new; end
 
   def create
