@@ -1,5 +1,6 @@
 // TODO:この辺のimportはどのファイルにもあるので、まとめてimportできないか
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import {
@@ -17,25 +18,14 @@ import {
 } from '@material-ui/core';
 import { purple } from '@material-ui/core/colors';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { AuthContext } from '../../../Components/Provider/AuthProvider';
+import { AuthContext } from 'Components/Provider/AuthProvider';
 
 // クラスコンポーネント内でhookは呼び出せないため、高階コンポーネントを使用する
 // https://material-ui.com/styles/basics/#higher-order-component-api
-const sytles = {
+const sytles = (theme) => ({
   container: {},
-  paper: {
-    marginTop: '100px',
-    // 子要素を縦に並べる ----------
-    display: 'flex',
-    flexDirection: 'column',
-    // --------------------------
-    alignItems: 'center',
-  },
-  avater: {
-    margin: '12px',
-    // TODO: hooksを使用してmaterial ui標準のpaletteを使いたい
-    backgroundColor: purple[400],
-  },
+  paper: theme.paper,
+  avater: theme.avater,
   form: {
     width: '100 %',
     marginTop: '12px',
@@ -43,7 +33,7 @@ const sytles = {
   submit: {
     margin: '36px 0 24px',
   },
-};
+});
 
 // react hooksを使用している場合
 // const useSytles = makeStyles((theme) => ({
@@ -82,8 +72,8 @@ class LoginPage extends React.Component {
     const { classes } = this.props;
     return (
       <Container component="main" maxWidth="xs">
-        {/* ブラウザによる表示の差異を解消、ページのマージン消滅、背景色の変更 */}
         <CssBaseline />
+        {/* ここでProviderから取得したthemeを適用したい */}
         <div className={classes.paper}>
           <Avatar className={classes.avater}>
             <LockOutlinedIcon />
@@ -99,7 +89,7 @@ class LoginPage extends React.Component {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="メールアドレス"
               name="email"
               autoComplete="email"
               onChange={(e) => {
@@ -113,7 +103,7 @@ class LoginPage extends React.Component {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="パスワード"
               type="password"
               id="password"
               onChange={(e) => {
@@ -143,8 +133,8 @@ class LoginPage extends React.Component {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {'新規登録の場合'}
+                <Link component={RouterLink} to="/signup" variant="body2">
+                  新規登録の場合
                 </Link>
               </Grid>
             </Grid>
