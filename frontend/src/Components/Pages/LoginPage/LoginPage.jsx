@@ -73,13 +73,12 @@ class LoginPage extends React.Component {
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        {/* ここでProviderから取得したthemeを適用したい */}
         <div className={classes.paper}>
           <Avatar className={classes.avater}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            ログイン
           </Typography>
           {/* TODO: メアドのバリデーション入れたい（他サービスの使用例を見る） */}
           <form className={classes.form} noValidate>
@@ -124,7 +123,7 @@ class LoginPage extends React.Component {
               className={classes.submit}
               onClick={(e) => this.handleClick(e)}
             >
-              Sign In
+              ログイン
             </Button>
             <Grid container>
               <Grid item xs>

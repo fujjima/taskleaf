@@ -20,11 +20,13 @@ export default class Main extends React.Component {
         <Router>
           <AuthProvider>
             <Switch>
-              <ThemeProvider theme={AuthenticateTheme}>
-                <Route exact path="/" component={LoginPage} />
-                <Route exact path="/signup" component={SignupPage} />
-              </ThemeProvider>
-              <PrivateRoutes />
+              <Route>
+                <ThemeProvider theme={AuthenticateTheme}>
+                  <Route exact path="/" component={LoginPage} />
+                  <Route exact path="/signup" component={SignupPage} />
+                  <PrivateRoutes />
+                </ThemeProvider>
+              </Route>
             </Switch>
           </AuthProvider>
         </Router>

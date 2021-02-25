@@ -24,6 +24,9 @@ export const PrivateRoutes = (props) => {
       </Sidebar>
     );
   } else {
+    // TODO: signup内でリロードすると、ログイン状態でないため / にレダイレクトされてしまう
+    // /以下にURLが付いていたら、そのパスへ遷移
+    // そのため、現在のパス（locationとかで取得）にリダイレクトするようにしたい
     return <Redirect to="/" />;
   }
 };
