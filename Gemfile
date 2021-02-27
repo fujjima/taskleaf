@@ -37,6 +37,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'activerecord-import'
 gem 'dotenv-rails'
+gem 'firebase-auth-rails'
 gem 'jquery-rails'
 gem 'kaminari'
 gem 'rack-cors'

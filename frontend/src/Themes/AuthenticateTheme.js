@@ -1,7 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { purple } from '@material-ui/core/colors';
 
-// ログイン、サインイン周りで使用される共通テーマ
 export const AuthenticateTheme = createMuiTheme({
   paper: {
     marginTop: '100px',

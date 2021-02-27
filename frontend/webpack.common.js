@@ -2,6 +2,9 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 // pathモジュールを読む(output.pathに絶対パスを指定するため)
 const path = require('path');
+
+const Dotenv = require('dotenv-webpack');
+
 // ここでの__dirnameはfrontendディレクトリを指す
 const src = path.resolve(__dirname, 'src');
 const dist = path.resolve(__dirname, 'dist');
@@ -56,6 +59,9 @@ module.exports = {
   },
 
   plugins: [
+    new Dotenv({
+      path: path.resolve(__dirname, '..', '.env'),
+    }),
     new webpack.DefinePlugin({
       API_URL: API_URL[environment],
     }),
@@ -76,4 +82,5 @@ module.exports = {
       IList: ['immutable', 'List'],
     }),
   ],
+  node: { fs: 'empty' },
 };

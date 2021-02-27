@@ -36,9 +36,21 @@ const UserSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem('user');
     },
+    // signinとの違いについて
+    signup: (state, { payload }) => {
+      const { user } = payload;
+      state.isLoggedIn = true;
+      const userInfo = fetchObj(user, ['name', 'email']);
+      localStorage.setItem(
+        'user',
+        JSON.stringify(Object.assign(userInfo, state))
+      );
+      // TODO: return {}では何故駄目なのか
+      return Object.assign(state, userInfo);
+    },
   },
 });
 
-export const { signin, signout } = UserSlice.actions;
+export const { signin, signout, signup } = UserSlice.actions;
 
 export default UserSlice;

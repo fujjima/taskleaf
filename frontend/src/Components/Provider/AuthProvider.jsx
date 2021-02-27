@@ -2,6 +2,7 @@ import React, { createContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signin, signout } from 'Slices/UserSlice';
+import firebase from 'firebase-config';
 
 export const AuthContext = createContext();
 
@@ -87,8 +88,52 @@ export const AuthProvider = (props) => {
       });
   };
 
+  const signup = (data) => {
+    const url = `${API_URL}/signup`;
+    const options = {
+      mode: 'cors',
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      }),
+    };
+
+    fetch(url, options)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if ('errors' in data) {
+          // TODO: 既にアカウントがある状態での失敗：メッセージを表示
+          // サインアップ系列での失敗内容を網羅したい
+          return alert('error');
+        } else if (data.loggedIn) {
+          // サインイン成功時フロー
+          //
+          dispatch(signup({ ...data }));
+          history.push('/tasks');
+        } else {
+          return alert('not authorized');
+        }
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
   return (
-    <AuthContext.Provider value={{ login, logout }}>
+    <AuthContext.Provider value={{ login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );
