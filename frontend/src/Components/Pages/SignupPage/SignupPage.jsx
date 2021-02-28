@@ -34,18 +34,24 @@ export const SignupPage = (props) => {
   const history = useHistory();
   const classes = useStyles();
 
-  // firebase側でログインできたら、/taskに遷移
-  // その際、rails側にuid(token?)を渡してjwt認証させる？
-  // firebaseにサインアップさせる
+  // onAuthStateChangedでユーザー状態を取得できる（user.uidとか）
+
+  // TODO: ここで定義するのではなく、firebase関連のメソッドを集めたクラスを作ってここで呼び出すようにしたい
   const onSubmit = (values) => {
     // TODO: firebaseへのサインアップは時間がかかるためloadingを表示させる
     firebase
       .auth()
       .createUserWithEmailAndPassword(values.email, values.password)
-      .then((res) => {
-        // 正常終了時
-        // spinner表示終了のための機構を追加しておく
-        history.push('/tasks');
+      .then(async (res) => {
+        // TODO: spinner表示終了のための機構を追加しておく
+
+        // signin()は、railsからの返却値をreduxに入れている
+        // ただしサインアップが完了した際に、サインアップしたユーザーに関する情報（名前、メアド、パスワード）あたりはrails側でも保存しておく必要はある
+        const token = await res.user.getIdToken(true);
+
+        signup(values, token);
+        // railsからのレスポンスが来るまで待たせる
+        history.push('/');
       })
       .catch((error) => {
         //異常終了時

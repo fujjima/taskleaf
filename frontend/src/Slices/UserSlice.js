@@ -36,7 +36,7 @@ const UserSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem('user');
     },
-    // signinとの違いについて
+    // signinとの違いがわからん
     signup: (state, { payload }) => {
       const { user } = payload;
       state.isLoggedIn = true;

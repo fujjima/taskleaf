@@ -88,7 +88,11 @@ export const AuthProvider = (props) => {
       });
   };
 
-  const signup = (data) => {
+  // const authorizationObj = (idToken) => {
+  //   return { Authorization: `Bearer ${idToken}` };
+  // };
+
+  const signup = (data, token) => {
     const url = `${API_URL}/signup`;
     const options = {
       mode: 'cors',
@@ -98,11 +102,14 @@ export const AuthProvider = (props) => {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        password: data.password,
+        user: {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        },
       }),
     };
 
@@ -119,8 +126,6 @@ export const AuthProvider = (props) => {
           // サインアップ系列での失敗内容を網羅したい
           return alert('error');
         } else if (data.loggedIn) {
-          // サインイン成功時フロー
-          //
           dispatch(signup({ ...data }));
           history.push('/tasks');
         } else {
