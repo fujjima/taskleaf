@@ -45,10 +45,11 @@ export const CreateDialog = (props) => {
   };
 
   const handleSubmit = (e) => {
-    const newTask = item.merge({
-      workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
-    });
-    props.onSubmit(e, newTask);
+    // TODO: 作業時間を編集できるようになったら復活させる
+    // const newTask = item.merge({
+    //   workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
+    // });
+    props.onSubmit(e, item);
   };
 
   return (

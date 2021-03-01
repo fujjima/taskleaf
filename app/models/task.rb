@@ -3,7 +3,10 @@ class Task < ApplicationRecord
 
   enum status: { waiting: 0, working: 1, completed: 2, pending: 3 }
 
+  before_validation :set_default_status, if: :status_nil?
+
   validates :name, presence: true, length: { maximum: 30 }
+  validates :status, presence: true
   validate :validate_name_not_including_comma
 
   belongs_to :user
@@ -49,6 +52,14 @@ class Task < ApplicationRecord
   # end
 
   private
+
+  def set_default_status
+    waiting!
+  end
+
+  def status_nil?
+    status.nil?
+  end
 
   def validate_name_not_including_comma
     errors.add(:name, 'にカンマを含めることは出来ません！') if name&.include?(',')
