@@ -128,7 +128,6 @@ export const TagsContainer = () => {
   };
 
   const deleteTag = (id) => {
-    const url = `${url}/${id}`;
     const options = {
       mode: 'cors',
       method: 'DELETE',
@@ -140,7 +139,7 @@ export const TagsContainer = () => {
       },
     };
 
-    fetch(url, options)
+    fetch(`${url}/${id}`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();

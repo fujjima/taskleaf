@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddIcon from '@material-ui/icons/Add';
 import { TagContext } from 'Containers/TagsContainer';
-import { DeleteDialog } from './DeleteDialog';
+import { DeleteDialog } from 'Components/Organisms/Dialog/DeleteDialog';
 import { CreateDialog } from './CreateDialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -107,9 +107,7 @@ export const TagsPage = () => {
     setEditingTagId(null);
   };
 
-  const handleSubmit = (e) => {
-    // stopとの違いについて
-    e.stopPropagation();
+  const handleDelete = () => {
     deleteTag(editingTagId);
     setEditingTagId(null);
   };
@@ -176,7 +174,9 @@ export const TagsPage = () => {
       <DeleteDialog
         open={openDeleteDialog}
         onClose={closeDeleteDialog}
-        tagId={editingTagId}
+        targetIds={editingTagId}
+        onDelete={handleDelete}
+        label="タグ"
       />
       <CreateDialog open={openCreateDialog} onClose={closeCreateDialog} />
     </div>

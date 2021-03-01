@@ -26,6 +26,7 @@ import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
+import { DeleteDialog } from 'Components/Organisms/Dialog/DeleteDialog';
 import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => ({
@@ -122,6 +123,7 @@ export const TasksPage = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const prevStartAt = usePrevious(startAt);
   const prevRecordingTaskId = usePrevious(recordingTaskId);
@@ -161,6 +163,10 @@ export const TasksPage = (props) => {
   const headerCells = [...taskLabel.values()];
 
   const isOpened = !_.isNull(openMenuId);
+
+  const closeDeleteDialog = () => {
+    return setOpenDeleteDialog(false);
+  };
 
   const rowCount = () => {
     return tasks.size;
@@ -443,7 +449,9 @@ export const TasksPage = (props) => {
             className={classes.multipleTrashIcon}
             size="large"
             disableRipple
-            onClick={() => executeDelete()}
+            onClick={() => {
+              setOpenDeleteDialog(!openDeleteDialog);
+            }}
           >
             <DeleteIcon />
           </IconButton>
@@ -468,6 +476,13 @@ export const TasksPage = (props) => {
         open={dialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleSubmit}
+      />
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={closeDeleteDialog}
+        targetIds={checkedIds}
+        onDelete={executeDelete}
+        label="タスク"
       />
     </div>
   );
