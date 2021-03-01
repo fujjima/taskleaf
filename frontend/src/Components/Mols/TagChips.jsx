@@ -3,9 +3,23 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { makeStyles } from '@material-ui/core/styles';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import { Chip, Menu, MenuItem, Checkbox, IconButton } from '@material-ui/core';
+import {
+  Chip,
+  Menu,
+  MenuItem,
+  Checkbox,
+  IconButton,
+  FormControlLabel,
+} from '@material-ui/core';
 
 const useStyles = makeStyles({
+  tagMenu: {
+    padding: '0',
+  },
+  tagFormLabel: {
+    width: '100%',
+    margin: '0',
+  },
   tagIcon: {
     '&:hover': {
       backgroundColor: 'inherit',
@@ -53,18 +67,27 @@ export const TagChips = (props) => {
         }}
         PaperProps={{
           style: {
-            height: '100px',
+            height: '200px',
             width: '20ch',
           },
         }}
       >
         {usableTags.map((u) => (
-          <MenuItem key={u.id} onClick={(e) => e.stopPropagation()}>
-            <Checkbox
-              checked={isTagged(u.id)}
-              onChange={(e) => handleChange(e, u.id)}
+          <MenuItem
+            className={classes.tagMenu}
+            key={u.id}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FormControlLabel
+              className={classes.tagFormLabel}
+              label={u.name}
+              control={
+                <Checkbox
+                  checked={isTagged(u.id)}
+                  onChange={(e) => handleChange(e, u.id)}
+                />
+              }
             />
-            {u.name}
           </MenuItem>
         ))}
       </Menu>

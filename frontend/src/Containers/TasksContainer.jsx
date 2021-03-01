@@ -108,7 +108,6 @@ export const TasksContainer = () => {
 
   const updateTask = (params) => {
     const taskId = id || params.id;
-    const url = `${url}/${taskId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -123,7 +122,7 @@ export const TasksContainer = () => {
       }),
     };
 
-    fetch(url, options)
+    fetch(`${url}/${taskId}`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -180,7 +179,6 @@ export const TasksContainer = () => {
 
   const updateTags = (params) => {
     const taskId = id || params.id;
-    const url = `${url}/${taskId}`;
     const options = {
       mode: 'cors',
       method: 'PATCH',
@@ -195,7 +193,7 @@ export const TasksContainer = () => {
       }),
     };
 
-    fetch(url, options)
+    fetch(`${url}/${taskId}`, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
