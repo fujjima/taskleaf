@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
 import { makeStyles } from '@material-ui/core';
+import DateUtil from 'Util/DateUtil';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -11,6 +12,9 @@ import ja from 'dayjs/locale/ja';
 
 const useStyles = (props) =>
   makeStyles({
+    overFinisiedAt: {
+      backgroundColor: 'red',
+    },
     ...props,
   });
 
@@ -26,8 +30,8 @@ class ExtendedUtils extends DayJsUtils {
 
 export const DateField = (props) => {
   const classes = useStyles(props);
-  const { pdate, onClose, ...options } = props;
-  const [date, setDate] = useState(pdate);
+  const { finishedAt, onClose, ...options } = props;
+  const [date, setDate] = useState(finishedAt);
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -59,6 +63,10 @@ export const DateField = (props) => {
           onFocus: () => {
             setOpen(true);
           },
+          // TODO: 本当はclassNameとかで指定したい
+          style: {
+            color: DateUtil.isAftertoday(date) && 'red',
+          },
         }}
         // バリデーションメッセージを表示させない
         error={false}
@@ -70,6 +78,6 @@ export const DateField = (props) => {
 };
 
 DateField.propTypes = {
-  pdate: PropTypes.instanceOf(dayjs).isRequired,
+  finishedAt: PropTypes.instanceOf(dayjs).isRequired,
   onClose: PropTypes.func,
 };

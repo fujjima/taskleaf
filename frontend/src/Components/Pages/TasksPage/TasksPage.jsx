@@ -27,6 +27,7 @@ import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
 import { DeleteDialog } from 'Components/Organisms/Dialog/DeleteDialog';
+import DateUtil from 'Util/DateUtil';
 import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       cursor: 'pointer',
     },
+  },
+  overFinisiedAt: {
+    color: 'red',
   },
   deleteItem: {
     color: 'red',
@@ -194,6 +198,10 @@ export const TasksPage = (props) => {
     );
   };
 
+  const isAfterFinishedAt = (date) => {
+    return DateUtil.isAftertoday(date);
+  };
+
   const executeDelete = () => {
     const ids = checkedIds || openMenuId;
     deleteTask(ids);
@@ -277,6 +285,7 @@ export const TasksPage = (props) => {
         value={task.status}
         variant="outlined"
         className={classes.statusMenu}
+        onClose={(e) => e.stopPropagation()}
         onChange={(e) => {
           updateTask({ id: task.id, status: e.target.value });
           e.stopPropagation();
@@ -306,7 +315,7 @@ export const TasksPage = (props) => {
           e.stopPropagation();
         }}
       >
-        <MenuItem>複製</MenuItem>
+        {/* <MenuItem>複製</MenuItem> */}
         <MenuItem onClick={executeDelete} className={classes.deleteItem}>
           削除
         </MenuItem>
@@ -369,8 +378,14 @@ export const TasksPage = (props) => {
               <TableCell width="15%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
-              <TableCell width="10%">
+              <TableCell
+                width="10%"
+                className={
+                  isAfterFinishedAt(task.finishedAt) && classes.overFinisiedAt
+                }
+              >
                 {/* TODO: 締め切り日でのソート */}
+                {/* TODO: 締め切り日超過している場合、メッセージをどっかに表示するなど */}
                 {task.finishedAt.isValid()
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
