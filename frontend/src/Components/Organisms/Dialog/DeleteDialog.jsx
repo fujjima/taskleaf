@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -9,7 +9,6 @@ import {
   DialogContentText,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { TagContext } from 'Containers/TagsContainer';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -25,11 +24,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const DeleteDialog = (props) => {
-  const { deleteTag } = useContext(TagContext);
   const classes = useStyles();
 
   const handleSubmit = () => {
-    deleteTag(props.tagId);
+    props.onDelete();
   };
 
   return (
@@ -38,11 +36,11 @@ export const DeleteDialog = (props) => {
       open={props.open}
       onClose={props.onClose}
     >
-      <DialogTitle>タグ削除</DialogTitle>
+      <DialogTitle>{props.label}削除</DialogTitle>
       <form onSubmit={handleSubmit}>
         <DialogContent className={classes.dialogContent}>
           <DialogContentText id="alert-dialog-description">
-            一度消したタグは復活できません。削除しますか？
+            一度消した{props.label}は復活できません。削除しますか？
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -70,5 +68,7 @@ export const DeleteDialog = (props) => {
 DeleteDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  tagId: PropTypes.number.isRequired,
+  targetIds: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
 };

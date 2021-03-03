@@ -12,8 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { TaskContext } from 'Containers/TasksContainer';
 import Task from 'Models/Task';
 import { DateField } from 'Components/Mols/DateField';
-import TimeField from 'Components/Mols/TimeField';
-import Formatter from '../../../Util/Formatter';
+// import TimeField from 'Components/Mols/TimeField';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -45,10 +44,11 @@ export const CreateDialog = (props) => {
   };
 
   const handleSubmit = (e) => {
-    const newTask = item.merge({
-      workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
-    });
-    props.onSubmit(e, newTask);
+    // TODO: 作業時間を編集できるようになったら復活させる
+    // const newTask = item.merge({
+    //   workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
+    // });
+    props.onSubmit(e, item);
   };
 
   return (
@@ -88,7 +88,7 @@ export const CreateDialog = (props) => {
             onChange={(e) => handleChange(e)}
           />
           <DateField
-            pdate={item.finishedAt}
+            finishedAt={item.finishedAt}
             className={classes.input}
             name={item.finishedAt}
             onClose={handleDateChange}

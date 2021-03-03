@@ -4,10 +4,10 @@ import { FormControl, TextField } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { makeStyles } from '@material-ui/core/styles';
 import EventIcon from '@material-ui/icons/Event';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker,
+// } from '@material-ui/pickers';
 import {
   BarChart,
   Bar,
@@ -61,6 +61,10 @@ export const ReportsPage = (props) => {
     return `${hour}H`;
   };
 
+  const formatDate = (date) => {
+    return dayjs(date).format('YYYY-MM-DD');
+  };
+
   const taskNames = () => {
     // if (division === 'tag') return;
     if (_.isNull(reports)) return [];
@@ -104,9 +108,14 @@ export const ReportsPage = (props) => {
     return (
       <>
         <TextField
+          style={{ width: '250px' }}
           label="表示期間"
           // data-calendar="calendar"
-          value={startDate && endDate ? `${startDate} ~ ${endDate}` : ''}
+          value={
+            startDate && endDate
+              ? `${formatDate(startDate)} ~ ${formatDate(endDate)}`
+              : ''
+          }
           onFocus={() => {
             setOpen(true);
           }}
