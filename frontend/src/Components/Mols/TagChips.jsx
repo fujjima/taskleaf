@@ -144,6 +144,7 @@ export const TagChips = (props) => {
     ) : (
         props.tags.map((tag) => (
           <Chip
+            style={{ width: 130 }}
             key={tag.get('id')}
             label={tag.get('name')}
             onClick={handleOpenMenu}

@@ -140,6 +140,7 @@ export const TagsPage = () => {
           ) : (
               <Chip
                 onClick={() => handleClick(t)}
+                style={{ maxWidth: 200 }}
                 key={t.get('id')}
                 label={t.get('name')}
                 // TODO: 面倒なのでDeleteにアクションを追加しているが、CSSでメニューボタンは位置の調整をするようにしたい

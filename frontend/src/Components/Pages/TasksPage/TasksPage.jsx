@@ -375,7 +375,8 @@ export const TasksPage = (props) => {
                 />
               </TableCell>
               <TableCell width="15%">{task.name}</TableCell>
-              <TableCell width="15%">{displayTags(task)}</TableCell>
+              {/* TODO: 最低でもwidthを260ぐらい取りたい */}
+              <TableCell width="18%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
               <TableCell
@@ -390,7 +391,7 @@ export const TasksPage = (props) => {
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>
-              <TableCell width="10%">
+              <TableCell width="7%">
                 <Timer
                   time={task.workingTime}
                   taskId={task.id}
