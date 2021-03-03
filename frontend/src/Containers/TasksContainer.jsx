@@ -42,6 +42,7 @@ export const TasksContainer = () => {
   }, []);
 
   function getTasks() {
+    const getUrl = `${API_URL}/tasks`;
     const options = {
       mode: 'cors',
       method: 'GET',
@@ -53,7 +54,7 @@ export const TasksContainer = () => {
       },
     };
 
-    return fetch(url, options)
+    return fetch(getUrl, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();

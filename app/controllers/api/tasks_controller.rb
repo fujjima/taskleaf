@@ -1,5 +1,5 @@
 class Api::TasksController < ApplicationController
-  before_action :set_task, only: %w[show update]
+  before_action :set_task, only: %w[update show]
   before_action :set_tasks, only: %w[index]
 
   def index

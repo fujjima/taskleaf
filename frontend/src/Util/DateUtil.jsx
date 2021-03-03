@@ -6,7 +6,7 @@ dayjs.extend(duration);
 
 export default class DateUtil {
   static isAftertoday = (date) => {
-    if (!date.isValid()) return false;
+    if (!date || !date.isValid()) return false;
     // 当日の場合false
     return dayjs().endOf('day').isAfter(date, 'date');
   };
