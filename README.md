@@ -1,3 +1,23 @@
+## railsの起動
+
+```
+# ローカル（port: 3000）でrailsサーバーを起動する
+rails s
+```
+
+
+## webpack周り
+
+```
+# webpackのビルドの実行
+yarn build
+
+
+# ローカル（port: 8080）の開発サーバーの起動
+yarn start
+```
+
+
 # README
 
 This README would normally document whatever steps are necessary to get the
