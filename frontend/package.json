@@ -15,7 +15,7 @@
     "@reduxjs/toolkit": "^1.5.0",
     "@wojtekmaj/react-daterange-picker": "^3.0.1",
     "classnames": "^2.2.6",
-    "dayjs": "^1.10.2",
+    "dayjs": "1.10.8",
     "immutable": "^4.0.0-rc.12",
     "jquery": "^3.5.1",
     "lodash": "^4.17.20",
