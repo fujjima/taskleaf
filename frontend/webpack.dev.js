@@ -26,7 +26,10 @@ module.exports = merge(common, {
   },
 
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    // ref) https://qiita.com/chocomint_t/items/4bc57945bce081922582
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
     host: 'localhost',
     port: 8080,
     headers: {
