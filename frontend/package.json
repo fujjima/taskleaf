@@ -19,6 +19,7 @@
     "immutable": "4.0.0-rc.12",
     "jquery": "3.5.1",
     "lodash": "4.17.21",
+    "mini-create-react-context": "^0.4.1",
     "prop-types": "15.7.2",
     "react": "17.0.1",
     "react-calendar": "3.3.1",
@@ -55,8 +56,8 @@
     "html-webpack-plugin": "4.5.2",
     "prettier": "2.1.2",
     "style-loader": "2.0.0",
-    "webpack": "4.44.2",
-    "webpack-cli": "4.5.0",
-    "webpack-dev-server": "3.11.3"
+    "webpack": "4.46.0",
+    "webpack-cli": "4.9.1",
+    "webpack-dev-server": "^4.5.0"
   }
 }
