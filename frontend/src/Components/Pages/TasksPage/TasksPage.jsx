@@ -26,6 +26,8 @@ import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
+import { DeleteDialog } from 'Components/Organisms/Dialog/DeleteDialog';
+import DateUtil from 'Util/DateUtil';
 import dayjs from 'dayjs';
 
 const useStyles = makeStyles((theme) => ({
@@ -88,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  overFinisiedAt: {
+    color: 'red',
+  },
   deleteItem: {
     color: 'red',
   },
@@ -122,6 +127,7 @@ export const TasksPage = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const prevStartAt = usePrevious(startAt);
   const prevRecordingTaskId = usePrevious(recordingTaskId);
@@ -162,6 +168,10 @@ export const TasksPage = (props) => {
 
   const isOpened = !_.isNull(openMenuId);
 
+  const closeDeleteDialog = () => {
+    return setOpenDeleteDialog(false);
+  };
+
   const rowCount = () => {
     return tasks.size;
   };
@@ -186,6 +196,10 @@ export const TasksPage = (props) => {
         size="small"
       />
     );
+  };
+
+  const isAfterFinishedAt = (date) => {
+    return DateUtil.isAftertoday(date);
   };
 
   const executeDelete = () => {
@@ -271,6 +285,7 @@ export const TasksPage = (props) => {
         value={task.status}
         variant="outlined"
         className={classes.statusMenu}
+        onClose={(e) => e.stopPropagation()}
         onChange={(e) => {
           updateTask({ id: task.id, status: e.target.value });
           e.stopPropagation();
@@ -300,7 +315,7 @@ export const TasksPage = (props) => {
           e.stopPropagation();
         }}
       >
-        <MenuItem>複製</MenuItem>
+        {/* <MenuItem>複製</MenuItem> */}
         <MenuItem onClick={executeDelete} className={classes.deleteItem}>
           削除
         </MenuItem>
@@ -360,16 +375,23 @@ export const TasksPage = (props) => {
                 />
               </TableCell>
               <TableCell width="15%">{task.name}</TableCell>
-              <TableCell width="15%">{displayTags(task)}</TableCell>
+              {/* TODO: 最低でもwidthを260ぐらい取りたい */}
+              <TableCell width="18%">{displayTags(task)}</TableCell>
               <TableCell width="25%">{task.description}</TableCell>
               <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
-              <TableCell width="10%">
+              <TableCell
+                width="10%"
+                className={
+                  isAfterFinishedAt(task.finishedAt) && classes.overFinisiedAt
+                }
+              >
                 {/* TODO: 締め切り日でのソート */}
+                {/* TODO: 締め切り日超過している場合、メッセージをどっかに表示するなど */}
                 {task.finishedAt.isValid()
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>
-              <TableCell width="10%">
+              <TableCell width="7%">
                 <Timer
                   time={task.workingTime}
                   taskId={task.id}
@@ -443,7 +465,9 @@ export const TasksPage = (props) => {
             className={classes.multipleTrashIcon}
             size="large"
             disableRipple
-            onClick={() => executeDelete()}
+            onClick={() => {
+              setOpenDeleteDialog(!openDeleteDialog);
+            }}
           >
             <DeleteIcon />
           </IconButton>
@@ -468,6 +492,13 @@ export const TasksPage = (props) => {
         open={dialogOpen}
         onClose={handleDialogClose}
         onSubmit={handleSubmit}
+      />
+      <DeleteDialog
+        open={openDeleteDialog}
+        onClose={closeDeleteDialog}
+        targetIds={checkedIds}
+        onDelete={executeDelete}
+        label="タスク"
       />
     </div>
   );

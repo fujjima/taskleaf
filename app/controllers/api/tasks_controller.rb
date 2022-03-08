@@ -1,5 +1,5 @@
 class Api::TasksController < ApplicationController
-  before_action :set_task, only: %w[show update]
+  before_action :set_task, only: %w[update show]
   before_action :set_tasks, only: %w[index]
 
   def index
@@ -17,12 +17,11 @@ class Api::TasksController < ApplicationController
   def create
     # TODO: finisied_atの文字列をTimeWithZoneに変換しているのはどこで行われているか調査
     @task = current_user.tasks.new(task_params)
-
     if @task.save
       render :show
     else
       # TODO: エラーメッセージ
-      render :new
+      render :index
     end
   end
 

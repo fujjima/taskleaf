@@ -110,7 +110,11 @@ export const TaskPage = (props) => {
         );
       case 'finishedAt':
         return (
-          <DateField pdate={item.value} onClose={handleBlur} margin="none" />
+          <DateField
+            finishedAt={item.value}
+            onClose={handleBlur}
+            margin="none"
+          />
         );
       // FIXME: 経過時間の編集ができるようになったらreadonlyは消す
       case 'workingTime':

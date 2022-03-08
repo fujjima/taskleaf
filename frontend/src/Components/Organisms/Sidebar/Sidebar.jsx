@@ -116,11 +116,11 @@ export const Sidebar = (props) => {
       icon: <AssignmentIcon />,
       path: '/reports',
     },
-    {
-      text: 'Calendar',
-      icon: <CalendarTodayIcon />,
-      path: '/tasks',
-    },
+    // {
+    //   text: 'Calendar',
+    //   icon: <CalendarTodayIcon />,
+    //   path: '/tasks',
+    // },
   ];
 
   return (
