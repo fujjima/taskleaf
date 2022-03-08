@@ -1530,17 +1530,17 @@
   resolved "https://registry.yarnpkg.com/@wojtekmaj/date-utils/-/date-utils-1.0.3.tgz#2dcfd92881425c5923e429c2aec86fb3609032a1"
   integrity sha512-1VPkkTBk07gMR1fjpBtse4G+oJqpmE+0gUFB0dg3VIL7qJmUVaBoD/vlzMm/jNeOPfvlmerl1lpnsZyBUFIRuw==
 
-"@wojtekmaj/react-daterange-picker@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@wojtekmaj/react-daterange-picker/-/react-daterange-picker-3.0.1.tgz#51c1e18fd06bdad7f8cf02af8cff48fbfc3d7a15"
-  integrity sha512-8N0NRqhLpolulBUq7ZZCRi1/badlrk9yHoLT216vcKvxkVHTkv27uKbMJd+6w/147OLEHgC0ZrqfablOipYbnw==
+"@wojtekmaj/react-daterange-picker@3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@wojtekmaj/react-daterange-picker/-/react-daterange-picker-3.4.0.tgz#bd85e980b16200f6066895961c518a327a830f3a"
+  integrity sha512-2ONcCSx10YP3+EOfg+1YrOO+Taa0iBdvfOJ5n8ZDW6fwS+9eyzYwWfRfPk78F2xZ7T7CR41ApBQlqM/2DT2Brw==
   dependencies:
     make-event-props "^1.1.0"
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
     react-calendar "^3.3.1"
-    react-date-picker "^8.0.7"
-    react-fit "^1.0.3"
+    react-date-picker "^8.4.0"
+    react-fit "^1.4.0"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -6049,7 +6049,7 @@ react-calendar@^3.3.1:
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
 
-react-date-picker@^8.0.7:
+react-date-picker@^8.4.0:
   version "8.4.0"
   resolved "https://registry.yarnpkg.com/react-date-picker/-/react-date-picker-8.4.0.tgz#2d166bbaa59b08ec8686f671fde553458d19f8c8"
   integrity sha512-zocntugDUyiHmV2Nq1qnsk4kDQuhBLUsDTz7akfIEJ0jVX925w0K5Ai5oZzWFNQOzXL/ITxafmDMuSbzlpBt/A==
@@ -6074,7 +6074,7 @@ react-dom@17.0.1:
     object-assign "^4.1.1"
     scheduler "^0.20.1"
 
-react-fit@^1.0.3, react-fit@^1.4.0:
+react-fit@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-fit/-/react-fit-1.4.0.tgz#6b6e3c75215561cc3cfb9854a6811b4347628666"
   integrity sha512-cf9sFKbr1rlTB9fNIKE5Uy4NCMUOqrX2mdJ69V4RtmV4KubPdtnbIP1tEar16GXaToCRr7I7c9d2wkTNk9TV5g==
