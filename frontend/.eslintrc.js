@@ -11,8 +11,10 @@ module.exports = {
       jsx: true,
     },
   },
+  ignorePatterns: ['dist/*.js', 'dist/*.js.map', 'templates'],
   extends: [
     'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'prettier/react',

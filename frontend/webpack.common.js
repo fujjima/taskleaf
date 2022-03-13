@@ -47,11 +47,12 @@ module.exports = {
           },
         },
       },
+      { test: /\.(ts|tsx)$/, use: 'ts-loader' },
     ],
   },
 
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     modules: [path.resolve(`${src}`), path.resolve('./node_modules')],
   },
 
