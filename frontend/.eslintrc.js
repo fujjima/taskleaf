@@ -11,7 +11,7 @@ module.exports = {
       jsx: true,
     },
   },
-  ignorePatterns: ['dist/*.js', 'dist/*.js.map', 'templates'],
+  ignorePatterns: ['dist/*.js', 'dist/*.js.map'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
