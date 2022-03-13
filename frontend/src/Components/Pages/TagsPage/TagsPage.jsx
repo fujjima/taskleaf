@@ -140,16 +140,16 @@ export const TagsPage = () => {
               onBlur={() => handleBlur()}
             />
           ) : (
-              <Chip
-                onClick={() => handleClick(t)}
-                key={t.get('id')}
-                label={t.get('name')}
-                // TODO: 面倒なのでDeleteにアクションを追加しているが、CSSでメニューボタンは位置の調整をするようにしたい
-                // あと、何故かdeleteicon側に異なるanchorELが設定されるみたいなので、onDeleteの運用はしたくない
-                deleteIcon={<MoreVertIcon />}
-                onDelete={() => handleClick(t)}
-              />
-            )
+            <Chip
+              onClick={() => handleClick(t)}
+              key={t.get('id')}
+              label={t.get('name')}
+              // TODO: 面倒なのでDeleteにアクションを追加しているが、CSSでメニューボタンは位置の調整をするようにしたい
+              // あと、何故かdeleteicon側に異なるanchorELが設定されるみたいなので、onDeleteの運用はしたくない
+              deleteIcon={<MoreVertIcon />}
+              onDelete={() => handleClick(t)}
+            />
+          )
         )}
         {chipMenu()}
       </TableBody>

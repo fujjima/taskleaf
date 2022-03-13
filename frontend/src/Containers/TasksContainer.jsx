@@ -239,8 +239,8 @@ export const TasksContainer = () => {
       {id ? (
         <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />
       ) : (
-          <TasksPage />
-        )}
+        <TasksPage />
+      )}
     </TaskContext.Provider>
   );
 };

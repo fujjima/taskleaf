@@ -71,7 +71,7 @@ export const ReportsPage = (props) => {
     return [...new Set(taskNames)];
   };
 
-  const tagName = () => { };
+  const tagName = () => {};
 
   const generataColor = () => {
     let randomColor = '#';

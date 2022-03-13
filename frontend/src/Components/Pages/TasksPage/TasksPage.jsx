@@ -325,7 +325,7 @@ export const TasksPage = (props) => {
             <TableCell
               key={idx}
               align={hcell.numeric ? 'right' : 'left'}
-            // sortDirection={orderBy === headCell.id ? order : false}
+              // sortDirection={orderBy === headCell.id ? order : false}
             >
               {hcell}
             </TableCell>
@@ -391,18 +391,18 @@ export const TasksPage = (props) => {
                     <StopIcon />
                   </IconButton>
                 ) : (
-                    <IconButton
-                      size="small"
-                      disableRipple
-                      className={classes.recordingIcon}
-                      key={`play-icon-${task.id}`}
-                      onClick={(e) => {
-                        handleStart(e, task.id);
-                      }}
-                    >
-                      <PlayArrowIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    size="small"
+                    disableRipple
+                    className={classes.recordingIcon}
+                    key={`play-icon-${task.id}`}
+                    onClick={(e) => {
+                      handleStart(e, task.id);
+                    }}
+                  >
+                    <PlayArrowIcon />
+                  </IconButton>
+                )}
               </TableCell>
               <TableCell width="5%">
                 <IconButton
