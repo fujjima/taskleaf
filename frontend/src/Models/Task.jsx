@@ -1,14 +1,14 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
 import Formatter from 'Util/Formatter';
-import Tag from 'Models/Tag';
+import { Tag } from 'Models/Tag';
 
 export default class Task extends IRecord({
   id: null,
   name: '',
   description: '',
   status: '',
-  tags: IList(),
+  tags: new Array,
   // TODO: バックから文字列で来る→文字列をフォーマットするというのが主になってしまっている
   finishedAt: '',
   workingTime: 0,
@@ -43,8 +43,8 @@ export default class Task extends IRecord({
       s.set('finishedAt', Formatter.toDate(params.finishedAt));
       s.set('workingTime', params.workingTime);
       _.isEmpty(params.tags)
-        ? s.set('tags', IList())
-        : s.set('tags', IList(params.tags.map((t) => Tag.fromJS(t))));
+        ? s.set('tags', new Array)
+        : s.set('tags', params.tags.map((t) => new Tag(t)))
     });
   };
 }
