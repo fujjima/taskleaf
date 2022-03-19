@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import Task from 'Models/Task';
-import Tag from 'Models/Tag';
+import { Tag } from 'Models/Tag';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
 

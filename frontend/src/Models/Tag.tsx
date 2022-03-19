@@ -5,7 +5,4 @@ export class Tag {
   constructor(params: Partial<Tag>) {
     Object.assign(this, params);
   }
-  // static fromJS = (params: TagInfo) => {
-  //   return new
-  // };
 }
