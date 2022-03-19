@@ -131,6 +131,7 @@ export const TagsPage = () => {
   const renderTableBody = () => {
     return (
       <TableBody>
+        {console.log(tags)}
         {tags.map((t) =>
           editing && isEditing(t.get('id')) ? (
             <TextField
