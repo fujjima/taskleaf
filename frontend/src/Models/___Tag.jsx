@@ -1,6 +1,5 @@
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Proptypes from 'react';
-
 export default class Tag extends IRecord({
   id: null,
   name: '',
@@ -10,6 +9,9 @@ export default class Tag extends IRecord({
     name: Proptypes.string,
   });
 
+  // constructor
+
+  // 静的メソッド
   static fromJS = (params) => {
     return new Tag(params).withMutations((s) => {
       s.set('id', parseInt(params.id, 10));

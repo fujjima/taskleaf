@@ -131,19 +131,19 @@ export const TagsPage = () => {
   const renderTableBody = () => {
     return (
       <TableBody>
-        {tags.map((t) =>
+        {tags.length && tags.map((t) =>
           editing && isEditing(t.get('id')) ? (
             <TextField
               // TODO: autofocusできない
               variant="outlined"
-              defaultValue={t.get('name')}
+              defaultValue={t.name}
               onBlur={() => handleBlur()}
             />
           ) : (
             <Chip
               onClick={() => handleClick(t)}
-              key={t.get('id')}
-              label={t.get('name')}
+              key={t.id}
+              label={t.name}
               // TODO: 面倒なのでDeleteにアクションを追加しているが、CSSでメニューボタンは位置の調整をするようにしたい
               // あと、何故かdeleteicon側に異なるanchorELが設定されるみたいなので、onDeleteの運用はしたくない
               deleteIcon={<MoreVertIcon />}

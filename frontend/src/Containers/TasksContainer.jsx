@@ -34,7 +34,7 @@ export const TasksContainer = () => {
       }
       if (result.usableTags) {
         setUsableTags((prev) => {
-          return prev.push(...result.usableTags.map((r) => Tag.fromJS(r)));
+          return [prev, ...result.usableTags.map((r) => new Tag(r))]
         });
       }
     };
@@ -210,7 +210,7 @@ export const TasksContainer = () => {
           const task = prev.find((t) => parseInt(taskId, 10) === t.id);
           const newTask = task.set(
             'tags',
-            IList(data.task.tags.map((r) => Tag.fromJS(r)))
+            IList(data.task.tags.map((r) => new Tag(r)))
           );
 
           return prev.set(
