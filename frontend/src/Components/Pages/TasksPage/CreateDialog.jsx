@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { TaskContext } from 'Containers/TasksContainer';
-import Task from 'Models/Task';
+import { Task } from 'Models/Task';
 import { DateField } from 'Components/Mols/DateField';
 import TimeField from 'Components/Mols/TimeField';
 import Formatter from '../../../Util/Formatter';
