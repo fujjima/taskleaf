@@ -325,7 +325,7 @@ export const TasksPage = (props) => {
             <TableCell
               key={idx}
               align={hcell.numeric ? 'right' : 'left'}
-              // sortDirection={orderBy === headCell.id ? order : false}
+            // sortDirection={orderBy === headCell.id ? order : false}
             >
               {hcell}
             </TableCell>
@@ -365,7 +365,8 @@ export const TasksPage = (props) => {
               <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
               <TableCell width="10%">
                 {/* TODO: 締め切り日でのソート */}
-                {task.finishedAt.isValid()
+                {/* 文字列に変更している理由について */}
+                {task.finishedAt
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>

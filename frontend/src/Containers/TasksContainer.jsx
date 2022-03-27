@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import Task from 'Models/Task';
-import Tag from 'Models/Tag';
+import { Task } from 'Models/Task';
+import { Tag } from 'Models/Tag';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
 
@@ -29,7 +29,7 @@ export const TasksContainer = () => {
       const result = await getTasks();
       if (result.tasks) {
         setTasks(() => {
-          return tasks.push(...result.tasks.map((r) => Task.fromJS(r)));
+          return tasks.push(...result.tasks.map((r) => new Task(r)));
         });
       }
       if (result.usableTags) {
@@ -98,7 +98,7 @@ export const TasksContainer = () => {
           return alert('error');
         }
         setTasks((prev) => {
-          return prev.unshift(Task.fromJS(data.task));
+          return prev.unshift(new Task(data.task));
         });
       })
       .catch((err) => {
@@ -137,7 +137,7 @@ export const TasksContainer = () => {
         setTasks((prev) => {
           return prev.set(
             prev.findIndex((t) => parseInt(taskId, 10) === t.id),
-            Task.fromJS(data.task)
+            new Task(data.task)
           );
         });
       })
