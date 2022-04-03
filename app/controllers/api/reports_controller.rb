@@ -25,7 +25,7 @@ class Api::ReportsController < ApplicationController
   end
 
   def working_time(task_id, date)
-    WorkingTime.specify(task_id, date)
+    WorkingTime.search_with_task_id_and_date(task_id, date)
   end
 
   # FIXME: ここでレコード回数分の計算をしてしまっている

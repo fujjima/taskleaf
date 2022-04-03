@@ -1,17 +1,20 @@
 class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update]
   before_action :set_tasks, only: %w[index]
+  before_action :set_useable_tags, only: %w[index show]
 
   def index
-    @tags = current_user.tags
-    @working_times = WorkingTime.working_time_with_task_id_hash
+    @working_times = WorkingTime.total_working_time_per_task
     respond_to do |format|
       format.json
     end
   end
 
   def show
-    render json: { status: 200, task: @task }
+    @working_time = WorkingTime.total_working_time @task.id
+    respond_to do |format|
+      format.json
+    end
   end
 
   def create
@@ -61,6 +64,7 @@ class Api::TasksController < ApplicationController
   end
 
   def set_task
+    # TODO: params[:task][:id]のパターンが必要かについて
     @task = current_user.tasks.find(params[:id]) || current_user.tasks.find(params[:task][:id])
   end
 
@@ -68,5 +72,9 @@ class Api::TasksController < ApplicationController
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
     @tasks = current_user.tasks.includes(:tags)
+  end
+
+  def set_useable_tags
+    @tags = current_user.tags
   end
 end

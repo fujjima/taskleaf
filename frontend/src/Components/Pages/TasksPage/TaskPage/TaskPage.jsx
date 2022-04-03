@@ -10,7 +10,7 @@ import {
   Select,
   MenuItem,
 } from '@material-ui/core';
-import Task from 'Models/Task';
+import { Task } from 'Models/Task';
 import { TaskContext } from 'Containers/TasksContainer';
 import { DateField } from 'Components/Mols/DateField';
 import TimeField from 'Components/Mols/TimeField';
