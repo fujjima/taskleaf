@@ -365,7 +365,8 @@ export const TasksPage = (props) => {
               <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
               <TableCell width="10%">
                 {/* TODO: 締め切り日でのソート */}
-                {task.finishedAt.isValid()
+                {/* 文字列に変更している理由について */}
+                {task.finishedAt
                   ? task.finishedAt.format('YYYY/MM/DD')
                   : ''}
               </TableCell>
@@ -391,18 +392,18 @@ export const TasksPage = (props) => {
                     <StopIcon />
                   </IconButton>
                 ) : (
-                    <IconButton
-                      size="small"
-                      disableRipple
-                      className={classes.recordingIcon}
-                      key={`play-icon-${task.id}`}
-                      onClick={(e) => {
-                        handleStart(e, task.id);
-                      }}
-                    >
-                      <PlayArrowIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    size="small"
+                    disableRipple
+                    className={classes.recordingIcon}
+                    key={`play-icon-${task.id}`}
+                    onClick={(e) => {
+                      handleStart(e, task.id);
+                    }}
+                  >
+                    <PlayArrowIcon />
+                  </IconButton>
+                )}
               </TableCell>
               <TableCell width="5%">
                 <IconButton

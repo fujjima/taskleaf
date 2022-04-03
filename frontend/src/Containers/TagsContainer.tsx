@@ -1,40 +1,30 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { TagsPage } from 'Components/Pages/TagsPage/TagsPage';
-import Tag from 'Models/Tag';
 
-export const TagContext = createContext();
+import { TagsPage } from 'Components/Pages/TagsPage/TagsPage';
+import { Tag }  from 'Models/Tag';
+import { FETCH_GET_OPTIONS, FETCH_POST_OPTIONS, FETCH_PATCH_OPTIONS, FETCH_DELETE_OPTIONS }  from 'Types/FetchOption';
+
+// 
+export const TagContext = createContext({});
 
 export const TagsContainer = () => {
   const location = useLocation();
   const url = `${API_URL}${location.pathname}`;
-  const [tags, setTags] = useState(IList());
+  const [tags, setTags] = useState<Tag[]>([]);
 
   useEffect(() => {
     const getData = async () => {
       const result = await getTags();
       if (result.tags) {
-        setTags((prev) => {
-          return prev.push(...result.tags.map((r) => Tag.fromJS(r)));
-        });
+        setTags(prev => [...prev, ...result.tags.map(r => new Tag(r))]);
       }
     };
     getData();
   }, []);
 
   function getTags() {
-    const options = {
-      mode: 'cors',
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    };
-
-    return fetch(url, options)
+    return fetch(url, FETCH_GET_OPTIONS)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -54,14 +44,7 @@ export const TagsContainer = () => {
 
   const createTag = (params) => {
     const options = {
-      mode: 'cors',
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_POST_OPTIONS,
       body: JSON.stringify({
         tag: params,
       }),
@@ -79,7 +62,7 @@ export const TagsContainer = () => {
           return alert('error');
         }
         setTags((prev) => {
-          return prev.unshift(Tag.fromJS(data.tag));
+          return [new Tag(data.tag), ...prev]
         });
       })
       .catch((err) => {
@@ -89,22 +72,15 @@ export const TagsContainer = () => {
 
   const updateTag = (params) => {
     const tagId = params.id;
-    const url = `${url}/${tagId}`;
+    const targetUrl = `${url}/${tagId}`;
     const options = {
-      mode: 'cors',
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
         tag: params,
       }),
     };
 
-    fetch(url, options)
+    fetch(targetUrl, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -116,10 +92,7 @@ export const TagsContainer = () => {
           return alert('error');
         }
         setTags((prev) => {
-          return prev.set(
-            prev.findIndex((t) => parseInt(tagId, 10) === t.id),
-            Tag.fromJS(data.tag)
-          );
+          return [...prev, new Tag(data.tag)]
         });
       })
       .catch((err) => {
@@ -128,19 +101,9 @@ export const TagsContainer = () => {
   };
 
   const deleteTag = (id) => {
-    const url = `${url}/${id}`;
-    const options = {
-      mode: 'cors',
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    };
+    const targetUrl = `${url}/${id}`;
 
-    fetch(url, options)
+    fetch(targetUrl, FETCH_DELETE_OPTIONS)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -151,7 +114,7 @@ export const TagsContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTags(tags.filterNot((t) => t.id === id));
+        setTags(tags.filter((t) => t.id !== id));
       })
       .catch((err) => {
         return err;

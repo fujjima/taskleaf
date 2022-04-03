@@ -27,7 +27,7 @@ export const TagChips = (props) => {
 
   function tagIds() {
     return !_.isEmpty(tags)
-      ? new Set(tags.map((t) => t.get('id')).toArray())
+      ? new Set(tags.map(t => t.id))
       : new Set();
   }
 
@@ -119,14 +119,14 @@ export const TagChips = (props) => {
         <LocalOfferIcon fontSize="small" onClick={(e) => handleOpenMenu(e)} />
       </IconButton>
     ) : (
-        props.tags.map((tag) => (
-          <Chip
-            key={tag.get('id')}
-            label={tag.get('name')}
-            onClick={handleOpenMenu}
-          />
-        ))
-      );
+      props.tags.map((tag) => (
+        <Chip
+          key={tag.id}
+          label={tag.name}
+          onClick={handleOpenMenu}
+        />
+      ))
+    );
   };
 
   return (

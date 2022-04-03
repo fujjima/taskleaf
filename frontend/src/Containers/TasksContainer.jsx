@@ -1,9 +1,10 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import Task from 'Models/Task';
-import Tag from 'Models/Tag';
+import { Task } from 'Models/Task';
+import { Tag } from 'Models/Tag';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
+import { FETCH_GET_OPTIONS, FETCH_POST_OPTIONS, FETCH_PATCH_OPTIONS, FETCH_DELETE_OPTIONS } from 'Types/FetchOption';
 
 export const taskLabel = new Map([
   ['name', 'タスク名'],
@@ -21,20 +22,26 @@ export const TasksContainer = () => {
   const location = useLocation();
   const url = `${API_URL}${location.pathname}`;
 
-  const [tasks, setTasks] = useState(IList());
-  const [usableTags, setUsableTags] = useState(IList());
+  const [tasks, setTasks] = useState([]);
+  const [usableTags, setUsableTags] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
+      // TODO: 詳細画面をモーダルに移行した際は、url取得等はしなくても問題なさそう？？
       const result = await getTasks();
-      if (result.tasks) {
-        setTasks(() => {
-          return tasks.push(...result.tasks.map((r) => Task.fromJS(r)));
+      if (!id) {
+        setTasks((prev) => {
+          return [...prev, ...result?.tasks?.map((r) => new Task(r))];
+        });
+      } else {
+        setTasks(prev => {
+          return [...prev, new Task(result.task)]
         });
       }
+
       if (result.usableTags) {
         setUsableTags((prev) => {
-          return prev.push(...result.usableTags.map((r) => Tag.fromJS(r)));
+          return [prev, ...result.usableTags.map((r) => new Tag(r))]
         });
       }
     };
@@ -42,18 +49,7 @@ export const TasksContainer = () => {
   }, []);
 
   function getTasks() {
-    const options = {
-      mode: 'cors',
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    };
-
-    return fetch(url, options)
+    return fetch(url, FETCH_GET_OPTIONS)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -73,14 +69,7 @@ export const TasksContainer = () => {
 
   const createTask = (params) => {
     const options = {
-      mode: 'cors',
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_POST_OPTIONS,
       body: JSON.stringify({
         task: { ...params.toJS() },
       }),
@@ -98,7 +87,7 @@ export const TasksContainer = () => {
           return alert('error');
         }
         setTasks((prev) => {
-          return prev.unshift(Task.fromJS(data.task));
+          return prev.unshift(new Task(data.task));
         });
       })
       .catch((err) => {
@@ -110,14 +99,7 @@ export const TasksContainer = () => {
     const taskId = id || params.id;
     const url = `${url}/${taskId}`;
     const options = {
-      mode: 'cors',
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
         task: { ...params },
       }),
@@ -137,7 +119,7 @@ export const TasksContainer = () => {
         setTasks((prev) => {
           return prev.set(
             prev.findIndex((t) => parseInt(taskId, 10) === t.id),
-            Task.fromJS(data.task)
+            new Task(data.task)
           );
         });
       })
@@ -149,14 +131,7 @@ export const TasksContainer = () => {
   const deleteTask = (ids) => {
     const paramsIds = _.isArray(ids) ? ids : Array.from(ids);
     const options = {
-      mode: 'cors',
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_DELETE_OPTIONS,
       body: JSON.stringify({ id: paramsIds }),
     };
 
@@ -182,14 +157,7 @@ export const TasksContainer = () => {
     const taskId = id || params.id;
     const url = `${url}/${taskId}`;
     const options = {
-      mode: 'cors',
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+      ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
         task: params,
       }),
@@ -210,7 +178,7 @@ export const TasksContainer = () => {
           const task = prev.find((t) => parseInt(taskId, 10) === t.id);
           const newTask = task.set(
             'tags',
-            IList(data.task.tags.map((r) => Tag.fromJS(r)))
+            IList(data.task.tags.map((r) => new Tag(r)))
           );
 
           return prev.set(
@@ -237,10 +205,10 @@ export const TasksContainer = () => {
       }}
     >
       {id ? (
-        <TaskPage task={tasks.find((t) => t.id === parseInt(id, 10))} />
+        <TaskPage task={tasks.find(t => t.id === parseInt(id, 10))} />
       ) : (
-          <TasksPage />
-        )}
+        <TasksPage />
+      )}
     </TaskContext.Provider>
   );
 };
