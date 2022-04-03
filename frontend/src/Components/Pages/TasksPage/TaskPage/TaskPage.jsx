@@ -65,7 +65,7 @@ export const TaskPage = (props) => {
         value: task.finishedAt,
       },
       {
-        label: '経過時間',
+        label: '作業時間',
         attribute: 'workingTime',
         value: Formatter.fromSecondToHour(task.workingTime),
       },
@@ -112,7 +112,7 @@ export const TaskPage = (props) => {
         return (
           <DateField pdate={item.value} onClose={handleBlur} margin="none" />
         );
-      // FIXME: 経過時間の編集ができるようになったらreadonlyは消す
+      // FIXME: 作業時間の編集ができるようになったらreadonlyは消す
       case 'workingTime':
         return (
           <TimeField

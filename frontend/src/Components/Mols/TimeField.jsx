@@ -37,7 +37,7 @@ let TimeField = (props, ref) => {
   return (
     <TextField
       name="elapsedTime"
-      label="経過時間"
+      label="作業時間"
       value={elapsedTime}
       onChange={handleChange}
       placeholder="HH:MM:SS"
