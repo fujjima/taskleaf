@@ -97,7 +97,7 @@ export const TasksContainer = () => {
 
   const updateTask = (params) => {
     const taskId = id || params.id;
-    const url = `${url}/${taskId}`;
+    const targetUrl = `${url}/${taskId}`;
     const options = {
       ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
@@ -105,7 +105,7 @@ export const TasksContainer = () => {
       }),
     };
 
-    fetch(url, options)
+    fetch(targetUrl, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -116,11 +116,10 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
+        newTask = new Task(data.task)
         setTasks((prev) => {
-          return prev.set(
-            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
-            new Task(data.task)
-          );
+          otherTasks = prev.filter(task => newTask.id !== task.id)
+          return [...otherTasks, newTask]
         });
       })
       .catch((err) => {
