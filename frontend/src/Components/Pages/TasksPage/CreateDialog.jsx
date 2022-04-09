@@ -33,6 +33,7 @@ export const CreateDialog = (props) => {
   const timeRef = useRef();
   const [item, setItem] = useState(new Task());
 
+  // onsubmit時の更新に変更できないか検討する
   const handleChange = (e) => {
     setItem(item.set(e.target.name, e.target.value));
   };

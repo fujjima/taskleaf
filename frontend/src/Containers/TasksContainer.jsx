@@ -97,7 +97,9 @@ export const TasksContainer = () => {
 
   const updateTask = (params) => {
     const taskId = id || params.id;
-    const targetUrl = `${url}/${taskId}`;
+    // 一覧、詳細ページの2画面で使用されるケースがあるため、URLを動的に生成している
+    // TODO: 上記のように、動的にURLを発行しているケースが多くなってきたら定数化する
+    const targetUrl = `${API_URL}/tasks/${taskId}`;
     const options = {
       ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
