@@ -77,6 +77,8 @@ export const TaskPage = (props) => {
   const handleBlur = (val) => {
     // TODO: 子コンポーネントからの値はvalに入るが、俺しか分からんので直したい
     // このページ内でレンダリングされているコンポーネントからはeventが取得できる
+    // TODO: タスク更新ができるようにする
+    // タスク更新時、tasksのsetし直しが必要では？？
     const name = event.target.name;
     const value = event.target.value;
     name ? updateTask({ [name]: value }) : updateTask(val);
