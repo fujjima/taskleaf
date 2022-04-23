@@ -59,7 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_17_172512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["list_id"], name: "index_orders_on_list_id"
-    t.index ["task_id"], name: "index_orders_on_task_id"
+    t.index ["task_id"], name: "index_orders_on_task_id", unique: true
   end
 
   create_table "tags", force: :cascade do |t|
