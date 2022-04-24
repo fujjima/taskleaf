@@ -4,6 +4,7 @@ class Api::TasksController < ApplicationController
   before_action :set_useable_tags, only: %w[index show]
 
   def index
+    # TODO: かつ、positionの配列も渡しておく？
     @working_times = WorkingTime.total_working_time_per_task
     respond_to do |format|
       format.json
@@ -56,6 +57,15 @@ class Api::TasksController < ApplicationController
     render json: { status: 200 }
   end
 
+  # TODO: ユーザー入力値についてのバリデーション等の対策
+  def update_tasks_order
+    # タスク内の順番の一括更新
+    # 使用ケース
+    #   リスト内のカードの移動、リスト間でのカードの移動、タスク追加、タスク削除
+    Order.update_order(order_params)
+    render :index
+  end
+
   private
 
   # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのが面倒
@@ -71,10 +81,17 @@ class Api::TasksController < ApplicationController
   def set_tasks
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
-    @tasks = current_user.tasks.includes(:tags)
+    @tasks = current_user.tasks
+                         .includes(:tags)
+                         .sort_by(&:order)
   end
 
   def set_useable_tags
     @tags = current_user.tags
+  end
+
+  def order_params
+    # TODO: リスト内の順番を受け取る方向性について（positionパラメータを必要とするか、task_idの配列内の順番で考えるか）
+    params.require(:order_params).map{ |param| param.permit(:position, :task_id).to_h }
   end
 end
