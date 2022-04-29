@@ -1,11 +1,10 @@
 class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update]
-  before_action :set_tasks, only: %w[index]
+  before_action :set_tasks_and_working_times, only: %w[index]
   before_action :set_useable_tags, only: %w[index show]
 
   def index
     # TODO: かつ、positionの配列も渡しておく？
-    @working_times = WorkingTime.total_working_time_per_task
     respond_to do |format|
       format.json
     end
@@ -63,6 +62,7 @@ class Api::TasksController < ApplicationController
     # 使用ケース
     #   リスト内のカードの移動、リスト間でのカードの移動、タスク追加、タスク削除
     Order.update_order(order_params)
+    set_tasks_and_working_times
     render :index
   end
 
@@ -78,12 +78,13 @@ class Api::TasksController < ApplicationController
     @task = current_user.tasks.find(params[:id]) || current_user.tasks.find(params[:task][:id])
   end
 
-  def set_tasks
+  def set_tasks_and_working_times
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
+    @working_times = WorkingTime.total_working_time_per_task
     @tasks = current_user.tasks
-                         .includes(:tags)
-                         .sort_by(&:order)
+                         .includes(:tags, :order)
+                         .sort_by{ |task| task.order.position }
   end
 
   def set_useable_tags

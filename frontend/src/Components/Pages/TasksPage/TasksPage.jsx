@@ -15,6 +15,7 @@ import {
   MenuItem,
   IconButton,
   Select,
+  Card,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -27,6 +28,7 @@ import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
 import dayjs from 'dayjs';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,10 +102,12 @@ export const TasksPage = (props) => {
     tasks,
     usableTags,
     taskLabel,
+    setTasks,
     updateTask,
     createTask,
     deleteTask,
     updateTags,
+    updateTasksOrder,
   } = useContext(TaskContext);
   const classes = useStyles();
   const history = useHistory();
@@ -248,6 +252,19 @@ export const TasksPage = (props) => {
     e.stopPropagation();
   };
 
+  // source, destination内の値を用いて配列内の順番を獲得する
+  // TODO: 横方向に動かした場合の挙動について
+  // TODO: 動かしている時に横幅が変わってしまうので、固定しておきたい
+  const handleDragEnd = (result) => {
+    const newTasks = [...tasks]
+    const [orderedItem] = newTasks.splice(result.source.index, 1);
+    newTasks.splice(result.destination.index, 0, orderedItem);
+    // NOTE: 
+    // back側からのレスポンスを待っている間のラグがカードの表示に影響するため、先にtasksの更新をしている
+    setTasks(newTasks)
+    updateTasksOrder(newTasks);
+  }
+
   // ダイアログ関連
 
   const handleDialogClose = () => {
@@ -339,89 +356,34 @@ export const TasksPage = (props) => {
 
   const renderTableBody = () => {
     return (
-      <TableBody>
-        {tasks.map((task) => {
-          return (
-            <TableRow
-              hover
-              role="checkbox"
-              tabIndex={-1}
-              key={task.id}
-              onClick={() => {
-                history.push(`tasks/${task.id}`);
-              }}
-            >
-              <TableCell padding="checkbox" width="5%">
-                <Checkbox
-                  disableRipple
-                  className={classes.checkBox}
-                  checked={checkedIds.has(task.id)}
-                  onClick={(e) => handleCheck(e, task.id)}
-                />
-              </TableCell>
-              <TableCell width="15%">{task.name}</TableCell>
-              <TableCell width="15%">{displayTags(task)}</TableCell>
-              <TableCell width="25%">{task.description}</TableCell>
-              <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
-              <TableCell width="10%">
-                {/* TODO: 締め切り日でのソート */}
-                {/* 文字列に変更している理由について */}
-                {task.finishedAt
-                  ? task.finishedAt.format('YYYY/MM/DD')
-                  : ''}
-              </TableCell>
-              <TableCell width="10%">
-                <Timer
-                  time={task.workingTime}
-                  taskId={task.id}
-                  recordingTaskId={recordingTaskId}
-                  ref={timerRef}
-                />
-              </TableCell>
-              <TableCell width="5%">
-                {isRecording(task.id) ? (
-                  <IconButton
-                    size="small"
-                    disableRipple
-                    className={classes.recordingIcon}
-                    key={`stop-icon-${task.id}`}
-                    onClick={(e) => {
-                      handleStop(e, task.id);
+      <DragDropContext onDragEnd={handleDragEnd}>
+        {/* TODO: droppable areaについては、ドラッグ可能な縦の範囲を確保しておく */}
+        <Droppable droppableId="selected" key="selected">
+          {(provided, snapshot) => (
+            // FIXME: 一旦ドラッグ可能範囲の縦の範囲を400pxにしておく
+            <div ref={provided.innerRef} {...provided.droppableProps} style={{ height: '400px' }}>
+              {tasks.map((task, idx) => {
+                return (
+                  <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
+                    {(provided) => {
+                      return (
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                          <Card>
+                            {task.name}
+                          </Card>
+                        </div>
+                      )
                     }}
-                  >
-                    <StopIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    size="small"
-                    disableRipple
-                    className={classes.recordingIcon}
-                    key={`play-icon-${task.id}`}
-                    onClick={(e) => {
-                      handleStart(e, task.id);
-                    }}
-                  >
-                    <PlayArrowIcon />
-                  </IconButton>
-                )}
-              </TableCell>
-              <TableCell width="5%">
-                <IconButton
-                  className={classes.menuButton}
-                  size="small"
-                  disableRipple
-                  onClick={(e) => handleOpenMenu(e, task.id)}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-        {renderMenu()}
-      </TableBody>
-    );
+                  </Draggable>
+                )
+              })}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    )
   };
+
 
   return (
     <div className={classes.root}>
