@@ -354,29 +354,47 @@ export const TasksPage = (props) => {
     );
   };
 
+  const getItemStyle = (isDragging, draggableStyle) => {
+  }
+
   const renderTableBody = () => {
     return (
+      // NOTE: 複数リストについて
+      // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
       <DragDropContext onDragEnd={handleDragEnd}>
-        {/* TODO: droppable areaについては、ドラッグ可能な縦の範囲を確保しておく */}
         <Droppable droppableId="selected" key="selected">
           {(provided, snapshot) => (
-            // FIXME: 一旦ドラッグ可能範囲の縦の範囲を400pxにしておく
-            <div ref={provided.innerRef} {...provided.droppableProps} style={{ height: '400px' }}>
-              {tasks.map((task, idx) => {
-                return (
-                  <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
-                    {(provided) => {
-                      return (
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                          <Card>
-                            {task.name}
-                          </Card>
-                        </div>
-                      )
-                    }}
-                  </Draggable>
-                )
-              })}
+            // TODO: リスト部分に個別にスタイルを当てる
+            // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
+            // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
+            //  縦：リストの最後に移動
+            //  横：他リストに移動
+            <div style={{ maxWidth: '300px', marginLeft: '10px', backgroundColor: 'whitesmoke', padding: '20px' }}>
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {tasks.map((task, idx) => {
+                  return (
+                    <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
+                      {(provided) => {
+                        return (
+                          <div style={{ maxWidth: '250px' }}>
+                            <div>
+                              {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
+                              {/* ref) https://mui.com/system/the-sx-prop/ */}
+                              {/* TODO: オンカーソル時は背景色を変更する */}
+                              {/* inline styleの当て方について  */}
+                              {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
+                              <Card variant="outlined" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ width: '100%', marginBottom: '8px', minHeight: '30px', ...provided.draggableProps.style }}>
+                                {task.name}
+                              </Card>
+                            </div>
+                          </div>
+                        )
+                      }}
+                    </Draggable>
+                  )
+                })}
+                {provided.placeholder}
+              </div>
             </div>
           )}
         </Droppable>
@@ -388,6 +406,7 @@ export const TasksPage = (props) => {
   return (
     <div className={classes.root}>
       <TableContainer>
+        {/* TODO: タスクの追加ボタンは、各リスト内に移動する */}
         <Button
           className={classes.addButton}
           onClick={() => setDialogOpen(!dialogOpen)}
@@ -410,12 +429,6 @@ export const TasksPage = (props) => {
           >
             <DeleteIcon />
           </IconButton>
-          {/* <IconButton
-            size="large"
-            disableRipple
-          >
-            <EditIcon />
-          </IconButton> */}
         </div>
         <Table
           className={classes.table}
@@ -423,7 +436,7 @@ export const TasksPage = (props) => {
           size={'medium'}
           aria-label="enhanced table"
         >
-          {renderTableHead()}
+          {/* {renderTableHead()} */}
           {renderTableBody()}
         </Table>
       </TableContainer>
