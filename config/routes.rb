@@ -14,8 +14,7 @@ Rails.application.routes.draw do
     resources :tasks, except: :destroy do
       delete :destroy, on: :collection
     end
-    # タスク一覧画面でのタスク別の更新することがある
-    put 'tasks', to: 'tasks#update'
+    patch 'tasks', to: 'tasks#update_tasks_order'
     resources :tags, only: %w[index create update destroy]
     resources :reports, only: %w[index] do
       # 単にparamsで取得できる情報があるかないかの違いでOK？
