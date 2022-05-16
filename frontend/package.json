@@ -23,7 +23,6 @@
     "mini-create-react-context": "^0.4.1",
     "prop-types": "15.7.2",
     "react": "17.0.1",
-    "react-beautiful-dnd": "^13.1.0",
     "react-calendar": "3.3.1",
     "react-dom": "17.0.1",
     "react-immutable-proptypes": "2.2.0",
