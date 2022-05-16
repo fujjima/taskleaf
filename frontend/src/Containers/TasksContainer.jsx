@@ -193,51 +193,16 @@ export const TasksContainer = () => {
       });
   };
 
-  const updateTasksOrder = (params) => {
-    const test = params.map((task, idx) => {
-      return {
-        'taskId': task.id,
-        'position': idx + 1
-      }
-    })
-
-    // TODO: リストのidも受け取れるようにしたい
-    const options = {
-      ...FETCH_PATCH_OPTIONS,
-      body: JSON.stringify({ 'order_params': test }),
-    };
-
-    return fetch(url, options)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error();
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if ('errors' in data) {
-          // TODO: 万が一バック側からエラーが返された場合はタスク取得をリトライする
-          return alert('error');
-        }
-      })
-      .catch((err) => {
-        return err;
-      });
-  }
-
   return (
-    // tasksの変更を行うsetstate関数を渡す
     <TaskContext.Provider
       value={{
         tasks,
         usableTags,
         taskLabel,
-        setTasks,
         createTask,
         updateTask,
         deleteTask,
         updateTags,
-        updateTasksOrder,
       }}
     >
       {id ? (

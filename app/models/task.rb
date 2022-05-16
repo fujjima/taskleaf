@@ -1,7 +1,6 @@
 class Task < ApplicationRecord
   has_one_attached :image
 
-  # TODO: ユーザーが設定したカラム名に変換される
   enum status: { waiting: 0, working: 1, completed: 2, pending: 3 }
 
   validates :name, presence: true, length: { maximum: 30 }
@@ -11,7 +10,6 @@ class Task < ApplicationRecord
   has_many :task_tags, dependent: :destroy
   has_many :tags, through: :task_tags
   has_many :working_times, dependent: :destroy
-  has_one :order
 
   paginates_per 20
 

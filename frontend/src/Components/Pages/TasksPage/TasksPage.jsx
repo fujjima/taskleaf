@@ -15,7 +15,6 @@ import {
   MenuItem,
   IconButton,
   Select,
-  Card,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -28,7 +27,6 @@ import { TaskContext } from 'Containers/TasksContainer';
 import { CreateDialog } from './CreateDialog';
 import { TagChips } from 'Components/Mols/TagChips';
 import dayjs from 'dayjs';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,12 +100,10 @@ export const TasksPage = (props) => {
     tasks,
     usableTags,
     taskLabel,
-    setTasks,
     updateTask,
     createTask,
     deleteTask,
     updateTags,
-    updateTasksOrder,
   } = useContext(TaskContext);
   const classes = useStyles();
   const history = useHistory();
@@ -252,19 +248,6 @@ export const TasksPage = (props) => {
     e.stopPropagation();
   };
 
-  // source, destination内の値を用いて配列内の順番を獲得する
-  // TODO: 横方向に動かした場合の挙動について
-  // TODO: 動かしている時に横幅が変わってしまうので、固定しておきたい
-  const handleDragEnd = (result) => {
-    const newTasks = [...tasks]
-    const [orderedItem] = newTasks.splice(result.source.index, 1);
-    newTasks.splice(result.destination.index, 0, orderedItem);
-    // NOTE: 
-    // back側からのレスポンスを待っている間のラグがカードの表示に影響するため、先にtasksの更新をしている
-    setTasks(newTasks)
-    updateTasksOrder(newTasks);
-  }
-
   // ダイアログ関連
 
   const handleDialogClose = () => {
@@ -354,59 +337,95 @@ export const TasksPage = (props) => {
     );
   };
 
-  const getItemStyle = (isDragging, draggableStyle) => {
-  }
-
   const renderTableBody = () => {
     return (
-      // NOTE: 複数リストについて
-      // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="selected" key="selected">
-          {(provided, snapshot) => (
-            // TODO: リスト部分に個別にスタイルを当てる
-            // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
-            // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
-            //  縦：リストの最後に移動
-            //  横：他リストに移動
-            <div style={{ maxWidth: '300px', marginLeft: '10px', backgroundColor: 'whitesmoke', padding: '20px' }}>
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {tasks.map((task, idx) => {
-                  return (
-                    <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
-                      {(provided) => {
-                        return (
-                          <div style={{ maxWidth: '250px' }}>
-                            <div>
-                              {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
-                              {/* ref) https://mui.com/system/the-sx-prop/ */}
-                              {/* TODO: オンカーソル時は背景色を変更する */}
-                              {/* inline styleの当て方について  */}
-                              {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
-                              <Card variant="outlined" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ width: '100%', marginBottom: '8px', minHeight: '30px', ...provided.draggableProps.style }}>
-                                {task.name}
-                              </Card>
-                            </div>
-                          </div>
-                        )
-                      }}
-                    </Draggable>
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    )
+      <TableBody>
+        {tasks.map((task) => {
+          return (
+            <TableRow
+              hover
+              role="checkbox"
+              tabIndex={-1}
+              key={task.id}
+              onClick={() => {
+                history.push(`tasks/${task.id}`);
+              }}
+            >
+              <TableCell padding="checkbox" width="5%">
+                <Checkbox
+                  disableRipple
+                  className={classes.checkBox}
+                  checked={checkedIds.has(task.id)}
+                  onClick={(e) => handleCheck(e, task.id)}
+                />
+              </TableCell>
+              <TableCell width="15%">{task.name}</TableCell>
+              <TableCell width="15%">{displayTags(task)}</TableCell>
+              <TableCell width="25%">{task.description}</TableCell>
+              <TableCell width="10%">{renderSelectStatusMenu(task)}</TableCell>
+              <TableCell width="10%">
+                {/* TODO: 締め切り日でのソート */}
+                {/* 文字列に変更している理由について */}
+                {task.finishedAt
+                  ? task.finishedAt.format('YYYY/MM/DD')
+                  : ''}
+              </TableCell>
+              <TableCell width="10%">
+                <Timer
+                  time={task.workingTime}
+                  taskId={task.id}
+                  recordingTaskId={recordingTaskId}
+                  ref={timerRef}
+                />
+              </TableCell>
+              <TableCell width="5%">
+                {isRecording(task.id) ? (
+                  <IconButton
+                    size="small"
+                    disableRipple
+                    className={classes.recordingIcon}
+                    key={`stop-icon-${task.id}`}
+                    onClick={(e) => {
+                      handleStop(e, task.id);
+                    }}
+                  >
+                    <StopIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    size="small"
+                    disableRipple
+                    className={classes.recordingIcon}
+                    key={`play-icon-${task.id}`}
+                    onClick={(e) => {
+                      handleStart(e, task.id);
+                    }}
+                  >
+                    <PlayArrowIcon />
+                  </IconButton>
+                )}
+              </TableCell>
+              <TableCell width="5%">
+                <IconButton
+                  className={classes.menuButton}
+                  size="small"
+                  disableRipple
+                  onClick={(e) => handleOpenMenu(e, task.id)}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </TableCell>
+            </TableRow>
+          );
+        })}
+        {renderMenu()}
+      </TableBody>
+    );
   };
-
 
   return (
     <div className={classes.root}>
       <TableContainer>
-        {/* TODO: タスクの追加ボタンは、各リスト内に移動する */}
         <Button
           className={classes.addButton}
           onClick={() => setDialogOpen(!dialogOpen)}
@@ -429,6 +448,12 @@ export const TasksPage = (props) => {
           >
             <DeleteIcon />
           </IconButton>
+          {/* <IconButton
+            size="large"
+            disableRipple
+          >
+            <EditIcon />
+          </IconButton> */}
         </div>
         <Table
           className={classes.table}
@@ -436,7 +461,7 @@ export const TasksPage = (props) => {
           size={'medium'}
           aria-label="enhanced table"
         >
-          {/* {renderTableHead()} */}
+          {renderTableHead()}
           {renderTableBody()}
         </Table>
       </TableContainer>
