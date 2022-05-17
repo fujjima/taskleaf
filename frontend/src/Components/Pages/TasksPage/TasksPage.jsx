@@ -4,12 +4,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import {
   TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Table,
-  Checkbox,
   Button,
   Menu,
   MenuItem,
@@ -19,9 +14,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
@@ -175,21 +167,8 @@ export const TasksPage = (props) => {
   }
 
   // utils
-
-  const headerCells = [...taskLabel.values()];
-
-  const isOpened = !_.isNull(openMenuId);
-
-  const rowCount = () => {
-    return tasks.size;
-  };
-
   const selected = () => {
     return checkedIds.size > 0;
-  };
-
-  const isRecording = (id) => {
-    return recordingTaskId === id;
   };
 
   const displayTags = (task) => {
@@ -315,61 +294,7 @@ export const TasksPage = (props) => {
     );
   };
 
-  const renderMenu = () => {
-    return (
-      <Menu
-        open={isOpened}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        onClick={(e) => {
-          setAnchorEl(null);
-          setOpenMenuId(null);
-          e.stopPropagation();
-        }}
-      >
-        <MenuItem>複製</MenuItem>
-        <MenuItem onClick={executeDelete} className={classes.deleteItem}>
-          削除
-        </MenuItem>
-      </Menu>
-    );
-  };
-
-  const renderTableHead = () => {
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              disableRipple
-              className={classes.checkBox}
-              checked={rowCount() > 0 && checkedIds.size === rowCount()}
-              inputProps={{ 'aria-label': 'select all desserts' }}
-              onClick={handleAllCheck}
-            />
-          </TableCell>
-          {headerCells.map((hcell, idx) => (
-            <TableCell
-              key={idx}
-              align={hcell.numeric ? 'right' : 'left'}
-            // sortDirection={orderBy === headCell.id ? order : false}
-            >
-              {hcell}
-            </TableCell>
-          ))}
-          <TableCell>{''}</TableCell>
-          <TableCell>{''}</TableCell>
-        </TableRow>
-      </TableHead>
-    );
-  };
-
-  const getItemStyle = (isDragging, draggableStyle) => {
-  }
+  const getItemStyle = (isDragging, draggableStyle) => { }
 
   const renderTableBody = () => {
     return (
@@ -448,7 +373,6 @@ export const TasksPage = (props) => {
           size={'medium'}
           aria-label="enhanced table"
         >
-          {/* {renderTableHead()} */}
           {renderTableBody()}
         </Table>
       </TableContainer>
