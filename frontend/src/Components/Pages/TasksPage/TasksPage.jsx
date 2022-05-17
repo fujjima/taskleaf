@@ -93,6 +93,20 @@ const useStyles = makeStyles((theme) => ({
   deleteItem: {
     color: 'red',
   },
+  // ---------------------------------------------
+  // ドラッグ内要素
+  list: {
+    maxWidth: '300px',
+    marginLeft: '10px',
+    backgroundColor: 'whitesmoke',
+    padding: '20px'
+  },
+  card: {
+    width: '100%',
+    marginBottom: '8px',
+    minHeight: '30px'
+  }
+  // ---------------------------------------------
 }));
 
 // TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
@@ -369,24 +383,22 @@ export const TasksPage = (props) => {
             // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
             //  縦：リストの最後に移動
             //  横：他リストに移動
-            <div style={{ maxWidth: '300px', marginLeft: '10px', backgroundColor: 'whitesmoke', padding: '20px' }}>
+            <div className={classes.list}>
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, idx) => {
                   return (
                     <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
                       {(provided) => {
                         return (
-                          <div style={{ maxWidth: '250px' }}>
-                            <div>
-                              {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
-                              {/* ref) https://mui.com/system/the-sx-prop/ */}
-                              {/* TODO: オンカーソル時は背景色を変更する */}
-                              {/* inline styleの当て方について  */}
-                              {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
-                              <Card variant="outlined" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ width: '100%', marginBottom: '8px', minHeight: '30px', ...provided.draggableProps.style }}>
-                                {task.name}
-                              </Card>
-                            </div>
+                          <div>
+                            {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
+                            {/* ref) https://mui.com/system/the-sx-prop/ */}
+                            {/* TODO: オンカーソル時は背景色を変更する */}
+                            {/* inline styleの当て方について  */}
+                            {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
+                            <Card variant="outlined" className={classes.card} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              {task.name}
+                            </Card>
                           </div>
                         )
                       }}
