@@ -6,6 +6,7 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
 
+  has_many :boards, dependent: :destroy
   has_many :tasks, dependent: :destroy
-  has_many :tags, dependent: :destroy
+  has_many :tags, dependent: :destroy  
 end
