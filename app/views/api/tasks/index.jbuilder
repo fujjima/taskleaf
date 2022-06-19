@@ -3,7 +3,7 @@ if @tags.present?
 end
 
 json.datas do
-  @datas.each do |data|
+  json.array! @datas do |data|
     # TODO: task用のpartialの用意
     json.list_id data[:list_id]
     json.list_name data[:list_name]

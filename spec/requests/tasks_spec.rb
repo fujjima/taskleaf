@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+# TODO: タスク作成時のテストを作りたい
+# モデルのテストをしたい時について
 RSpec.describe 'task_management', type: :request do
   let(:user_a) { FactoryBot.create(:user, name: 'テストユーザーA', email: 'a@example.com', password: 'testA') }
   let(:user_b) { FactoryBot.create(:user, name: 'テストユーザーB', email: 'b@example.com', password: 'testB') }
