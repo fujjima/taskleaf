@@ -38,10 +38,6 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: '36px 0 24px',
   },
-  addButton: {
-    marginLeft: '30px',
-    marginBottom: '10px',
-  },
   // 複数選択メニュー -------------------------------
   multipleMenu: {
     // backgroundColor: 'red',
@@ -95,10 +91,13 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     width: '100%',
-    marginBottom: '8px',
+    marginBottom: '10px',
     minHeight: '30px'
-  }
+  },
   // ---------------------------------------------
+  addButton: {
+    width: '100%'
+  },
 }));
 
 // TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
@@ -296,19 +295,24 @@ export const TasksPage = (props) => {
 
   const getItemStyle = (isDragging, draggableStyle) => { }
 
+  // TODO: リストの最後にタスク追加ボタンを追加しておく
+  // ドラッグ不可アイテムの追加について
   const renderTableBody = () => {
     return (
       // NOTE: 複数リストについて
       // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="selected" key="selected">
-          {(provided, snapshot) => (
-            // TODO: リスト部分に個別にスタイルを当てる
-            // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
-            // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
-            //  縦：リストの最後に移動
-            //  横：他リストに移動
-            <div className={classes.list}>
+      // TODO: リスト全体のスタイルについて
+      <div className={classes.list}>
+        {/* TODO: リストタイトルを表示させる */}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="selected" key="selected">
+            {(provided, snapshot) => (
+              // TODO: リスト部分に個別にスタイルを当てる
+              // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
+              // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
+              //  縦：リストの最後に移動
+              //  横：他リストに移動
+
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {tasks.map((task, idx) => {
                   return (
@@ -332,10 +336,18 @@ export const TasksPage = (props) => {
                 })}
                 {provided.placeholder}
               </div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <Button
+          className={classes.addButton}
+          onClick={() => setDialogOpen(!dialogOpen)}
+          variant="outlined"
+          startIcon={<AddIcon />}
+        >
+          タスクの追加
+        </Button>
+      </div>
     )
   };
 
@@ -344,15 +356,6 @@ export const TasksPage = (props) => {
     <div className={classes.root}>
       <TableContainer>
         {/* TODO: タスクの追加ボタンは、各リスト内に移動する */}
-        <Button
-          className={classes.addButton}
-          onClick={() => setDialogOpen(!dialogOpen)}
-          variant="outlined"
-          color="primary"
-          startIcon={<AddIcon />}
-        >
-          タスクの追加
-        </Button>
         <div
           className={cn(classes.multipleMenu, {
             [classes.hiddenMultipleMenu]: !selected(),

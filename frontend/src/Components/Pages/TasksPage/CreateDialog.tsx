@@ -9,11 +9,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { TaskContext } from 'Containers/TasksContainer';
-import { Task } from 'Models/Task';
+// import { TaskContext } from 'Containers/TasksContainer';
+import { Task, TaskTypes } from 'Models/Task';
 import { DateField } from 'Components/Mols/DateField';
-import TimeField from 'Components/Mols/TimeField';
-import Formatter from '../../../Util/Formatter';
+// import TimeField from 'Components/Mols/TimeField';
+// import Formatter from '../../../Util/Formatter';
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -28,28 +28,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// TODO: propsの型定義をしておく
+// CreateDialog.propTypes = {
+//   open: PropTypes.bool.isRequired,
+//   onClose: PropTypes.func.isRequired,
+//   onSubmit: PropTypes.func.isRequired,
+// };
+
 export const CreateDialog = (props) => {
   const classes = useStyles();
   const timeRef = useRef();
-  const [item, setItem] = useState(new Task());
+  // TODO: itemの型はTask型で縛る。
+  const [task, setTask] = useState(new Task());
 
-  // onsubmit時の更新に変更できないか検討する
-  const handleChange = (e) => {
-    setItem(item.set(e.target.name, e.target.value));
+  const isEmptyObj = (obj): boolean => Object.keys(obj).length === 0
+
+  const handleChange = (e, params: Partial<TaskTypes> = {}) => {
+    // TODO: setStateの際にいちいちインスタンスを生成することの是非について
+    if(!isEmptyObj(params)){
+      for( const [key, value] of Object.entries(params)){
+        setTask(new Task({ ...task, ...{ [key]: value } }));
+      }
+    }else{
+      setTask(new Task({ ...task, ...{ [e.target.name]: e.target.value } }));
+    }
   };
 
-  const handleDateChange = (value) => {
-    if (!value) return;
+  // const handleDateChange = (value) => {
+  //   if (!value) return;
 
-    // value = { finishedAt: dayjs }
-    setItem(item.merge(value));
-  };
+  //   // value = { finishedAt: dayjs }
+  //   setTask(item.merge(value));
+  // };
 
   const handleSubmit = (e) => {
-    const newTask = item.merge({
-      workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
-    });
-    props.onSubmit(e, newTask);
+    // const newTask = item.merge({
+    //   workingTime: Formatter.toSecond(timeRef.current.newTaskWorkingTime),
+    // });
+    props.onSubmit(e, task);
   };
 
   return (
@@ -71,11 +87,12 @@ export const CreateDialog = (props) => {
             // XXX:
             // value値はstateとして管理することをreactが推奨している
             // onchangeにはsetstateする関数を設定する
-            value={item.name}
-            {...(!item.name
+            // TODO: 入力値をstate管理する
+            value={task.name}
+            {...(!task.name
               ? { error: true, helperText: 'タスク名を入力してください' }
               : { error: false })}
-            onChange={(e) => handleChange(e)}
+            onChange={e => handleChange(e)}
           />
           <TextField
             name="description"
@@ -84,15 +101,17 @@ export const CreateDialog = (props) => {
             margin="normal"
             rows={3}
             multiline
-            value={item.description}
+            value={task.description}
             variant="outlined"
             onChange={(e) => handleChange(e)}
           />
           <DateField
-            pdate={item.finishedAt}
-            className={classes.input}
-            name={item.finishedAt}
-            onClose={handleDateChange}
+            name="finishedAt"
+            pdate={task.finishedAt}
+            // className={classes.input}
+            // name={task.finishedAt}
+            // 日時フィールドを閉じた際に、変更された日時を受け取りたい
+            onClose={handleChange}
             label="締め切り日"
             margin="normal"
             InputLabelProps={{ shrink: true }}
@@ -103,7 +122,7 @@ export const CreateDialog = (props) => {
         <DialogActions>
           <Button
             color="secondary"
-            className={classes.subscribeButton}
+            // className={classes.subscribeButton}
             onClick={props.onClose}
             size="large"
           >
@@ -111,10 +130,10 @@ export const CreateDialog = (props) => {
           </Button>
           <Button
             color="primary"
-            className={classes.subscribeButton}
+            // className={classes.subscribeButton}
             type="submit"
             size="large"
-            disabled={!item.name}
+            disabled={!task.name}
           >
             作成
           </Button>
@@ -122,10 +141,4 @@ export const CreateDialog = (props) => {
       </form>
     </Dialog>
   );
-};
-
-CreateDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };

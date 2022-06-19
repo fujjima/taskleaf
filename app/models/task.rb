@@ -11,7 +11,8 @@ class Task < ApplicationRecord
   has_many :task_tags, dependent: :destroy
   has_many :tags, through: :task_tags
   has_many :working_times, dependent: :destroy
-  has_one :order
+  has_one :order, required: true
+  delegate :position, to: :order
 
   paginates_per 20
 

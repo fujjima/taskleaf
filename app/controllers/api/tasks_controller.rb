@@ -1,10 +1,20 @@
 class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update]
-  before_action :set_tasks_and_working_times, only: %w[index]
+  # before_action :set_tasks_and_working_times, only: %w[index]
   before_action :set_useable_tags, only: %w[index show]
 
   def index
-    # TODO: かつ、positionの配列も渡しておく？
+    # FIXME: boards.last部分は将来的に、表示中のboardのみになるのでそれまでは決め打ちでlastにしておく
+    lists = current_user.boards.last.lists
+    tasks = current_user.tasks.eager_load(:order, :tags)
+    @datas = lists.reduce([]) do |array, list|
+      array.push({  
+        list_id: list.id,
+        list_name: list.name,
+        tasks: tasks.where(order: { list_id: list.id })
+                    .sort_by(&:position)
+      })
+    end
     respond_to do |format|
       format.json
     end
@@ -19,13 +29,14 @@ class Api::TasksController < ApplicationController
 
   def create
     # TODO: finisied_atの文字列をTimeWithZoneに変換しているのはどこで行われているか調査
+    # TODO: 恐らくorderに関するパラメータも受け取るため、そのパラメータをもとにorderの生成を行う
     @task = current_user.tasks.new(task_params)
 
     if @task.save
       render :show
     else
       # TODO: エラーメッセージ
-      render :new
+      render :index
     end
   end
 
@@ -82,9 +93,10 @@ class Api::TasksController < ApplicationController
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
     @working_times = WorkingTime.total_working_time_per_task
+    # 各list内について、positionでソートしておく
     @tasks = current_user.tasks
-                         .includes(:tags, :order)
-                         .sort_by{ |task| task.order.position }
+                         .eager_load(:tags, :order)
+                         .sort_by{ |task| task.position }
   end
 
   def set_useable_tags
