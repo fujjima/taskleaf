@@ -11,6 +11,7 @@ import {
   IconButton,
   Select,
   Card,
+  List,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -104,6 +105,7 @@ const useStyles = makeStyles((theme) => ({
 // 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
 export const TasksPage = (props) => {
   const {
+    lists,
     tasks,
     usableTags,
     taskLabel,
@@ -122,6 +124,8 @@ export const TasksPage = (props) => {
 
   const [startAt, setStartAt] = useState(null);
   const [endAt, setEndAt] = useState(null);
+
+  const [listId, setListId] = useState(null);
 
   // 記録中タスク判定用
   const [recordingTaskId, setRecordingTaskId] = useState(null);
@@ -251,8 +255,7 @@ export const TasksPage = (props) => {
     const newTasks = [...tasks]
     const [orderedItem] = newTasks.splice(result.source.index, 1);
     newTasks.splice(result.destination.index, 0, orderedItem);
-    // NOTE: 
-    // back側からのレスポンスを待っている間のラグがカードの表示に影響するため、先にtasksの更新をしている
+    // NOTE: back側からのレスポンスを待っている間のラグがあるため、tasksの配列の更新を行なっている
     setTasks(newTasks)
     updateTasksOrder(newTasks);
   }
@@ -263,7 +266,12 @@ export const TasksPage = (props) => {
     setDialogOpen(false);
   };
 
+  // TODO: タスク生成に必要なパラメータとしてposition（これは強制的に最後にしていいかもしれない）
+  //  と listの値が必要
+  //  listについては、タスク追加ボタンを押した際のリストIDを取得できるようにしておくことで対応したい
   const handleSubmit = (e, params) => {
+    console.log(params, 'paramsの情報を確認しておく')
+    // TODO: タスク生成時にpositionはリスト内の最後に設定しておく
     e.preventDefault();
     createTask(params);
     setDialogOpen(false);
@@ -295,67 +303,70 @@ export const TasksPage = (props) => {
 
   const getItemStyle = (isDragging, draggableStyle) => { }
 
-  // TODO: リストの最後にタスク追加ボタンを追加しておく
-  // ドラッグ不可アイテムの追加について
   const renderTableBody = () => {
-    return (
-      // NOTE: 複数リストについて
-      // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
-      // TODO: リスト全体のスタイルについて
-      <div className={classes.list}>
-        {/* TODO: リストタイトルを表示させる */}
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="selected" key="selected">
-            {(provided, snapshot) => (
-              // TODO: リスト部分に個別にスタイルを当てる
-              // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
-              // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
-              //  縦：リストの最後に移動
-              //  横：他リストに移動
-
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {tasks.map((task, idx) => {
-                  return (
-                    <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
-                      {(provided) => {
-                        return (
-                          <div>
-                            {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
-                            {/* ref) https://mui.com/system/the-sx-prop/ */}
-                            {/* TODO: オンカーソル時は背景色を変更する */}
-                            {/* inline styleの当て方について  */}
-                            {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
-                            <Card variant="outlined" className={classes.card} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              {task.name}
-                            </Card>
-                          </div>
-                        )
-                      }}
-                    </Draggable>
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-        <Button
-          className={classes.addButton}
-          onClick={() => setDialogOpen(!dialogOpen)}
-          variant="outlined"
-          startIcon={<AddIcon />}
-        >
-          タスクの追加
-        </Button>
-      </div>
-    )
+    // NOTE: 複数リストについて
+    // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
+    // TODO: リスト全体のスタイルについて
+    return lists.map((list, idx) => {
+      const { tasks } = list
+      return (
+        <List className={classes.list} id={list.id} name={list.name}>
+          {/* TODO: 可変 */}
+          {/* TODO: スタイルの適用 */}
+          <div>{list.name}</div>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="selected" key="selected">
+              {(provided, snapshot) => (
+                // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
+                // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {tasks.map((task, idx) => {
+                    return (
+                      <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
+                        {(provided) => {
+                          return (
+                            <div>
+                              {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
+                              {/* ref) https://mui.com/system/the-sx-prop/ */}
+                              {/* TODO: オンカーソル時は背景色を変更する */}
+                              {/* inline styleの当て方について  */}
+                              {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
+                              <Card variant="outlined" className={classes.card} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                {task.name}
+                              </Card>
+                            </div>
+                          )
+                        }}
+                      </Draggable>
+                    )
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          <Button
+            className={classes.addButton}
+            onClick={(e) => {
+              console.log(e.currentTarget, 'イベントの内容について')
+              // TODO: リストのIDを指定する
+              setListId()
+              setDialogOpen(!dialogOpen)
+            }}
+            variant="outlined"
+            startIcon={<AddIcon />}
+          >
+            タスクの追加
+          </Button>
+        </List>
+      )
+    })
   };
 
 
   return (
     <div className={classes.root}>
       <TableContainer>
-        {/* TODO: タスクの追加ボタンは、各リスト内に移動する */}
         <div
           className={cn(classes.multipleMenu, {
             [classes.hiddenMultipleMenu]: !selected(),

@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Task, TaskTypes } from 'Models/Task';
 import { Tag } from 'Models/Tag';
+import { List } from 'Models/List';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
 import { FETCH_GET_OPTIONS, FETCH_POST_OPTIONS, FETCH_PATCH_OPTIONS, FETCH_DELETE_OPTIONS } from 'Types/FetchOption';
@@ -15,7 +16,6 @@ export const taskLabel = new Map([
   ['workingTime', '経過時間'],
 ]);
 
-// 
 export const TaskContext = createContext(null);
 
 export const TasksContainer = () => {
@@ -24,6 +24,7 @@ export const TasksContainer = () => {
   const url = `${API_URL}${location.pathname}`;
 
   const [tasks, setTasks] = useState([]);
+  const [lists, setLists] = useState([]);
   const [usableTags, setUsableTags] = useState([]);
 
   useEffect(() => {
@@ -31,9 +32,21 @@ export const TasksContainer = () => {
       // TODO: 詳細画面をモーダルに移行した際は、url取得等はしなくても問題なさそう？？
       const result = await getTasks();
       if (!id) {
-        setTasks((prev) => {
-          return [...prev, ...result?.tasks?.map((r) => new Task(r))];
-        });
+        setLists((prev) => {
+          // TODO: 何の配列もない時の考慮はしておく
+          const lists = result.datas.reduce((acc, data) => {
+            const { listId, listName } = data
+            const tasks: Task[] = data.tasks.map(t => new Task(t))
+            acc.push(new List({
+              id: listId,
+              name: listName,
+              tasks: tasks
+            })
+            )
+            return acc
+          }, [])
+          return [...prev, ...lists];
+        })
       } else {
         setTasks(prev => {
           return [...prev, new Task(result.task)]
@@ -73,7 +86,6 @@ export const TasksContainer = () => {
   const createTask = (params: Partial<TaskTypes>) => {
     // TODO: インスタンスチェック機構をどこで行うかについて
     if(params instanceof Task){
-      console.log('通ってほしい')
     }
     // TODO: タスクのorder, list情報も併せて送信したい
     const options = {
@@ -196,6 +208,8 @@ export const TasksContainer = () => {
       });
   };
 
+  // この時に、毎回listのidと一緒に送信しないといけないのかを考えたい
+  // 同じlist内、異なるlistへの移動のどちらで合っても、移動先のlistIdを渡してきた方が良さそう
   const updateTasksOrder = (params) => {
     const test = params.map((task, idx) => {
       return {
@@ -232,6 +246,7 @@ export const TasksContainer = () => {
     // tasksの変更を行うsetstate関数を渡す
     <TaskContext.Provider
       value={{
+        lists,
         tasks,
         usableTags,
         taskLabel,
