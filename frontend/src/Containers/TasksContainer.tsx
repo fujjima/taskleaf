@@ -208,20 +208,18 @@ export const TasksContainer = () => {
       });
   };
 
-  // この時に、毎回listのidと一緒に送信しないといけないのかを考えたい
   // 同じlist内、異なるlistへの移動のどちらで合っても、移動先のlistIdを渡してきた方が良さそう
-  const updateTasksOrder = (params) => {
-    const test = params.map((task, idx) => {
+  const updateTasksOrder = ({ tasks, listId  }) => {
+    const params = tasks.map((task, idx) => {
       return {
         'taskId': task.id,
         'position': idx + 1
       }
     })
 
-    // TODO: リストのidも受け取れるようにしたい
     const options = {
       ...FETCH_PATCH_OPTIONS,
-      body: JSON.stringify({ 'order_params': test }),
+      body: JSON.stringify({ 'order_params': params, 'list_id': listId }),
     };
 
     return fetch(url, options)

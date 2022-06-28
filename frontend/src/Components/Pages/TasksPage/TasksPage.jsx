@@ -6,7 +6,6 @@ import {
   TableContainer,
   Table,
   Button,
-  Menu,
   MenuItem,
   IconButton,
   Select,
@@ -101,8 +100,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
-// 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
+// NOTE: 記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）と表現する
 export const TasksPage = (props) => {
   const {
     lists,
@@ -207,27 +205,6 @@ export const TasksPage = (props) => {
     updateTags({ id: taskId, tagIds: tags });
   };
 
-  const handleCheck = (e, id) => {
-    setCheckedIds((prev) => {
-      prev.has(id) ? prev.delete(id) : prev.add(id);
-      return new Set(prev);
-    });
-    e.stopPropagation();
-  };
-
-  const handleAllCheck = (e) => {
-    const checked = e.target.checked;
-    setCheckedIds((prev) => {
-      if (checked) {
-        prev = tasks.map((t) => t.id).toJS();
-      } else {
-        prev.clear();
-      }
-      return new Set(prev);
-    });
-    e.stopPropagation();
-  };
-
   const handleStart = (e, id) => {
     // バックに送信する際に何故かGMTになってしまうため、文字列をフォーマットして格納している
     setStartAt(dayjs().format('YYYY/MM/DD HH:mm:ss'));
@@ -248,16 +225,19 @@ export const TasksPage = (props) => {
     e.stopPropagation();
   };
 
-  // source, destination内の値を用いて配列内の順番を獲得する
   // TODO: 横方向に動かした場合の挙動について
-  // TODO: 動かしている時に横幅が変わってしまうので、固定しておきたい
   const handleDragEnd = (result) => {
-    const newTasks = [...tasks]
-    const [orderedItem] = newTasks.splice(result.source.index, 1);
-    newTasks.splice(result.destination.index, 0, orderedItem);
+    // TODO: tasksはlist内にネストされる構造になったのでそれに伴う変更
+    // list内の街頭のtasksを抽出する
+    const { index, droppableId } = result.source
+    const newTasks = lists.find(list => list.id == droppableId)?.tasks
+    const [orderedItem] = newTasks.splice(index, 1);
+    newTasks.splice(index, 0, orderedItem);
+
     // NOTE: back側からのレスポンスを待っている間のラグがあるため、tasksの配列の更新を行なっている
     setTasks(newTasks)
-    updateTasksOrder(newTasks);
+    // console.log(newTasks, 'aaaa')
+    updateTasksOrder({ tasks: newTasks, listId: droppableId });
   }
 
   // ダイアログ関連
@@ -270,7 +250,6 @@ export const TasksPage = (props) => {
   //  と listの値が必要
   //  listについては、タスク追加ボタンを押した際のリストIDを取得できるようにしておくことで対応したい
   const handleSubmit = (e, params) => {
-    console.log(params, 'paramsの情報を確認しておく')
     // TODO: タスク生成時にpositionはリスト内の最後に設定しておく
     e.preventDefault();
     createTask(params);
@@ -310,12 +289,13 @@ export const TasksPage = (props) => {
     return lists.map((list, idx) => {
       const { tasks } = list
       return (
-        <List className={classes.list} id={list.id} name={list.name}>
+        <List className={classes.list} name={list.name}>
           {/* TODO: 可変 */}
           {/* TODO: スタイルの適用 */}
           <div>{list.name}</div>
           <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="selected" key="selected">
+            {/* TODO: 移動先のリスト情報の取得方法について（具体的にはlistのidの取得をしたい） */}
+            <Droppable droppableId={list.id} key="selected">
               {(provided, snapshot) => (
                 // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
                 // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
@@ -348,7 +328,6 @@ export const TasksPage = (props) => {
           <Button
             className={classes.addButton}
             onClick={(e) => {
-              console.log(e.currentTarget, 'イベントの内容について')
               // TODO: リストのIDを指定する
               setListId()
               setDialogOpen(!dialogOpen)
