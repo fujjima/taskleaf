@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :list do
-    name { "MyString" }
+    name { Faker::Games::Touhou.character }
     board { nil }
   end
 end

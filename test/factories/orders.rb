@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :order do
-    task { nil }
-    list { nil }
+    task
+    list
     position { 1 }
   end
 end

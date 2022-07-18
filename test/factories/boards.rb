@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :board do
-    name { "MyString" }
+    name { Faker::Games::Pokemon.name }
     user { nil }
     archived_at { "2022-04-17" }
   end

@@ -8,15 +8,12 @@ class Api::TasksController < ApplicationController
     lists = current_user.boards.last.lists
     tasks = current_user.tasks.eager_load(:order, :tags)
     @datas = lists.reduce([]) do |array, list|
-      array.push({  
+      array.push({
         list_id: list.id,
         list_name: list.name,
         tasks: tasks.where(order: { list_id: list.id })
                     .sort_by(&:position)
       })
-    end
-    respond_to do |format|
-      format.json
     end
   end
 
@@ -68,8 +65,10 @@ class Api::TasksController < ApplicationController
   end
 
   # TODO: ユーザー入力値についてのバリデーション等の対策
+  # 期待するリクエストパラメータ
+  # { tasks: [], list_id: num }
+  # TODO: 紐づくlist.idがリクエストパラメータのものと異なる場合、list.idの更新を行う
   def update_tasks_order
-    # タスク内の順番の一括更新
     # 使用ケース
     #   リスト内のカードの移動、リスト間でのカードの移動、タスク追加、タスク削除
     Order.update_order(order_params)
@@ -93,7 +92,6 @@ class Api::TasksController < ApplicationController
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
     @working_times = WorkingTime.total_working_time_per_task
-    # 各list内について、positionでソートしておく
     @tasks = current_user.tasks
                          .eager_load(:tags, :order)
                          .sort_by{ |task| task.position }

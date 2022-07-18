@@ -2,7 +2,6 @@ class Order < ApplicationRecord
   belongs_to :task
   belongs_to :list
 
-
   class << self
     def update_order order_list
       # TODO: 例外にしたいケース

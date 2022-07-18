@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :task do
-    name { 'テストタスク' }
-    description { 'Rspec & Capybra & FactoryBotを準備する' }
-    user
+    name { Faker::Creature::Animal.name }
+    description { 'テストテキスト' }
+    user { nil }
+    status { :waiting }
   end
 end
