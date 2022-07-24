@@ -4,13 +4,6 @@ RSpec.describe Api::TasksController, type: :request do
   let!(:user) {
     create(:user, :has_board_with_five_tasks)
   }
-  # let(:user_b) { create(:user, name: 'テストユーザーB', email: 'b@example.com', password: 'testB') }
-  # let!(:board) { create(:board, user: user) }
-  # let!(:list) { create(:list, board: board) }
-  
-  # let!(:task_a) { create(:task, name: 'タスクA', user: user ) }
-  # let(:task_b) { create(:task, name: 'タスクB', user: user_b) }
-  # let(:lists){   { list_id: list.id , list_name:  } }
 
   before do
     post api_login_path, params: { session: {email: user.email, password: user.password} }
@@ -18,7 +11,6 @@ RSpec.describe Api::TasksController, type: :request do
 
   def reset_session
     get api_logout_path, params: {}
-    # allow_any_instance_of(ActionDispatch::Request).to receive(:session).and_return({})
   end
 
   shared_examples_for 'ユーザーAが作成したタスクが表示される' do
@@ -59,17 +51,39 @@ RSpec.describe Api::TasksController, type: :request do
   end
 
   describe 'task#update_tasks_order' do
+    let(:order_params) do
+      user.tasks.map.with_index do |task, index|
+          {
+            position: index + 1,
+            task_id: task.id,
+            list_id: user.boards.take.lists.take.id
+          }
+      end
+    end
+
     context '正常なパラメータが送信されてきた時' do
       it '同リスト内でのタスク移動が正常に行えること' do
-        # TODO: listの変数を用意しておく
-        # TODO: tasksを用意しておく
-        patch api_task_path, params: { list_id: list_id, tasks: tasks }
+        order_params = user.tasks.map.with_index do |task, index|
+          # 1番目と2番目のタスクのpositionを入れ替える
+          position = case index
+            when 0 then 2
+            when 1 then 1
+            else index + 1
+            end
+          {
+            position: position,
+            task_id: task.id,
+            list_id: user.boards.take.lists.take.id
+          }
+        end
+        patch '/api/tasks', params: { order_params: order_params }
         json = JSON.parse(response.body)
         expect(response.status).to eq(200)
-        expect(json['task']['name']).to eq('タスクA')
+        # FIXME: あまりにもテスト内容が分かりづらいので修正する
+        expect(json["datas"][0]["tasks"].map{ |item| item["id"] }).to eq(order_params.sort_by{ |item| item[:position] }.pluck(:task_id))
       end
 
-      it '異なるリスト内でのタスク移動が正常に行えること' do
+      xit '異なるリスト内でのタスク移動が正常に行えること' do
         get api_task_path(task_a.id), params: {}
         json = JSON.parse(response.body)
         expect(response.status).to eq(200)
@@ -77,12 +91,19 @@ RSpec.describe Api::TasksController, type: :request do
       end
     end
 
+    # TODO: positionの更新時のバリデーションが一通り整備されたらテストする
     context '異常なパラメータが送信されてきた時' do
-      it 'タスクの順序の更新が行われないこと' do
-        get api_task_path(task_a.id), params: {}
-        json = JSON.parse(response.body)
-        expect(response.status).to eq(200)
-        expect(json['task']['name']).to eq('タスクA')
+      context 'リスト内のタスク数以上のposition値が送信されてきた時' do
+        xit 'タスクの順序の更新が行われないこと' do
+          incorrect_order_params = order_params.map do |param|
+            param[:position] = Float::INFINITY if param[:position] == 1
+            param
+          end
+          patch '/api/tasks', params: { order_params: order_params }
+          json = JSON.parse(response.body)
+          expect(response.status).to eq(200)
+          expect(json['task']['name']).to eq('タスクA')
+        end
       end
     end
   end

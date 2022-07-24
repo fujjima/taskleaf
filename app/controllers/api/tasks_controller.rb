@@ -5,16 +5,7 @@ class Api::TasksController < ApplicationController
 
   def index
     # FIXME: boards.last部分は将来的に、表示中のboardのみになるのでそれまでは決め打ちでlastにしておく
-    lists = current_user.boards.last.lists
-    tasks = current_user.tasks.eager_load(:order, :tags)
-    @datas = lists.reduce([]) do |array, list|
-      array.push({
-        list_id: list.id,
-        list_name: list.name,
-        tasks: tasks.where(order: { list_id: list.id })
-                    .sort_by(&:position)
-      })
-    end
+    set_datas
   end
 
   def show
@@ -72,11 +63,25 @@ class Api::TasksController < ApplicationController
     # 使用ケース
     #   リスト内のカードの移動、リスト間でのカードの移動、タスク追加、タスク削除
     Order.update_order(order_params)
-    set_tasks_and_working_times
+    # set_tasks_and_working_times
+    set_datas
     render :index
   end
 
   private
+
+  def set_datas
+    lists = current_user.boards.last.lists
+    tasks = current_user.tasks.eager_load(:order, :tags)
+    @datas = lists.reduce([]) do |array, list|
+      array.push({
+        list_id: list.id,
+        list_name: list.name,
+        tasks: tasks.where(order: { list_id: list.id })
+                    .sort_by(&:position)
+      })
+    end
+  end
 
   # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのが面倒
   def task_params
@@ -92,9 +97,6 @@ class Api::TasksController < ApplicationController
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
     @working_times = WorkingTime.total_working_time_per_task
-    @tasks = current_user.tasks
-                         .eager_load(:tags, :order)
-                         .sort_by{ |task| task.position }
   end
 
   def set_useable_tags
@@ -103,6 +105,6 @@ class Api::TasksController < ApplicationController
 
   def order_params
     # TODO: リスト内の順番を受け取る方向性について（positionパラメータを必要とするか、task_idの配列内の順番で考えるか）
-    params.require(:order_params).map{ |param| param.permit(:position, :task_id).to_h }
+    params.require(:order_params).map{ |param| param.permit(:position, :task_id, :list_id).to_h }
   end
 end
