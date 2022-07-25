@@ -58,4 +58,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # NOTE: create, build等をFactoryBotのprefixなしで使えるようにする
+  # ref) https://semaphoreci.com/community/tutorials/working-effectively-with-data-factories-using-factorygirl
+  config.include FactoryBot::Syntax::Methods
 end

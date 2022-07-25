@@ -1,13 +1,11 @@
 class Api::TasksController < ApplicationController
   before_action :set_task, only: %w[show update]
-  before_action :set_tasks_and_working_times, only: %w[index]
+  # before_action :set_tasks_and_working_times, only: %w[index]
   before_action :set_useable_tags, only: %w[index show]
 
   def index
-    # TODO: かつ、positionの配列も渡しておく？
-    respond_to do |format|
-      format.json
-    end
+    # FIXME: boards.last部分は将来的に、表示中のboardのみになるのでそれまでは決め打ちでlastにしておく
+    set_datas
   end
 
   def show
@@ -19,13 +17,14 @@ class Api::TasksController < ApplicationController
 
   def create
     # TODO: finisied_atの文字列をTimeWithZoneに変換しているのはどこで行われているか調査
+    # TODO: 恐らくorderに関するパラメータも受け取るため、そのパラメータをもとにorderの生成を行う
     @task = current_user.tasks.new(task_params)
 
     if @task.save
       render :show
     else
       # TODO: エラーメッセージ
-      render :new
+      render :index
     end
   end
 
@@ -57,16 +56,32 @@ class Api::TasksController < ApplicationController
   end
 
   # TODO: ユーザー入力値についてのバリデーション等の対策
+  # 期待するリクエストパラメータ
+  # { tasks: [], list_id: num }
+  # TODO: 紐づくlist.idがリクエストパラメータのものと異なる場合、list.idの更新を行う
   def update_tasks_order
-    # タスク内の順番の一括更新
     # 使用ケース
     #   リスト内のカードの移動、リスト間でのカードの移動、タスク追加、タスク削除
     Order.update_order(order_params)
-    set_tasks_and_working_times
+    # set_tasks_and_working_times
+    set_datas
     render :index
   end
 
   private
+
+  def set_datas
+    lists = current_user.boards.last.lists
+    tasks = current_user.tasks.eager_load(:order, :tags)
+    @datas = lists.reduce([]) do |array, list|
+      array.push({
+        list_id: list.id,
+        list_name: list.name,
+        tasks: tasks.where(order: { list_id: list.id })
+                    .sort_by(&:position)
+      })
+    end
+  end
 
   # XXX: 中間テーブルに関する情報を毎回ここのparams内で取得するのが面倒
   def task_params
@@ -82,9 +97,6 @@ class Api::TasksController < ApplicationController
     # @q = current_user.tasks.ransack(params[:q])
     # @tasks = @q.result(distinct: true).page(params[:page]).order('created_at DESC')
     @working_times = WorkingTime.total_working_time_per_task
-    @tasks = current_user.tasks
-                         .includes(:tags, :order)
-                         .sort_by{ |task| task.order.position }
   end
 
   def set_useable_tags
@@ -93,6 +105,6 @@ class Api::TasksController < ApplicationController
 
   def order_params
     # TODO: リスト内の順番を受け取る方向性について（positionパラメータを必要とするか、task_idの配列内の順番で考えるか）
-    params.require(:order_params).map{ |param| param.permit(:position, :task_id).to_h }
+    params.require(:order_params).map{ |param| param.permit(:position, :task_id, :list_id).to_h }
   end
 end

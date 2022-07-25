@@ -1,6 +1,18 @@
 import Formatter from 'Util/Formatter';
 import { Tag } from 'Models/Tag';
 
+// TODO: Task型を定義して、クラスにも適用する方針について
+export type TaskTypes = {
+  id: number
+  name: string
+  description: string
+  // TODO: status = list.name
+  status: string
+  tags: Tag[]
+  finishedAt: string
+  workingTime: number
+}
+
 export class Task{
   id: number;
   name: string;
@@ -11,10 +23,11 @@ export class Task{
   finishedAt: string | undefined;
   workingTime: number;
 
-  constructor(params: Partial<Task>) {
+  constructor(params?: Partial<Task>) {
     // params内のfinishedAtのみdate形式に変換しておく
     const param = params?.finishedAt ? { ...params, ...{finishedAt: Formatter.toDate(params.finishedAt)}}
-                                      : params
+                                      : params;
+
     Object.assign(this, param);
   }
 
@@ -31,5 +44,13 @@ export class Task{
       default:
         return '未定義';
     }
+  }
+
+  toJS(params){
+    // TODO: toJS()に相当するものについて定義しておく
+    // finishedAtの文字列変換
+    // パラメータのjson化
+    // その他、TaskTypesに不適合なものを弾いたりなど
+    return JSON.stringify(params)
   }
 }

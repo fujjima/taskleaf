@@ -4,24 +4,16 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import {
   TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   Table,
-  Checkbox,
   Button,
-  Menu,
   MenuItem,
   IconButton,
   Select,
   Card,
+  List,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Timer from 'Components/Mols/Timer';
 import { TaskContext } from 'Containers/TasksContainer';
@@ -45,10 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: '36px 0 24px',
-  },
-  addButton: {
-    marginLeft: '30px',
-    marginBottom: '10px',
   },
   // 複数選択メニュー -------------------------------
   multipleMenu: {
@@ -93,12 +81,29 @@ const useStyles = makeStyles((theme) => ({
   deleteItem: {
     color: 'red',
   },
+  // ---------------------------------------------
+  // ドラッグ内要素
+  list: {
+    maxWidth: '300px',
+    marginLeft: '10px',
+    backgroundColor: 'whitesmoke',
+    padding: '20px'
+  },
+  card: {
+    width: '100%',
+    marginBottom: '10px',
+    minHeight: '30px'
+  },
+  // ---------------------------------------------
+  addButton: {
+    width: '100%'
+  },
 }));
 
-// TODO: 巨大になってしまったので、テーブル行、start/stopIcon、Timer周りをそのうち分離する
-// 下記のように、記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）とする
+// NOTE: 記録→他タスク記録 の処理のことを「記録切り替え」（switch_recording）と表現する
 export const TasksPage = (props) => {
   const {
+    lists,
     tasks,
     usableTags,
     taskLabel,
@@ -117,6 +122,8 @@ export const TasksPage = (props) => {
 
   const [startAt, setStartAt] = useState(null);
   const [endAt, setEndAt] = useState(null);
+
+  const [listId, setListId] = useState(null);
 
   // 記録中タスク判定用
   const [recordingTaskId, setRecordingTaskId] = useState(null);
@@ -161,21 +168,8 @@ export const TasksPage = (props) => {
   }
 
   // utils
-
-  const headerCells = [...taskLabel.values()];
-
-  const isOpened = !_.isNull(openMenuId);
-
-  const rowCount = () => {
-    return tasks.size;
-  };
-
   const selected = () => {
     return checkedIds.size > 0;
-  };
-
-  const isRecording = (id) => {
-    return recordingTaskId === id;
   };
 
   const displayTags = (task) => {
@@ -211,27 +205,6 @@ export const TasksPage = (props) => {
     updateTags({ id: taskId, tagIds: tags });
   };
 
-  const handleCheck = (e, id) => {
-    setCheckedIds((prev) => {
-      prev.has(id) ? prev.delete(id) : prev.add(id);
-      return new Set(prev);
-    });
-    e.stopPropagation();
-  };
-
-  const handleAllCheck = (e) => {
-    const checked = e.target.checked;
-    setCheckedIds((prev) => {
-      if (checked) {
-        prev = tasks.map((t) => t.id).toJS();
-      } else {
-        prev.clear();
-      }
-      return new Set(prev);
-    });
-    e.stopPropagation();
-  };
-
   const handleStart = (e, id) => {
     // バックに送信する際に何故かGMTになってしまうため、文字列をフォーマットして格納している
     setStartAt(dayjs().format('YYYY/MM/DD HH:mm:ss'));
@@ -252,17 +225,19 @@ export const TasksPage = (props) => {
     e.stopPropagation();
   };
 
-  // source, destination内の値を用いて配列内の順番を獲得する
   // TODO: 横方向に動かした場合の挙動について
-  // TODO: 動かしている時に横幅が変わってしまうので、固定しておきたい
   const handleDragEnd = (result) => {
-    const newTasks = [...tasks]
-    const [orderedItem] = newTasks.splice(result.source.index, 1);
-    newTasks.splice(result.destination.index, 0, orderedItem);
-    // NOTE: 
-    // back側からのレスポンスを待っている間のラグがカードの表示に影響するため、先にtasksの更新をしている
+    // TODO: tasksはlist内にネストされる構造になったのでそれに伴う変更
+    // list内の街頭のtasksを抽出する
+    const { index, droppableId } = result.source
+    const newTasks = lists.find(list => list.id == droppableId)?.tasks
+    const [orderedItem] = newTasks.splice(index, 1);
+    newTasks.splice(index, 0, orderedItem);
+
+    // NOTE: back側からのレスポンスを待っている間のラグがあるため、tasksの配列の更新を行なっている
     setTasks(newTasks)
-    updateTasksOrder(newTasks);
+    // console.log(newTasks, 'aaaa')
+    updateTasksOrder({ tasks: newTasks, listId: droppableId });
   }
 
   // ダイアログ関連
@@ -271,7 +246,11 @@ export const TasksPage = (props) => {
     setDialogOpen(false);
   };
 
+  // TODO: タスク生成に必要なパラメータとしてposition（これは強制的に最後にしていいかもしれない）
+  //  と listの値が必要
+  //  listについては、タスク追加ボタンを押した際のリストIDを取得できるようにしておくことで対応したい
   const handleSubmit = (e, params) => {
+    // TODO: タスク生成時にpositionはリスト内の最後に設定しておく
     e.preventDefault();
     createTask(params);
     setDialogOpen(false);
@@ -301,121 +280,72 @@ export const TasksPage = (props) => {
     );
   };
 
-  const renderMenu = () => {
-    return (
-      <Menu
-        open={isOpened}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        onClick={(e) => {
-          setAnchorEl(null);
-          setOpenMenuId(null);
-          e.stopPropagation();
-        }}
-      >
-        <MenuItem>複製</MenuItem>
-        <MenuItem onClick={executeDelete} className={classes.deleteItem}>
-          削除
-        </MenuItem>
-      </Menu>
-    );
-  };
-
-  const renderTableHead = () => {
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              disableRipple
-              className={classes.checkBox}
-              checked={rowCount() > 0 && checkedIds.size === rowCount()}
-              inputProps={{ 'aria-label': 'select all desserts' }}
-              onClick={handleAllCheck}
-            />
-          </TableCell>
-          {headerCells.map((hcell, idx) => (
-            <TableCell
-              key={idx}
-              align={hcell.numeric ? 'right' : 'left'}
-            // sortDirection={orderBy === headCell.id ? order : false}
-            >
-              {hcell}
-            </TableCell>
-          ))}
-          <TableCell>{''}</TableCell>
-          <TableCell>{''}</TableCell>
-        </TableRow>
-      </TableHead>
-    );
-  };
-
-  const getItemStyle = (isDragging, draggableStyle) => {
-  }
+  const getItemStyle = (isDragging, draggableStyle) => { }
 
   const renderTableBody = () => {
-    return (
-      // NOTE: 複数リストについて
-      // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="selected" key="selected">
-          {(provided, snapshot) => (
-            // TODO: リスト部分に個別にスタイルを当てる
-            // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
-            // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
-            //  縦：リストの最後に移動
-            //  横：他リストに移動
-            <div style={{ maxWidth: '300px', marginLeft: '10px', backgroundColor: 'whitesmoke', padding: '20px' }}>
-              <div ref={provided.innerRef} {...provided.droppableProps}>
-                {tasks.map((task, idx) => {
-                  return (
-                    <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
-                      {(provided) => {
-                        return (
-                          <div style={{ maxWidth: '250px' }}>
+    // NOTE: 複数リストについて
+    // ref) https://www.codedaily.io/tutorials/Multi-List-Drag-and-Drop-With-react-beautiful-dnd-Immer-and-useReducer
+    // TODO: リスト全体のスタイルについて
+    return lists.map((list, idx) => {
+      const { tasks } = list
+      return (
+        <List className={classes.list} name={list.name}>
+          {/* TODO: 可変 */}
+          {/* TODO: スタイルの適用 */}
+          <div>{list.name}</div>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            {/* TODO: 移動先のリスト情報の取得方法について（具体的にはlistのidの取得をしたい） */}
+            <Droppable droppableId={list.id} key="selected">
+              {(provided, snapshot) => (
+                // TODO: そのうち、リスト内の子要素の総計の高さに応じてドラッグ可能範囲も可変にできるようにしておく
+                // TODO: 各リストに対して、「その範囲に入ったら、リスト間の移動を行う」という閾値を指定しておく
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {tasks.map((task, idx) => {
+                    return (
+                      <Draggable key={task.id} draggableId={`g-${task.id}`} index={idx}>
+                        {(provided) => {
+                          return (
                             <div>
                               {/* FIXME: Card内のスタイリングについては、material-uiの5系から入ったsxを使うようにしたい */}
                               {/* ref) https://mui.com/system/the-sx-prop/ */}
                               {/* TODO: オンカーソル時は背景色を変更する */}
                               {/* inline styleの当て方について  */}
                               {/* ref) https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/api/draggable.md#extending-draggablepropsstyle */}
-                              <Card variant="outlined" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ width: '100%', marginBottom: '8px', minHeight: '30px', ...provided.draggableProps.style }}>
+                              <Card variant="outlined" className={classes.card} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                 {task.name}
                               </Card>
                             </div>
-                          </div>
-                        )
-                      }}
-                    </Draggable>
-                  )
-                })}
-                {provided.placeholder}
-              </div>
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    )
+                          )
+                        }}
+                      </Draggable>
+                    )
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          <Button
+            className={classes.addButton}
+            onClick={(e) => {
+              // TODO: リストのIDを指定する
+              setListId()
+              setDialogOpen(!dialogOpen)
+            }}
+            variant="outlined"
+            startIcon={<AddIcon />}
+          >
+            タスクの追加
+          </Button>
+        </List>
+      )
+    })
   };
 
 
   return (
     <div className={classes.root}>
       <TableContainer>
-        {/* TODO: タスクの追加ボタンは、各リスト内に移動する */}
-        <Button
-          className={classes.addButton}
-          onClick={() => setDialogOpen(!dialogOpen)}
-          variant="outlined"
-          color="primary"
-          startIcon={<AddIcon />}
-        >
-          タスクの追加
-        </Button>
         <div
           className={cn(classes.multipleMenu, {
             [classes.hiddenMultipleMenu]: !selected(),
@@ -436,7 +366,6 @@ export const TasksPage = (props) => {
           size={'medium'}
           aria-label="enhanced table"
         >
-          {/* {renderTableHead()} */}
           {renderTableBody()}
         </Table>
       </TableContainer>

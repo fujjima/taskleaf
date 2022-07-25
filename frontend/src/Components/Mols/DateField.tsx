@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
 import { makeStyles } from '@material-ui/core';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import dayjs from 'dayjs';
+import { Dayjs } from 'dayjs';
 import ja from 'dayjs/locale/ja';
 
 const useStyles = (props) =>
@@ -15,24 +14,26 @@ const useStyles = (props) =>
   });
 
 class ExtendedUtils extends DayJsUtils {
-  getCalendarHeaderText(date) {
+  getCalendarHeaderText(date: Dayjs): string {
     return date.format('YYYY年 MMM');
   }
 
-  getDatePickerHeaderText(date) {
+  getDatePickerHeaderText(date: Dayjs): string {
     return date.format('MMMM DD日');
   }
 }
 
+// TODO: DateField自体に型付けができないかを検討する
+// type PropTypes
 export const DateField = (props) => {
   const classes = useStyles(props);
-  const { pdate, onClose, ...options } = props;
-  const [date, setDate] = useState(pdate);
-  const [open, setOpen] = useState(false);
+  const { name, pdate, onClose, ...options } = props;
+  const [date, setDate] = useState<Dayjs>(pdate);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
     setOpen(false);
-    onClose && onClose({ finishedAt: date });
+    onClose(e, { [name]: date });
   };
 
   return (
@@ -52,7 +53,7 @@ export const DateField = (props) => {
         }}
         PopoverProps={{
           disableRestoreFocus: true,
-          onClose: handleClose,
+          onClose: (e) => handleClose(e),
         }}
         // ------------------------------------------------
         InputProps={{
@@ -67,9 +68,4 @@ export const DateField = (props) => {
       />
     </MuiPickersUtilsProvider>
   );
-};
-
-DateField.propTypes = {
-  pdate: PropTypes.instanceOf(dayjs).isRequired,
-  onClose: PropTypes.func,
 };

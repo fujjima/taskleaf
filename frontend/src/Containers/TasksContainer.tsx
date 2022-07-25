@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { Task } from 'Models/Task';
+import { Task, TaskTypes } from 'Models/Task';
 import { Tag } from 'Models/Tag';
+import { List } from 'Models/List';
 import { TaskPage } from 'Components/Pages/TasksPage/TaskPage/TaskPage';
 import { TasksPage } from 'Components/Pages/TasksPage/TasksPage';
 import { FETCH_GET_OPTIONS, FETCH_POST_OPTIONS, FETCH_PATCH_OPTIONS, FETCH_DELETE_OPTIONS } from 'Types/FetchOption';
@@ -15,7 +16,7 @@ export const taskLabel = new Map([
   ['workingTime', '経過時間'],
 ]);
 
-export const TaskContext = createContext();
+export const TaskContext = createContext(null);
 
 export const TasksContainer = () => {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export const TasksContainer = () => {
   const url = `${API_URL}${location.pathname}`;
 
   const [tasks, setTasks] = useState([]);
+  const [lists, setLists] = useState([]);
   const [usableTags, setUsableTags] = useState([]);
 
   useEffect(() => {
@@ -30,9 +32,21 @@ export const TasksContainer = () => {
       // TODO: 詳細画面をモーダルに移行した際は、url取得等はしなくても問題なさそう？？
       const result = await getTasks();
       if (!id) {
-        setTasks((prev) => {
-          return [...prev, ...result?.tasks?.map((r) => new Task(r))];
-        });
+        setLists((prev) => {
+          // TODO: 何の配列もない時の考慮はしておく
+          const lists = result.datas.reduce((acc, data) => {
+            const { listId, listName } = data
+            const tasks: Task[] = data.tasks.map(t => new Task(t))
+            acc.push(new List({
+              id: listId,
+              name: listName,
+              tasks: tasks
+            })
+            )
+            return acc
+          }, [])
+          return [...prev, ...lists];
+        })
       } else {
         setTasks(prev => {
           return [...prev, new Task(result.task)]
@@ -67,11 +81,18 @@ export const TasksContainer = () => {
       });
   }
 
-  const createTask = (params) => {
+
+  // TODO: 特定のクラスのインスタンスであることを確認しておく
+  const createTask = (params: Partial<TaskTypes>) => {
+    // TODO: インスタンスチェック機構をどこで行うかについて
+    if(params instanceof Task){
+    }
+    // TODO: タスクのorder, list情報も併せて送信したい
     const options = {
       ...FETCH_POST_OPTIONS,
       body: JSON.stringify({
-        task: { ...params.toJS() },
+        task: { ...params },
+        // task: { ...params.toJS() },
       }),
     };
 
@@ -86,8 +107,8 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks((prev) => {
-          return prev.unshift(new Task(data.task));
+        setTasks((prev): Task[] => {
+          return [new Task(data.task), ...prev]
         });
       })
       .catch((err) => {
@@ -118,9 +139,9 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        newTask = new Task(data.task)
+        let newTask = new Task(data.task)
         setTasks((prev) => {
-          otherTasks = prev.filter(task => newTask.id !== task.id)
+          let otherTasks = prev.filter(task => newTask.id !== task.id)
           return [...otherTasks, newTask]
         });
       })
@@ -129,8 +150,8 @@ export const TasksContainer = () => {
       });
   };
 
-  const deleteTask = (ids) => {
-    const paramsIds = _.isArray(ids) ? ids : Array.from(ids);
+  const deleteTask = (ids: number[]) => {
+    const paramsIds = Array.isArray(ids) ? ids : Array.from(ids);
     const options = {
       ...FETCH_DELETE_OPTIONS,
       body: JSON.stringify({ id: paramsIds }),
@@ -147,7 +168,7 @@ export const TasksContainer = () => {
         if ('errors' in data) {
           return alert('error');
         }
-        setTasks(tasks.filterNot((t) => paramsIds.includes(t.id)));
+        setTasks(tasks.filter((t) => !paramsIds.includes(t.id)));
       })
       .catch((err) => {
         return err;
@@ -156,7 +177,7 @@ export const TasksContainer = () => {
 
   const updateTags = (params) => {
     const taskId = id || params.id;
-    const url = `${url}/${taskId}`;
+    const targetUrl = `${url}/${taskId}`;
     const options = {
       ...FETCH_PATCH_OPTIONS,
       body: JSON.stringify({
@@ -164,7 +185,7 @@ export const TasksContainer = () => {
       }),
     };
 
-    fetch(url, options)
+    fetch(targetUrl, options)
       .then((response) => {
         if (!response.ok) {
           throw new Error();
@@ -177,15 +198,9 @@ export const TasksContainer = () => {
         }
         setTasks((prev) => {
           const task = prev.find((t) => parseInt(taskId, 10) === t.id);
-          const newTask = task.set(
-            'tags',
-            IList(data.task.tags.map((r) => new Tag(r)))
-          );
+          const newTask = {...task, ...{ tags: data.task.tags.map((r) => new Tag(r)) }}
 
-          return prev.set(
-            prev.findIndex((t) => parseInt(taskId, 10) === t.id),
-            newTask
-          );
+          return [...prev, new Task(newTask)]
         });
       })
       .catch((err) => {
@@ -193,18 +208,18 @@ export const TasksContainer = () => {
       });
   };
 
-  const updateTasksOrder = (params) => {
-    const test = params.map((task, idx) => {
+  // 同じlist内、異なるlistへの移動のどちらで合っても、移動先のlistIdを渡してきた方が良さそう
+  const updateTasksOrder = ({ tasks, listId  }) => {
+    const params = tasks.map((task, idx) => {
       return {
         'taskId': task.id,
         'position': idx + 1
       }
     })
 
-    // TODO: リストのidも受け取れるようにしたい
     const options = {
       ...FETCH_PATCH_OPTIONS,
-      body: JSON.stringify({ 'order_params': test }),
+      body: JSON.stringify({ 'order_params': params, 'list_id': listId }),
     };
 
     return fetch(url, options)
@@ -229,6 +244,7 @@ export const TasksContainer = () => {
     // tasksの変更を行うsetstate関数を渡す
     <TaskContext.Provider
       value={{
+        lists,
         tasks,
         usableTags,
         taskLabel,
@@ -243,7 +259,7 @@ export const TasksContainer = () => {
       {id ? (
         <TaskPage task={tasks.find(t => t.id === parseInt(id, 10))} />
       ) : (
-        <TasksPage />
+        <TasksPage />  
       )}
     </TaskContext.Provider>
   );
