@@ -21,7 +21,7 @@ jobs:
           - 5432:5432
     strategy:
       matrix:
-        ruby-version: ['2.7.5']
+        ruby-version: 2.7.5
 
     steps:
       - name: Checkout repository
@@ -88,6 +88,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          ruby-version: 2.7.5
 
       - name: Run rubocop
         run: bundle exec rubocop
