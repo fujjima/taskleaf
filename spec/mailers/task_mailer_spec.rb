@@ -13,7 +13,8 @@ describe TaskMailer, type: :mailer do
     part.body.raw_source
   end
 
-  describe '#creation_email' do
+  # FIXME: メーラー機能が仮に復活するのであれば復活させる
+  xdescribe '#creation_email' do
     let(:mail) { TaskMailer.creation_email(task) }
 
     it '想定通りのメールが生成されている' do
