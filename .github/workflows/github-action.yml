@@ -3,7 +3,7 @@ name: Run rspec, rubocop
 on: [push]
 
 jobs:
-  rspec:
+  run-rspec:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
