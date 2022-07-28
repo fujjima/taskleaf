@@ -75,11 +75,11 @@ class Api::TasksController < ApplicationController
     tasks = current_user.tasks.eager_load(:order, :tags)
     @datas = lists.reduce([]) do |array, list|
       array.push({
-        list_id: list.id,
-        list_name: list.name,
-        tasks: tasks.where(order: { list_id: list.id })
+                   list_id: list.id,
+                   list_name: list.name,
+                   tasks: tasks.where(order: { list_id: list.id })
                     .sort_by(&:position)
-      })
+                 })
     end
   end
 
@@ -105,6 +105,6 @@ class Api::TasksController < ApplicationController
 
   def order_params
     # TODO: リスト内の順番を受け取る方向性について（positionパラメータを必要とするか、task_idの配列内の順番で考えるか）
-    params.require(:order_params).map{ |param| param.permit(:position, :task_id, :list_id).to_h }
+    params.require(:order_params).map { |param| param.permit(:position, :task_id, :list_id).to_h }
   end
 end

@@ -3,7 +3,7 @@ class Order < ApplicationRecord
   belongs_to :list
 
   class << self
-    def update_order order_list
+    def update_order(order_list)
       # TODO: 例外にしたいケース
       #   配列内に異なるリスト or 異なるboardに属するタスクが検出される
       #   position被り

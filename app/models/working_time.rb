@@ -1,8 +1,8 @@
 # -------------------------------------------------
 # WorkintTime
-# 
+#
 # 各タスクに紐づく作業時間を管理する
-# 
+#
 # recorded_at: 記録がされた日
 # times: ある日における作業時間の開始時刻及び終了時刻の配列
 # -------------------------------------------------
@@ -25,7 +25,7 @@ class WorkingTime < ApplicationRecord
     end
 
     # 特定タスクについての合計作業時間を返す
-    def total_working_time task_id
+    def total_working_time(task_id)
       # 複数日におけるworking_timeが取得される予定
       # 1working_time内でsumする、という計算を取得数分行う
       search_with_task_id(task_id)
