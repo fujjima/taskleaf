@@ -4,14 +4,14 @@ class Api::ReportsController < ApplicationController
                                                     .group_by(&:recorded_at)
 
     datas = period_range.map do |date|
-              hash = {}
-              # XXX: ここでキャメルケース使いたくない
-              hash['recordedAt'] = date
-              working_times = working_times_group_by_recorded_at[date]
-              next hash unless working_times
+      hash = {}
+      # XXX: ここでキャメルケース使いたくない
+      hash['recordedAt'] = date
+      working_times = working_times_group_by_recorded_at[date]
+      next hash unless working_times
 
-              hash.merge(sum_hash(working_times))
-            end.compact
+      hash.merge(sum_hash(working_times))
+    end.compact
 
     @report_datas = datas.map do |d|
       Hash[d.sort]

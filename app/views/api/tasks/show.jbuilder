@@ -1,6 +1,4 @@
-if @tags.present?
-  json.usable_tags @tags, :id, :name
-end
+json.usable_tags @tags, :id, :name if @tags.present?
 
 json.task do
   json.extract! @task, :id, :name, :finished_at, :description, :status

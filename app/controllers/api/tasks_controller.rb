@@ -28,27 +28,30 @@ class Api::TasksController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  # FIXME: 複数のリソースに対するupdateを行なってしまっていて分かりにくいので、分解するかモデルに処理させる
   def update
     # update! + working_timeに関する更新はtransactionで囲む
     @task.update!(task_params)
     times = params[:task][:times]
-    if times
-      update_target = WorkingTime.find_by(task_id: @task.id, recorded_at: Date.parse(params[:task][:times][:start_at]))
-      if update_target
-        update_target.times << times
-        update_target.save!
-      else
-        working_time = WorkingTime.new(
-          task_id: @task.id,
-          times: [times],
-          # TODO: end_atが日を跨いだ場合の対応
-          recorded_at: Date.parse(params[:task][:times][:start_at])
-        )
-        working_time.save!
-      end
+
+    render :show and return unless times
+
+    update_target = WorkingTime.find_by(task_id: @task.id, recorded_at: Date.parse(params[:task][:times][:start_at]))
+    if update_target
+      update_target.times << times
+      update_target.save!
+    else
+      WorkingTime.new(
+        task_id: @task.id,
+        times: [times],
+        # TODO: end_atが日を跨いだ場合の対応
+        recorded_at: Date.parse(params[:task][:times][:start_at])
+      ).save!
     end
     render :show
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def destroy
     Task.where(id: params[:id]).destroy_all
@@ -75,11 +78,11 @@ class Api::TasksController < ApplicationController
     tasks = current_user.tasks.eager_load(:order, :tags)
     @datas = lists.reduce([]) do |array, list|
       array.push({
-        list_id: list.id,
-        list_name: list.name,
-        tasks: tasks.where(order: { list_id: list.id })
+                   list_id: list.id,
+                   list_name: list.name,
+                   tasks: tasks.where(order: { list_id: list.id })
                     .sort_by(&:position)
-      })
+                 })
     end
   end
 
@@ -105,6 +108,6 @@ class Api::TasksController < ApplicationController
 
   def order_params
     # TODO: リスト内の順番を受け取る方向性について（positionパラメータを必要とするか、task_idの配列内の順番で考えるか）
-    params.require(:order_params).map{ |param| param.permit(:position, :task_id, :list_id).to_h }
+    params.require(:order_params).map { |param| param.permit(:position, :task_id, :list_id).to_h }
   end
 end

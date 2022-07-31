@@ -4,6 +4,7 @@ class List < ApplicationRecord
 
   def tasks
     return [] if orders.empty?
+
     orders.map(&:task)
   end
 end

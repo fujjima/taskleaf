@@ -1,9 +1,9 @@
 name: Run rspec, rubocop
 
-on: :push
+on: [push]
 
 jobs:
-  rspec:
+  run-rspec:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     services:
@@ -88,6 +88,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          ruby-version: 2.7.5
 
       - name: Run rubocop
         run: bundle exec rubocop

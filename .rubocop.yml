@@ -1,13 +1,27 @@
 Style/FrozenStringLiteralComment:
   Enabled: false
-Metrics/LineLength:
-  Max: 120
-AsciiComments:
+Style/MixinUsage:
   Enabled: false
 Style/Documentation:
   Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Metrics/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 13
+  Exclude:
+    - 'db/**/*' # migrate系のファイルを除外する
+Metrics/BlockLength:
+  Exclude:
+    - 'db/*'
+    - 'spec/**/*.rb'
+AsciiComments:
+  Enabled: false
 ClassAndModuleChildren:
   EnforcedStyle: compact
+Metrics/AbcSize:
+  Max: 20
 # Rails/TopLevelInclude:
 #   Include:
 #     - app/**/*.rb

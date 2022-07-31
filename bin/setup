@@ -2,7 +2,6 @@
 include FileUtils
 require 'fileutils'
 
-
 # path to your application root.
 APP_ROOT = File.expand_path('..', __dir__)
 

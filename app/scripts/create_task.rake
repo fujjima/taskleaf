@@ -9,7 +9,7 @@ ActiveRecord::Base.transaction do
 
   # タスクに紐づくworking_timeを1個ずつ生成する
   created_at = Date.new(2020, 11, 10)
-  start_date = Time.new(2020, 11, 10, 12, 00, 00)
+  start_date = Time.new(2020, 11, 10, 12, 0o0, 0o0)
   end_date = Time.new(2020, 11, 10, 13, 30, 30)
 
   created_tasks = user.tasks.last(5)

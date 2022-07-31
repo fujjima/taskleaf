@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Api::TasksController, type: :request do
-  let!(:user) {
+  let!(:user) do
     create(:user, :has_board_with_five_tasks)
-  }
+  end
 
   before do
-    post api_login_path, params: { session: {email: user.email, password: user.password} }
+    post api_login_path, params: { session: { email: user.email, password: user.password } }
   end
 
   def reset_session
@@ -24,7 +24,7 @@ RSpec.describe Api::TasksController, type: :request do
         json = JSON.parse(response.body)
         expect(response.status).to eq(200)
         # TODO: 他ユーザーのタスクが混じっていないことを確認したい
-        expect(json["datas"][0]["tasks"].length).to eq(5)
+        expect(json['datas'][0]['tasks'].length).to eq(5)
       end
     end
 
@@ -53,11 +53,11 @@ RSpec.describe Api::TasksController, type: :request do
   describe 'task#update_tasks_order' do
     let(:order_params) do
       user.tasks.map.with_index do |task, index|
-          {
-            position: index + 1,
-            task_id: task.id,
-            list_id: user.boards.take.lists.take.id
-          }
+        {
+          position: index + 1,
+          task_id: task.id,
+          list_id: user.boards.take.lists.take.id
+        }
       end
     end
 
@@ -66,10 +66,10 @@ RSpec.describe Api::TasksController, type: :request do
         order_params = user.tasks.map.with_index do |task, index|
           # 1番目と2番目のタスクのpositionを入れ替える
           position = case index
-            when 0 then 2
-            when 1 then 1
-            else index + 1
-            end
+                     when 0 then 2
+                     when 1 then 1
+                     else index + 1
+                     end
           {
             position: position,
             task_id: task.id,
@@ -80,7 +80,9 @@ RSpec.describe Api::TasksController, type: :request do
         json = JSON.parse(response.body)
         expect(response.status).to eq(200)
         # FIXME: あまりにもテスト内容が分かりづらいので修正する
-        expect(json["datas"][0]["tasks"].map{ |item| item["id"] }).to eq(order_params.sort_by{ |item| item[:position] }.pluck(:task_id))
+        expect(json['datas'][0]['tasks'].map { |item| item['id'] }).to eq(order_params.sort_by do |item|
+                                                                            item[:position]
+                                                                          end.pluck(:task_id))
       end
 
       xit '異なるリスト内でのタスク移動が正常に行えること' do
@@ -95,14 +97,14 @@ RSpec.describe Api::TasksController, type: :request do
     context '異常なパラメータが送信されてきた時' do
       context 'リスト内のタスク数以上のposition値が送信されてきた時' do
         xit 'タスクの順序の更新が行われないこと' do
-          incorrect_order_params = order_params.map do |param|
-            param[:position] = Float::INFINITY if param[:position] == 1
-            param
-          end
-          patch '/api/tasks', params: { order_params: order_params }
-          json = JSON.parse(response.body)
-          expect(response.status).to eq(200)
-          expect(json['task']['name']).to eq('タスクA')
+          # incorrect_order_params = order_params.map do |param|
+          #   param[:position] = Float::INFINITY if param[:position] == 1
+          #   param
+          # end
+          # patch '/api/tasks', params: { order_params: order_params }
+          # json = JSON.parse(response.body)
+          # expect(response.status).to eq(200)
+          # expect(json['task']['name']).to eq('タスクA')
         end
       end
     end

@@ -1,6 +1,4 @@
-if @tags.present?
-  json.usable_tags @tags, :id, :name
-end
+json.usable_tags @tags, :id, :name if @tags.present?
 
 json.datas do
   json.array! @datas do |data|
@@ -12,7 +10,7 @@ json.datas do
       json.array! data.fetch(:tasks, []) do |task|
         json.extract! task, :id, :name, :description, :finished_at, :status
         json.partial! 'shared/tags', tags: task.tags
-        if working_time = @working_times&.dig(task.id)
+        if (working_time = @working_times&.dig(task.id))
           json.working_time working_time
         end
       end
