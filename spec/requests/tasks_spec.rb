@@ -97,14 +97,14 @@ RSpec.describe Api::TasksController, type: :request do
     context '異常なパラメータが送信されてきた時' do
       context 'リスト内のタスク数以上のposition値が送信されてきた時' do
         xit 'タスクの順序の更新が行われないこと' do
-          incorrect_order_params = order_params.map do |param|
-            param[:position] = Float::INFINITY if param[:position] == 1
-            param
-          end
-          patch '/api/tasks', params: { order_params: order_params }
-          json = JSON.parse(response.body)
-          expect(response.status).to eq(200)
-          expect(json['task']['name']).to eq('タスクA')
+          # incorrect_order_params = order_params.map do |param|
+          #   param[:position] = Float::INFINITY if param[:position] == 1
+          #   param
+          # end
+          # patch '/api/tasks', params: { order_params: order_params }
+          # json = JSON.parse(response.body)
+          # expect(response.status).to eq(200)
+          # expect(json['task']['name']).to eq('タスクA')
         end
       end
     end

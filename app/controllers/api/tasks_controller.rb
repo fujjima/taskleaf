@@ -28,27 +28,30 @@ class Api::TasksController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  # FIXME: 複数のリソースに対するupdateを行なってしまっていて分かりにくいので、分解するかモデルに処理させる
   def update
     # update! + working_timeに関する更新はtransactionで囲む
     @task.update!(task_params)
     times = params[:task][:times]
-    if times
-      update_target = WorkingTime.find_by(task_id: @task.id, recorded_at: Date.parse(params[:task][:times][:start_at]))
-      if update_target
-        update_target.times << times
-        update_target.save!
-      else
-        working_time = WorkingTime.new(
-          task_id: @task.id,
-          times: [times],
-          # TODO: end_atが日を跨いだ場合の対応
-          recorded_at: Date.parse(params[:task][:times][:start_at])
-        )
-        working_time.save!
-      end
+
+    render :show and return unless times
+
+    update_target = WorkingTime.find_by(task_id: @task.id, recorded_at: Date.parse(params[:task][:times][:start_at]))
+    if update_target
+      update_target.times << times
+      update_target.save!
+    else
+      WorkingTime.new(
+        task_id: @task.id,
+        times: [times],
+        # TODO: end_atが日を跨いだ場合の対応
+        recorded_at: Date.parse(params[:task][:times][:start_at])
+      ).save!
     end
     render :show
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def destroy
     Task.where(id: params[:id]).destroy_all
