@@ -48,7 +48,7 @@
     "@webpack-cli/serve": "1.7.0",
     "axios": "0.27.2",
     "@babel/eslint-parser": "7.11.0",
-    "babel-loader": "8.2.1",
+    "babel-loader": "8.3.0",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-es2015-riot": "1.1.0",
     "babel-preset-react": "6.24.1",
