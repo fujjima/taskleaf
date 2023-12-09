@@ -53,7 +53,7 @@
     "babel-preset-es2015-riot": "1.1.0",
     "babel-preset-react": "6.24.1",
     "core-js": "3.34.0",
-    "css-loader": "5.0.2",
+    "css-loader": "5.2.7",
     "eslint": "7.13.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-plugin-prettier": "3.1.4",
