@@ -4,6 +4,7 @@ json.datas do
   json.array! @datas do |data|
     # TODO: task用のpartialの用意
     # positionも一緒に送信した方がテストはしやすい
+    # test
     json.list_id data[:list_id]
     json.list_name data[:list_name]
     json.tasks do |json|
