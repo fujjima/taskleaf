@@ -13,7 +13,7 @@
     "@material-ui/icons": "4.9.1",
     "@material-ui/pickers": "3.2.10",
     "@rails/ujs": "6.1.7",
-    "@reduxjs/toolkit": "1.5.0",
+    "@reduxjs/toolkit": "1.9.7",
     "@wojtekmaj/react-daterange-picker": "3.0.1",
     "classnames": "2.2.6",
     "dayjs": "1.11.10",
