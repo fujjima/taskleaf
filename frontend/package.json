@@ -46,7 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
     "@webpack-cli/serve": "1.7.0",
-    "axios": "0.27.2",
+    "axios": "0.33.0",
     "@babel/eslint-parser": "7.11.0",
     "babel-loader": "8.3.0",
     "babel-preset-es2015": "6.24.1",
